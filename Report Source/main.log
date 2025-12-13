@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (MiKTeX 25.4) (preloaded format=pdflatex 2025.12.13)  13 DEC 2025 14:50
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (MiKTeX 25.4) (preloaded format=pdflatex 2025.12.13)  13 DEC 2025 16:48
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -1501,7 +1501,7 @@ Package csquotes Info: Checking for multilingual support...
 Package csquotes Info: ... found 'babel' package.
 Package csquotes Info: Adjusting default style.
 Package csquotes Info: Redefining alias 'default' -> 'english'.
-(main.aux (tom_tat/main.aux) (1_gioi_thieu/main.aux) (2_co_so_ly_thuyet/main.aux) (3_phan_tich_va_kien_truc/main.aux) (4_thiet_ke_accelerator/main.aux) (5_hien_thuc_soc/main.aux) (6_danh_gia_hieu_nang/main.aux) (7_ke_hoach_phat_trien/main.aux) (appendix/main.aux))
+(main.aux (tom_tat/main.aux) (tom_tat/danh_muc_ky_hieu.aux) (1_gioi_thieu/main.aux) (2_co_so_ly_thuyet/main.aux) (3_phan_tich_va_kien_truc/main.aux) (4_thiet_ke_accelerator/main.aux) (5_hien_thuc_soc/main.aux) (6_danh_gia_hieu_nang/main.aux) (7_ke_hoach_phat_trien/main.aux) (appendix/main.aux))
 \openout1 = `main.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 220.
@@ -1616,7 +1616,7 @@ Package hyperref Info: Link coloring ON on input line 220.
 \@outlinefile=\write5
 \openout5 = `main.out'.
 
-<image/hcmut.png, id=130, 845.0772pt x 597.6729pt>
+<image/hcmut.png, id=210, 845.0772pt x 597.6729pt>
 File: image/hcmut.png Graphic file (type png)
 <use image/hcmut.png>
 Package pdftex.def Info: image/hcmut.png  used on input line 239.
@@ -1709,19 +1709,40 @@ LaTeX Font Warning: Font shape `U/lasy/m/n' in size <13> not available
 
 
 
-])
+] [2])
 \tf@toc=\write6
 \openout6 = `main.toc'.
 
- [2] (main.lof)
+ [3] (main.lof)
 \tf@lof=\write7
 \openout7 = `main.lof'.
 
- [3] (main.lot)
+ [4] (main.lot)
 \tf@lot=\write8
 \openout8 = `main.lot'.
 
- [4]
+ [5]
+\openout2 = `tom_tat/danh_muc_ky_hieu.aux'.
+
+ (tom_tat/danh_muc_ky_hieu.tex
+Overfull \hbox (10.2048pt too wide) in paragraph at lines 1--1
+|\T5/lmr/bx/n/32.34409 Danh möc Kþ hi»u v  Chú
+ []
+
+
+Overfull \hbox (52.45273pt too wide) in alignment at lines 5--8
+ [] [] 
+ []
+
+
+Overfull \hbox (52.45273pt too wide) in alignment at lines 8--47
+ [] [] 
+ []
+
+tom_tat/danh_muc_ky_hieu.tex:47: ignored error: Infinite glue shrinkage found in box being split [6
+
+
+{D:/Tool/MikTex/New folder/fonts/enc/dvips/lm/lm-mathit.enc}]) [7]
 
 Package geometry Warning: `a4paper': not available in `\newgeometry'; skipped.
 
@@ -1765,8 +1786,10 @@ Chapter 1.
 pdfTeX warning (ext4): destination with the same identifier (name{page.1}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.325 \include{1_gioi_thieu/main}
+l.327 \include{1_gioi_thieu/main}
                                   [1
+
+
 
 
 
@@ -1795,22 +1818,34 @@ Chapter 3.
 
  (4_thiet_ke_accelerator/main.tex
 Chapter 4.
-(4_thiet_ke_accelerator/4.1_phan_tich_toan_hoc.tex) (4_thiet_ke_accelerator/4.2_chien_luoc_dataflow.tex)
-Overfull \hbox (42.93755pt too wide) in paragraph at lines 12--12
-|[]\T5/lmr/bx/n/18.72003 Thi¸t k¸ ki¸n tróc vi mæ (Micro-architecture)| 
- []
-
-(4_thiet_ke_accelerator/4.3_kien_truc_vi_mo.tex)) [4
+(4_thiet_ke_accelerator/4.1_phan_tich_toan_hoc.tex [4
 
 
 
 
 ]
+Overfull \hbox (10.3473pt too wide) detected at line 15
+[][][]\OML/lmm/m/it/13 O\OT1/lmr/m/n/13 [\OML/lmm/m/it/13 m\OT1/lmr/m/n/13 ][\OML/lmm/m/it/13 h\OT1/lmr/m/n/13 ][\OML/lmm/m/it/13 w\OT1/lmr/m/n/13 ] = \OML/lmm/m/it/13 B\OT1/lmr/m/n/13 [\OML/lmm/m/it/13 m\OT1/lmr/m/n/13 ] + [] [] [] \OML/lmm/m/it/13 I\OT1/lmr/m/n/13 [\OML/lmm/m/it/13 c\OT1/lmr/m/n/13 ][\OML/lmm/m/it/13 h \OMS/lmsy/m/n/13 ^^A \OML/lmm/m/it/13 U \OT1/lmr/m/n/13 + \OML/lmm/m/it/13 r \OMS/lmsy/m/n/13 ^^@ \OML/lmm/m/it/13 P\OT1/lmr/m/n/13 ][\OML/lmm/m/it/13 w \OMS/lmsy/m/n/13 ^^A \OML/lmm/m/it/13 U \OT1/lmr/m/n/13 + \OML/lmm/m/it/13 s \OMS/lmsy/m/n/13 ^^@ \OML/lmm/m/it/13 P\OT1/lmr/m/n/13 ] \OMS/lmsy/m/n/13 ^^B \OML/lmm/m/it/13 W\OT1/lmr/m/n/13 [\OML/lmm/m/it/13 m\OT1/lmr/m/n/13 ][\OML/lmm/m/it/13 c\OT1/lmr/m/n/13 ][\OML/lmm/m/it/13 r\OT1/lmr/m/n/13 ][\OML/lmm/m/it/13 s\OT1/lmr/m/n/13 ]
+ []
+
+LaTeX Font Info:    Trying to load font information for TS1+lmr on input line 19.
+(D:\Tool\MikTex\New folder\tex/latex/lm\ts1lmr.fd
+File: ts1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+)
+LaTeX Font Info:    Trying to load font information for T5+lmtt on input line 55.
+ (D:\Tool\MikTex\New folder\tex/latex/lm\t5lmtt.fd
+File: t5lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+) [5{D:/Tool/MikTex/New folder/fonts/enc/dvips/lm/lm-rm.enc}{D:/Tool/MikTex/New folder/fonts/enc/dvips/lm/lm-mathsy.enc}{D:/Tool/MikTex/New folder/fonts/enc/dvips/lm/lm-mathex.enc}{D:/Tool/MikTex/New folder/fonts/enc/dvips/lm/lm-ts1.enc}] [6] [7] [8] [9]) (4_thiet_ke_accelerator/4.2_chien_luoc_dataflow.tex [10] [11] [12] [13])
+Overfull \hbox (42.93755pt too wide) in paragraph at lines 12--12
+|[]\T5/lmr/bx/n/18.72003 Thi¸t k¸ ki¸n tróc vi mæ (Micro-architecture)| 
+ []
+
+(4_thiet_ke_accelerator/4.3_kien_truc_vi_mo.tex [14] [15])) [16]
 \openout2 = `5_hien_thuc_soc/main.aux'.
 
  (5_hien_thuc_soc/main.tex
 Chapter 5.
-(5_hien_thuc_soc/5.1_moi_truong_hien_thuc.tex) (5_hien_thuc_soc/5.2_he_thong_xu_ly.tex) (5_hien_thuc_soc/5.3_he_thong_ket_noi.tex) (5_hien_thuc_soc/5.4_tich_hop_kiem_thu.tex)) [5
+(5_hien_thuc_soc/5.1_moi_truong_hien_thuc.tex) (5_hien_thuc_soc/5.2_he_thong_xu_ly.tex) (5_hien_thuc_soc/5.3_he_thong_ket_noi.tex) (5_hien_thuc_soc/5.4_tich_hop_kiem_thu.tex)) [17
 
 
 
@@ -1830,7 +1865,7 @@ Overfull \hbox (5.425pt too wide) in paragraph at lines 6--6
 |[]\T5/lmr/bx/n/18.72003 Ph÷ìng ph¡p ^^_¡nh gi¡: Mæ h¼nh Roofline| 
  []
 
-(6_danh_gia_hieu_nang/6.1_phuong_phap_danh_gia.tex) (6_danh_gia_hieu_nang/6.2_uoc_luong_hieu_nang.tex) (6_danh_gia_hieu_nang/6.3_so_sanh_nghien_cuu.tex)) [6
+(6_danh_gia_hieu_nang/6.1_phuong_phap_danh_gia.tex) (6_danh_gia_hieu_nang/6.2_uoc_luong_hieu_nang.tex) (6_danh_gia_hieu_nang/6.3_so_sanh_nghien_cuu.tex)) [18
 
 
 
@@ -1840,21 +1875,21 @@ Overfull \hbox (5.425pt too wide) in paragraph at lines 6--6
 
  (7_ke_hoach_phat_trien/main.tex
 Chapter 7.
-(7_ke_hoach_phat_trien/7.1_danh_gia_giai_doan_1.tex) (7_ke_hoach_phat_trien/7.2_ke_hoach_giai_doan_2.tex) (7_ke_hoach_phat_trien/7.3_tien_do_du_kien.tex)) [7
+(7_ke_hoach_phat_trien/7.1_danh_gia_giai_doan_1.tex) (7_ke_hoach_phat_trien/7.2_ke_hoach_giai_doan_2.tex) (7_ke_hoach_phat_trien/7.3_tien_do_du_kien.tex)) [19
 
 
 
 
 ]
 
-LaTeX Warning: Empty bibliography on input line 348.
+LaTeX Warning: Empty bibliography on input line 350.
 
 \openout2 = `appendix/main.aux'.
 
 No file appendix/main.tex.
 
 enddocument/afterlastpage (AED): lastpage setting LastPage.
-(main.aux (tom_tat/main.aux) (1_gioi_thieu/main.aux) (2_co_so_ly_thuyet/main.aux) (3_phan_tich_va_kien_truc/main.aux) (4_thiet_ke_accelerator/main.aux) (5_hien_thuc_soc/main.aux) (6_danh_gia_hieu_nang/main.aux) (7_ke_hoach_phat_trien/main.aux) (appendix/main.aux))
+(main.aux (tom_tat/main.aux) (tom_tat/danh_muc_ky_hieu.aux) (1_gioi_thieu/main.aux) (2_co_so_ly_thuyet/main.aux) (3_phan_tich_va_kien_truc/main.aux) (4_thiet_ke_accelerator/main.aux) (5_hien_thuc_soc/main.aux) (6_danh_gia_hieu_nang/main.aux) (7_ke_hoach_phat_trien/main.aux) (appendix/main.aux))
  ***********
 LaTeX2e <2025-11-01>
 L3 programming layer <2025-11-06>
@@ -1864,24 +1899,32 @@ L3 programming layer <2025-11-06>
 LaTeX Font Warning: Size substitutions with differences
 (Font)              up to 1.19997pt have occurred.
 
+
+LaTeX Warning: There were undefined references.
+
 Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: BDF6E2080A4080061818C753AD1F11AC;7607.
+(rerunfilecheck)             Checksum: 1AABA8D4B77C0922EA942C64B52B3FD3;13182.
+
+Package biblatex Warning: Please (re)run Biber on the file:
+(biblatex)                main
+(biblatex)                and rerun LaTeX afterwards.
+
 Package logreq Info: Writing requests to 'main.run.xml'.
 \openout1 = `main.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 41176 strings out of 467871
- 782233 string characters out of 5427480
- 1653221 words of memory out of 5000000
- 69148 multiletter control sequences out of 15000+600000
- 744696 words of font info for 125 fonts, out of 8000000 for 9000
+ 41397 strings out of 467871
+ 786929 string characters out of 5427480
+ 1663507 words of memory out of 5000000
+ 69293 multiletter control sequences out of 15000+600000
+ 762021 words of font info for 130 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 108i,12n,131p,1252b,2295s stack positions out of 10000i,1000n,20000p,200000b,200000s
-<D:/Tool/MikTex/New folder/fonts/type1/public/lm/lmbx12.pfb><D:/Tool/MikTex/New folder/fonts/type1/public/lm/lmr12.pfb><D:/Tool/MikTex/New folder/fonts/type1/public/lm/lmr17.pfb><D:/Tool/MikTex/New folder/fonts/type1/public/lm/lmri12.pfb>
-Output written on main.pdf (12 pages, 231560 bytes).
+ 108i,29n,131p,1252b,2295s stack positions out of 10000i,1000n,20000p,200000b,200000s
+<D:/Tool/MikTex/New folder/fonts/type1/public/lm/lmbx12.pfb><D:/Tool/MikTex/New folder/fonts/type1/public/lm/lmbxi10.pfb><D:/Tool/MikTex/New folder/fonts/type1/public/lm/lmex10.pfb><D:/Tool/MikTex/New folder/fonts/type1/public/lm/lmmi10.pfb><D:/Tool/MikTex/New folder/fonts/type1/public/lm/lmmi12.pfb><D:/Tool/MikTex/New folder/fonts/type1/public/lm/lmr10.pfb><D:/Tool/MikTex/New folder/fonts/type1/public/lm/lmr12.pfb><D:/Tool/MikTex/New folder/fonts/type1/public/lm/lmr17.pfb><D:/Tool/MikTex/New folder/fonts/type1/public/lm/lmri12.pfb><D:/Tool/MikTex/New folder/fonts/type1/public/lm/lmsy10.pfb><D:/Tool/MikTex/New folder/fonts/type1/public/lm/lmtt12.pfb>
+Output written on main.pdf (27 pages, 379216 bytes).
 PDF statistics:
- 250 PDF objects out of 1000 (max. 8388607)
- 43 named destinations out of 1000 (max. 500000)
- 266 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 488 PDF objects out of 1000 (max. 8388607)
+ 96 named destinations out of 1000 (max. 500000)
+ 426 words of extra memory for PDF output out of 10000 (max. 10000000)
 

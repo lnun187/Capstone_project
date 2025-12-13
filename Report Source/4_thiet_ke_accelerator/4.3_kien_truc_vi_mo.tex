@@ -1,0 +1,21 @@
+\subsection{Kiến trúc Mảng tính toán (PE Array Architecture)}
+
+\subsubsection{Cấu hình PE cho Tích chập Không gian (Spatial Convolution)}
+Mảng tính toán được tổ chức để ánh xạ trực tiếp chiều cao $R$ của bộ lọc lên phần cứng. Hệ thống sử dụng một nhóm gồm $R$ phần tử xử lý (PE) hoạt động phối hợp (Cooperative PEs) để tính toán cho một hàng đầu ra (Output Row).
+
+\begin{itemize}
+    \item \textbf{Phân bố dữ liệu:} Mỗi PE trong nhóm $R$ này chịu trách nhiệm lưu trữ và tính toán cho một hàng trọng số (Weight Row) của bộ lọc kích thước $R \times S$.
+    \item \textbf{Cơ chế trượt (Sliding Mechanism):} Các PE cùng trượt trên các hàng dữ liệu đầu vào tương ứng. Kết quả từ $R$ PE này được cộng dồn (Reduction) để tạo ra một điểm pixel đầu ra hoàn chỉnh.
+    \item \textbf{Tổng số PE:} Để hỗ trợ tính toán song song cho $T_c$ kênh đầu vào và $T_m$ kênh đầu ra, tổng số PE của hệ thống là:
+    \begin{equation}
+        N_{PE} = R \times T_c \times T_m
+    \end{equation}
+\end{itemize}
+
+\subsubsection{Hỗ trợ Depthwise Convolution}
+Trong chế độ Depthwise, vì mỗi kênh đầu vào chỉ tương tác với một bộ lọc duy nhất ($T_c$ input channels $\leftrightarrow$ $T_c$ output channels), kiến trúc phần cứng tự động cấu hình lại đường dẫn dữ liệu:
+\begin{itemize}
+    \item Nhóm $R$ PE vẫn hoạt động như cũ để xử lý không gian.
+    \item Tuy nhiên, $T_c$ nhóm PE (vốn dùng để cộng dồn kênh trong Standard Conv) giờ đây sẽ hoạt động độc lập, mỗi nhóm xử lý một kênh riêng biệt (Channel-Parallelism).
+    \item Điều này đảm bảo không có PE nào bị lãng phí (idle) khi chuyển từ Standard sang Depthwise, giải quyết triệt để vấn đề hiệu suất thấp thường gặp ở các kiến trúc systolic array truyền thống.
+\end{itemize}

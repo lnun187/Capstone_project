@@ -1,0 +1,97 @@
+\section{Chiến lược phân mảnh và Dòng dữ liệu đề xuất}
+\label{sec:dataflow_strategy}
+
+Dựa trên phân tích về tài nguyên phần cứng và đặc thù của các lớp tích chập (Convolution), nhóm đề xuất chiến lược quản lý dữ liệu dựa trên kỹ thuật **Ping-Pong Buffering** (Double Buffering) mở rộng. Chiến lược này không chỉ giúp che giấu độ trễ truy cập bộ nhớ mà còn giải quyết hiệu quả bài toán tính toán tại biên (boundary computation) mà không cần bộ nhớ đệm dòng (Line Buffer) riêng biệt.
+
+\subsection{Chiến lược quản lý bộ nhớ Ping-Pong và Xử lý biên}
+Thay vì sử dụng một bộ đệm dòng chuyên dụng để lưu trữ dữ liệu đầu vào chồng lấn, hệ thống tận dụng chính cơ chế Ping-Pong của Output Buffer để lưu trữ và tích lũy các kết quả trung gian tại biên (Boundary Partial Sums).
+
+Hệ thống sử dụng hai bộ đệm đầu ra (Output Buffers): \textbf{Buffer A} và \textbf{Buffer B} hoạt động luân phiên:
+\begin{itemize}
+    \item \textbf{Cơ chế Tích lũy chéo (Cross-Accumulation):} Khi hệ thống đang tính toán cho vùng dữ liệu hiện tại (Tile $k$) và lưu kết quả vào Buffer A, các giá trị tính toán thuộc vùng biên dưới ("giá trị dôi ra" do kích thước bộ lọc $R$) sẽ được lưu trực tiếp vào các hàng đầu tiên của Buffer B.
+    \item \textbf{Trạng thái khởi tạo tự động:} Khi hệ thống chuyển sang xử lý vùng dữ liệu tiếp theo (Tile $k+1$) với Buffer B làm bộ đệm chính, các hàng đầu tiên của Buffer B đã chứa sẵn các giá trị tổng riêng (Partial Sums) cần thiết từ bước trước đó. Việc tính toán tiếp tục được cộng dồn (accumulate) vào các giá trị này.
+    \item \textbf{Điều kiện chuyển đổi:} Buffer A chỉ được giải phóng (ghi xuống DRAM) khi đã hoàn thành tích lũy đủ $T_h$ hàng của toàn bộ $C$ kênh đầu vào (với Standard Conv) hoặc $T_c$ kênh (với Depthwise Conv). Hệ thống phải đảm bảo Buffer A đã được giải phóng (trống) trước khi Buffer B cần ghi đè vùng biên ("dôi ra") của Tile $k+1$ vào Buffer A (để chuẩn bị cho Tile $k+2$).
+\end{itemize}
+
+\subsection{Tham số phân mảnh dữ liệu (Tiling Parameters)}
+Không gian tính toán được chia nhỏ dựa trên các tham số cấu hình phần cứng như sau:
+\begin{itemize}
+    \item $W, H$: Chiều rộng và chiều cao của Input Feature Map (IFM).
+    \item $T_h$: Chiều cao của một mảnh IFM (Input Tile Height) được xử lý trong một lần nạp. Mảnh cuối cùng có chiều cao $H \% T_h$.
+    \item $T_c$: Số kênh đầu vào (Input Channels) được xử lý song song trong 1 pass ($k_i$).
+    \item $T_m$: Số kênh đầu ra (Output Channels) được tính toán song song ($m_i$).
+    \item $R, S$: Kích thước nhân chập (Kernel Height, Width).
+\end{itemize}
+
+\subsection{Cấu trúc Dòng dữ liệu (Dataflow Description)}
+Quy trình thực hiện được mô tả chi tiết cho hai loại tích chập chính:
+
+\subsubsection{Standard Convolution}
+Trong Standard Convolution, mỗi kênh đầu ra là tổng hợp từ tất cả $C$ kênh đầu vào.
+\begin{itemize}
+    \item \textbf{Đơn vị xử lý (1 Pass):} Trong mỗi pass, hệ thống nạp $T_c$ kênh đầu vào và thực hiện tích chập với $T_m$ bộ lọc tương ứng để tạo ra $T_m$ mảnh Output Feature Map (OFM).
+    \item \textbf{Tích lũy kênh (Channel Accumulation):} Để hoàn thành một mảnh OFM (gồm $T_m$ kênh), hệ thống cần thực hiện $\lceil C/T_c \rceil$ passes. Các kết quả từ các pass này được cộng dồn vào Buffer hiện tại (A hoặc B).
+    \item \textbf{Hoàn thành toàn bộ OFM:}
+    \begin{itemize}
+        \item Để hoàn thành $T_m$ kênh OFM với chiều cao $H$: Cần $\lceil C/T_c \rceil \times \lceil H/T_h \rceil$ passes.
+        \item Để hoàn thành toàn bộ $M$ kênh OFM: Cần $\lceil C/T_c \rceil \times \lceil H/T_h \rceil \times \lceil M/T_m \rceil$ passes.
+    \end{itemize}
+    \item \textbf{Quản lý trọng số (Weight Management):} Trọng số không được nạp theo từng pass mà được nạp và tích lũy trong bộ nhớ on-chip (Weight Buffer) cho đến khi đầy giới hạn cho phép. Trọng số chỉ bị xóa (evicted) khi toàn bộ các tính toán liên quan đến bộ lọc đó đã hoàn tất, giúp tối đa hóa tái sử dụng trọng số (Weight Reuse).
+\end{itemize}
+
+\subsubsection{Depthwise Convolution}
+Trong Depthwise Convolution, mỗi kênh đầu vào tương ứng duy nhất với một kênh đầu ra ($C=M$).
+\begin{itemize}
+    \item \textbf{Đơn vị xử lý (1 Pass):} Một pass tính toán xong sẽ hoàn thành luôn $T_m$ mảnh OFM (tương ứng với $T_c$ mảnh IFM, với $T_m=T_c$). Không cần vòng lặp tích lũy kênh đầu vào.
+    \item \textbf{Hoàn thành toàn bộ OFM:}
+    \begin{itemize}
+        \item Để hoàn thành $T_m$ kênh OFM với chiều cao $H$: Cần $\lceil H/T_h \rceil$ passes.
+        \item Để hoàn thành toàn bộ $M$ kênh OFM: Cần $\lceil H/T_h \rceil \times \lceil M/T_m \rceil$ passes.
+    \end{itemize}
+\end{itemize}
+
+\subsection{Thuật toán và Loop Nest}
+Mã giả dưới đây mô tả chi tiết hoạt động của bộ điều khiển (Controller) và cơ chế Ping-Pong Buffer:
+
+\begin{algorithm}[H]
+\caption{Dataflow với cơ chế Ping-Pong Accumulation}
+\label{alg:ping_pong_dataflow}
+\SetAlgoLined
+\DontPrintSemicolon
+\KwIn{Input Tiles, Weights}
+\KwOut{Output Feature Map}
+
+Initialize $Buffer\_Current = A$, $Buffer\_Next = B$\;
+% Loop qua các Output Channel Blocks
+\For{$m_{blk} = 0$ \textbf{to} $\lceil M/T_m \rceil$}{
+    Load Weights into On-chip Memory\;
+    
+    % Loop qua chiều cao ảnh (Spatial Tiling)
+    \For{$h_{blk} = 0$ \textbf{to} $\lceil H/T_h \rceil$}{
+        % Loop qua các Input Channel Blocks (Reduction)
+        \For{$c_{blk} = 0$ \textbf{to} $\lceil C/T_c \rceil$}{
+            Load Input Tile ($T_c \times T_h$)\;
+            
+            % Tính toán trên PE Array (R x Tc x Tm PEs)
+            Compute Convolution\;
+            
+            % Cơ chế lưu trữ Ping-Pong
+            \eIf{pixel $\in$ Main Body ($T_h$ rows)}{
+                Accumulate to $Buffer\_Current$\;
+            }{
+                % Pixel thuộc vùng dôi ra (Overlap/Boundary)
+                Accumulate to $Buffer\_Next$ (start rows)\;
+            }
+        }
+        
+        % Sau khi tính đủ C kênh input cho Tile hiện tại
+        \If{Standard Convolution OR ($h_{blk}$ done in Depthwise)}{
+            Drain $Buffer\_Current$ to DRAM (Off-chip)\;
+            Swap($Buffer\_Current$, $Buffer\_Next$)\;
+            Clear $Buffer\_Next$ (prepare for future overlap)\;
+        }
+    }
+}
+\end{algorithm}
+
+Chiến lược này giúp giảm thiểu dung lượng bộ nhớ on-chip cần thiết vì mỗi thời điểm chỉ cần chứa tối đa dữ liệu cho 2 passes (Current và Next), đồng thời loại bỏ hoàn toàn việc nạp lại dữ liệu IFM chồng lấn từ bộ nhớ ngoài.

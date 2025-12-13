@@ -6,12 +6,39 @@
 \@writefile{loa}{\addvspace {10\p@ }}
 \newlabel{ch:accelerator_design}{{4}{4}{Thiết kế kiến trúc Accelerator và Chiến lược dòng dữ liệu}{chapter.4}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {4.1}Phân tích toán học của phép tính tích chập}{4}{section.4.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {4.2}Chiến lược phân mảnh và Dòng dữ liệu đề xuất}{4}{section.4.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {4.3}Thiết kế kiến trúc vi mô (Micro-architecture)}{4}{section.4.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1.1}Standard Convolution (Tích chập tiêu chuẩn)}{5}{subsection.4.1.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.1.1.1}Công thức toán học tổng quát}{5}{subsubsection.4.1.1.1}\protected@file@percent }
+\newlabel{eq:std_conv}{{4.1}{5}{Công thức toán học tổng quát}{equation.4.1}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.1.1.2}Cấu trúc vòng lặp (Loop Nest)}{5}{subsubsection.4.1.1.2}\protected@file@percent }
+\@writefile{loa}{\contentsline {algocf}{\numberline {1}{\ignorespaces Standard Convolution (Standard Conv2D)}}{6}{algocf.1}\protected@file@percent }
+\newlabel{alg:std_conv}{{1}{6}{Cấu trúc vòng lặp (Loop Nest)}{algocf.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1.2}Depthwise Separable Convolution}{6}{subsection.4.1.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.1.2.1}Depthwise Convolution (DW)}{7}{subsubsection.4.1.2.1}\protected@file@percent }
+\@writefile{loa}{\contentsline {algocf}{\numberline {2}{\ignorespaces Depthwise Convolution (với Padding)}}{7}{algocf.2}\protected@file@percent }
+\newlabel{alg:dw_conv}{{2}{7}{Depthwise Convolution (DW)}{algocf.2}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.1.2.2}Pointwise Convolution (PW)}{8}{subsubsection.4.1.2.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1.3}Yêu cầu đối với Kiến trúc thống nhất (Unified Architecture)}{8}{subsection.4.1.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1.4}Kỹ thuật Gập Batch Normalization (BN Folding)}{8}{subsection.4.1.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.1.4.1}Công thức biến đổi trọng số}{9}{subsubsection.4.1.4.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4.2}Chiến lược phân mảnh và Dòng dữ liệu đề xuất}{10}{section.4.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4.3}Chiến lược phân mảnh và Dòng dữ liệu đề xuất}{10}{section.4.3}\protected@file@percent }
+\newlabel{sec:dataflow_strategy}{{4.3}{10}{Chiến lược phân mảnh và Dòng dữ liệu đề xuất}{section.4.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3.1}Chiến lược quản lý bộ nhớ Ping-Pong và Xử lý biên}{10}{subsection.4.3.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3.2}Tham số phân mảnh dữ liệu (Tiling Parameters)}{11}{subsection.4.3.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3.3}Cấu trúc Dòng dữ liệu (Dataflow Description)}{12}{subsection.4.3.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.3.3.1}Standard Convolution}{12}{subsubsection.4.3.3.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.3.3.2}Depthwise Convolution}{13}{subsubsection.4.3.3.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3.4}Thuật toán và Loop Nest}{13}{subsection.4.3.4}\protected@file@percent }
+\@writefile{loa}{\contentsline {algocf}{\numberline {3}{\ignorespaces Dataflow với cơ chế Ping-Pong Accumulation}}{14}{algocf.3}\protected@file@percent }
+\newlabel{alg:ping_pong_dataflow}{{3}{14}{Thuật toán và Loop Nest}{algocf.3}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {4.4}Thiết kế kiến trúc vi mô (Micro-architecture)}{15}{section.4.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.4.1}Kiến trúc Mảng tính toán (PE Array Architecture)}{15}{subsection.4.4.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.4.1.1}Cấu hình PE cho Tích chập Không gian (Spatial Convolution)}{15}{subsubsection.4.4.1.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.4.1.2}Hỗ trợ Depthwise Convolution}{15}{subsubsection.4.4.1.2}\protected@file@percent }
 \@setckpt{4_thiet_ke_accelerator/main}{
-\setcounter{page}{5}
-\setcounter{equation}{0}
-\setcounter{enumi}{0}
+\setcounter{page}{17}
+\setcounter{equation}{9}
+\setcounter{enumi}{2}
 \setcounter{enumii}{0}
 \setcounter{enumiii}{0}
 \setcounter{enumiv}{0}
@@ -19,9 +46,9 @@
 \setcounter{mpfootnote}{0}
 \setcounter{part}{0}
 \setcounter{chapter}{4}
-\setcounter{section}{3}
-\setcounter{subsection}{0}
-\setcounter{subsubsection}{0}
+\setcounter{section}{4}
+\setcounter{subsection}{1}
+\setcounter{subsubsection}{2}
 \setcounter{paragraph}{0}
 \setcounter{subparagraph}{0}
 \setcounter{figure}{0}
@@ -30,10 +57,10 @@
 \setcounter{theorem}{0}
 \setcounter{property}{0}
 \setcounter{proposition}{0}
-\setcounter{LT@tables}{0}
-\setcounter{LT@chunks}{0}
+\setcounter{LT@tables}{1}
+\setcounter{LT@chunks}{2}
 \setcounter{float@type}{8}
-\setcounter{caption@flags}{0}
+\setcounter{caption@flags}{2}
 \setcounter{continuedfloat}{0}
 \setcounter{subfigure}{0}
 \setcounter{subtable}{0}
@@ -42,9 +69,9 @@
 \setcounter{lofdepth}{1}
 \setcounter{lotdepth}{1}
 \setcounter{AlgoLine}{0}
-\setcounter{algocfline}{0}
-\setcounter{algocfproc}{0}
-\setcounter{algocf}{0}
+\setcounter{algocfline}{3}
+\setcounter{algocfproc}{3}
+\setcounter{algocf}{3}
 \setcounter{ALC@unique}{0}
 \setcounter{ALC@line}{0}
 \setcounter{ALC@rem}{0}
@@ -165,9 +192,9 @@
 \setcounter{bbx:relatedcount}{0}
 \setcounter{bbx:relatedtotal}{0}
 \setcounter{section@level}{0}
-\setcounter{Item}{0}
+\setcounter{Item}{2}
 \setcounter{Hfootnote}{0}
-\setcounter{bookmark@seq@number}{18}
+\setcounter{bookmark@seq@number}{38}
 \setcounter{lastpagecount}{0}
 \setcounter{subsubsubsection}{0}
 \setcounter{lstlisting}{0}

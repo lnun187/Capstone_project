@@ -1,0 +1,140 @@
+Để đảm bảo tính linh hoạt cho kiến trúc phần cứng, giúp hệ thống có khả năng hỗ trợ đa dạng các mô hình mạng nơ-ron từ kinh điển (như VGG16) đến các mô hình tối ưu cho thiết bị biên (như MobileNet), nhóm thực hiện đề tài đã tập trung phân tích đặc tả toán học của hai loại phép tính cốt lõi: \textbf{Standard Convolution} và \textbf{Depthwise Separable Convolution}.
+
+Việc hiểu rõ bản chất toán học và cấu trúc dữ liệu của các phép tính này (bao gồm cả cơ chế xử lý biên - Padding) là cơ sở quan trọng để chúng tôi thiết kế nên một kiến trúc thống nhất (Unified Architecture).
+
+\subsection{Standard Convolution (Tích chập tiêu chuẩn)}
+Đây là phép tính nền tảng trong hầu hết các mạng CNN truyền thống. Về mặt toán học, tích chập tiêu chuẩn thực hiện việc trượt bộ lọc (filter) trên không gian đầu vào $(H, W)$, đồng thời tích lũy giá trị qua toàn bộ chiều sâu của kênh (Channels).
+
+\subsubsection{Công thức toán học tổng quát}
+Xét một lớp tích chập với đầu vào $I$ có kích thước $C \times H_{in} \times W_{in}$ và bộ trọng số $W$ có kích thước $M \times C \times R \times S$.
+Tham số Padding ($P$) được sử dụng để giữ nguyên kích thước không gian hoặc kiểm soát việc giảm kích thước. Giá trị đầu ra $O$ tại kênh $m$, vị trí $(h, w)$ được xác định bởi:
+
+\begin{equation}
+    O[m][h][w] = B[m] + \sum_{c=0}^{C-1} \sum_{r=0}^{R-1} \sum_{s=0}^{S-1} I[c][h \cdot U + r - P][w \cdot U + s - P] \times W[m][c][r][s]
+    \label{eq:std_conv}
+\end{equation}
+
+Trong đó:
+\begin{itemize}
+    \item $U$: Bước trượt (Stride).
+    \item $P$: Số lượng điểm ảnh đệm thêm vào mỗi cạnh (Padding).
+    \item Điều kiện biên: Nếu chỉ số truy cập $I$ nằm ngoài phạm vi $[0, H_{in}-1]$ hoặc $[0, W_{in}-1]$, giá trị trả về là 0 (Zero-padding).
+\end{itemize}
+
+\subsubsection{Cấu trúc vòng lặp (Loop Nest)}
+Với giả thiết kích thước batch $N=1$, chúng tôi mô hình hóa phép tính này dưới dạng 6 vòng lặp lồng nhau. Việc xử lý Padding thường được thực hiện bằng phần cứng chuyên dụng (Padding Logic) để tránh truy cập bộ nhớ ngoài vùng cho phép.
+
+\begin{algorithm}[H]
+\caption{Standard Convolution (Standard Conv2D)}
+\label{alg:std_conv}
+\SetAlgoLined
+\DontPrintSemicolon
+\KwIn{$I[C][H_{in}][W_{in}]$, $W[M][C][R][S]$, Padding $P$, Stride $U$}
+\KwOut{$O[M][H_{out}][W_{out}]$}
+
+\For{$m = 0$ \textbf{to} $M-1$}{
+    \For{$c = 0$ \textbf{to} $C-1$}{
+        \For{$h = 0$ \textbf{to} $H_{out}-1$}{
+            \For{$w = 0$ \textbf{to} $W_{out}-1$}{
+                \For{$r = 0$ \textbf{to} $R-1$}{
+                    \For{$s = 0$ \textbf{to} $S-1$}{
+                        $h_{in} = h \cdot U + r - P$\;
+                        $w_{in} = w \cdot U + s - P$\;
+                        \eIf{$h_{in} \geq 0 \land h_{in} < H_{in} \land w_{in} \geq 0 \land w_{in} < W_{in}$}{
+                            $val = I[c][h_{in}][w_{in}]$\;
+                        }{
+                            $val = 0$ \Comment*[r]{Zero Padding}
+                        }
+                        $O[m][h][w] \leftarrow O[m][h][w] + val \times W[m][c][r][s]$\;
+                    }
+                }
+            }
+        }
+    }
+}
+\end{algorithm}
+
+\subsection{Depthwise Separable Convolution}
+Để giảm chi phí tính toán cho các thiết bị biên, các mô hình như MobileNet sử dụng kỹ thuật \textbf{Depthwise Separable Convolution}, tách phép chập chuẩn thành hai bước: \textbf{Depthwise (DW)} và \textbf{Pointwise (PW)}.
+
+\subsubsection{Depthwise Convolution (DW)}
+Phép tính này áp dụng bộ lọc riêng cho từng kênh đầu vào. Công thức tính toán bao gồm tham số Padding như sau:
+
+\begin{equation}
+    O_{dw}[c][h][w] = \sum_{r=0}^{R-1} \sum_{s=0}^{S-1} I[c][h \cdot U + r - P][w \cdot U + s - P] \times W_{dw}[c][r][s]
+\end{equation}
+
+\textbf{Nhận xét:} Việc xử lý Padding trong Depthwise cũng tương tự như Standard Conv, tuy nhiên do tính độc lập giữa các kênh, bộ điều khiển (Controller) cần đảm bảo logic Padding hoạt động chính xác cho từng luồng tính toán song song.
+
+\begin{algorithm}[H]
+\caption{Depthwise Convolution (với Padding)}
+\label{alg:dw_conv}
+\SetAlgoLined
+\DontPrintSemicolon
+\For{$c = 0$ \textbf{to} $C-1$ \Comment*[r]{Parallel Channels}}{
+    \For{$h = 0$ \textbf{to} $H_{out}-1$}{
+        \For{$w = 0$ \textbf{to} $W_{out}-1$}{
+            \For{$r = 0$ \textbf{to} $R-1$}{
+                \For{$s = 0$ \textbf{to} $S-1$}{
+                    $h_{in} = h \cdot U + r - P$\;
+                    $w_{in} = w \cdot U + s - P$\;
+                    \If{$h_{in} \in [0, H_{in}) \land w_{in} \in [0, W_{in})$}{
+                        $O_{dw}[c][h][w] += I[c][h_{in}][w_{in}] \times W_{dw}[c][r][s]$\;
+                    }
+                }
+            }
+        }
+    }
+}
+\end{algorithm}
+
+\subsubsection{Pointwise Convolution (PW)}
+Pointwise Convolution là tích chập chuẩn với kernel $1 \times 1$. Do kích thước kernel là $1 \times 1$, tham số Padding thường được đặt bằng 0 ($P=0$) và Stride $U=1$ để giữ nguyên kích thước không gian $(H, W)$, chỉ thay đổi số kênh từ $C$ sang $M$.
+
+\begin{equation}
+    O_{pw}[m][h][w] = \sum_{c=0}^{C-1} I[c][h][w] \times W_{pw}[m][c]
+\end{equation}
+
+\subsection{Yêu cầu đối với Kiến trúc thống nhất (Unified Architecture)}
+Từ các phân tích trên, nhóm nhận thấy rằng để bộ tăng tốc hoạt động hiệu quả cho cả hai trường hợp, kiến trúc phần cứng cần giải quyết được bài toán "kép":
+\begin{enumerate}
+    \item \textbf{Cơ chế xử lý Padding động:} Phần cứng cần có khối logic để tự động chèn giá trị 0 khi chỉ số tính toán $(h \cdot U + r - P)$ bị âm hoặc vượt quá kích thước ảnh, thay vì phải tốn tài nguyên bộ nhớ để lưu trữ các viền số 0 thực tế.
+    \item \textbf{Tính linh hoạt của Mảng PE:} Các đơn vị tính toán cần có khả năng chuyển đổi chế độ giữa tích lũy theo không gian (Standard/Pointwise) và tính toán độc lập theo kênh (Depthwise).
+\end{enumerate}
+\subsection{Kỹ thuật Gập Batch Normalization (BN Folding)}
+Trong các mạng CNN hiện đại như MobileNet, lớp Batch Normalization (BN) thường được đặt ngay sau lớp Convolution để chuẩn hóa phân phối dữ liệu, giúp mạng hội tụ nhanh hơn.
+Công thức tính toán của lớp BN trong quá trình suy luận (Inference) cho một kênh $m$ là:
+
+\begin{equation}
+    y = \frac{x - \mu_m}{\sqrt{\sigma_m^2 + \epsilon}} \cdot \gamma_m + \beta_m
+\end{equation}
+
+Trong đó:
+\begin{itemize}
+    \item $x$: Giá trị đầu ra từ lớp Convolution (trước khi qua hàm kích hoạt).
+    \item $\mu_m, \sigma_m$: Giá trị trung bình (mean) và phương sai (variance) động (running statistics) của kênh $m$.
+    \item $\gamma_m, \beta_m$: Tham số tỉ lệ (scale) và dịch chuyển (shift) được học trong quá trình huấn luyện.
+    \item $\epsilon$: Hằng số nhỏ để tránh chia cho 0.
+\end{itemize}
+
+Việc thực hiện trực tiếp công thức này trên phần cứng rất tốn kém do yêu cầu các phép toán phức tạp như căn bậc hai và phép chia. Tuy nhiên, do tại thời điểm suy luận, các tham số $\mu, \sigma, \gamma, \beta$ đều là hằng số, chúng tôi áp dụng kỹ thuật \textbf{BN Folding} để gộp toàn bộ phép tính BN vào trong trọng số ($W$) và bias ($B$) của lớp Convolution đi trước nó.
+
+\subsubsection{Công thức biến đổi trọng số}
+Giả sử đầu ra của lớp Convolution là $x = W_{orig} \cdot Input + B_{orig}$. Khi thay vào công thức BN, ta có:
+
+\begin{equation}
+    y = \frac{(W_{orig} \cdot Input + B_{orig}) - \mu}{\sqrt{\sigma^2 + \epsilon}} \cdot \gamma + \beta
+\end{equation}
+
+Phương trình trên có thể được viết lại dưới dạng một phép Convolution mới với trọng số $W'$ và bias $B'$:
+\begin{equation}
+    y = W' \cdot Input + B'
+\end{equation}
+
+Trong đó, các tham số mới được tính toán trước (offline) bởi phần mềm (driver) trước khi nạp xuống phần cứng:
+\begin{align}
+    W'[m][c][r][s] &= W_{orig}[m][c][r][s] \cdot \frac{\gamma_m}{\sqrt{\sigma_m^2 + \epsilon}} \\
+    B'[m] &= \left( B_{orig}[m] - \mu_m \right) \cdot \frac{\gamma_m}{\sqrt{\sigma_m^2 + \epsilon}} + \beta_m
+\end{align}
+
+\textbf{Kết luận thiết kế:} Nhờ kỹ thuật BN Folding, kiến trúc phần cứng của chúng tôi \textbf{không cần} thiết kế khối chức năng riêng cho Batch Normalization. Accelerator chỉ cần thực hiện phép tính Convolution bình thường với bộ trọng số $(W', B')$ đã được tinh chỉnh, giúp tiết kiệm đáng kể tài nguyên DSP và giảm độ trễ xử lý.
