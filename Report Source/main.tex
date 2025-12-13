@@ -3,14 +3,15 @@
 %=====================================================
 % DOCUMENT CLASS & FONT SETTINGS
 %=====================================================
-\usepackage[fontsize=13pt]{scrextend}
 \usepackage[T1]{fontenc}
+\usepackage[fontsize=13pt]{scrextend}
 \usepackage{mathptmx} % Times font
 \usepackage{lmodern}
 \usepackage{adjustbox}
 %=====================================================
 % LANGUAGE & ENCODING
 %=====================================================
+\usepackage{csquotes}
 \usepackage[utf8]{vietnam}
 \usepackage[english]{babel}
 % \usepackage{vntex}
@@ -120,7 +121,6 @@
 %=====================================================
 % BIBLIOGRAPHY
 %=====================================================
-\usepackage{csquotes}
 \usepackage[style=ieee,sorting=none]{biblatex}
 \addbibresource{refs.bib}
 
@@ -157,8 +157,10 @@
 \renewcommand{\cfttabnumwidth}{5em}
 
 \AtBeginDocument{
-    \renewcommand*\contentsname{Contents}
-    \renewcommand*\refname{References}
+    \renewcommand*\contentsname{Mục lục}
+    \renewcommand*\refname{Tài liệu tham khảo}
+    \renewcommand*\listfigurename{Danh sách hình vẽ}
+    \renewcommand*\listtablename{Danh sách bảng biểu}
 }
 
 %=====================================================
@@ -172,7 +174,7 @@
 \renewcommand{\footrulewidth}{0.3pt}
 
 \fancyfoot{}
-\fancyfoot[R]{\scriptsize Page \thepage/\pageref{LastPage}}
+\fancyfoot[R]{\scriptsize Trang \thepage/\pageref{LastPage}}
 
 %=====================================================
 % SECTION FORMATTING
@@ -207,20 +209,10 @@
 \newcommand\blank[1]{\rule[-.2ex]{#1}{.4pt}}
 
 %=====================================================
-% MISCELLANEOUS PACKAGES
-%=====================================================
-\usepackage{blindtext}
-\usepackage{comment}
-\usepackage{appendix}
-\usepackage{enumerate}
-\usepackage[normalem]{ulem}
-\usepackage{longfbox}
-
-%=====================================================
 % FIGURE & TABLE NAMING
 %=====================================================
-\renewcommand{\figurename}{\textbf{Figure}}
-\renewcommand{\tablename}{\textbf{Table}}
+\renewcommand{\figurename}{\textbf{Hình}}
+\renewcommand{\tablename}{\textbf{Bảng}}
 
 %=====================================================
 % DOCUMENT BEGIN
@@ -241,27 +233,28 @@
     
     \begin{center}
         \vspace{-20pt}
-        \textbf{HO CHI MINH CITY UNIVERSITY OF TECHNOLOGY}\\
-        \textbf{FALTY OF COMPUTER SCIENCE AND ENGINEERING}\\
+        \textbf{TRƯỜNG ĐẠI HỌC BÁCH KHOA TP.HCM}\\
+        \textbf{KHOA KHOA HỌC VÀ KỸ THUẬT MÁY TÍNH}\\
         \vspace{10pt}
         \includegraphics[width=0.25\linewidth]{image/hcmut.png}\\
         \vspace{8pt}
-        \textbf{\Large CAPSTONE PROJECT}\\
+        \textbf{\Large ĐỒ ÁN THIẾT KẾ}\\ 
         \vspace{8pt}
-        \textbf{\Large COMPUTER ENGINEERING}\\
+        \textbf{\Large KỸ THUẬT MÁY TÍNH}\\
         \vspace{15pt}
         \hrule
         \vspace{20pt}
-        \textcolor{blue}{\Large{\textbf{Motion Planning around Obstacles}}}\\
+        % TÊN ĐỀ TÀI TIẾNG VIỆT
+        \textcolor{blue}{\Large{\textbf{THIẾT KẾ VÀ HIỆN THỰC AI ACCELERATOR TRÊN SYSTEM-ON-CHIP}}}\\
         \vspace{20pt}
         \hrule
     \end{center}
 
     \vspace{5pt}
     \begin{center}
-       \large{\textbf{Semester 251}}\\
+       \large{\textbf{Học kỳ 251}}\\
        \vspace{10pt}
-        \textbf{Instructor:} Assoc. Prof. Le Hong Trang 
+       \textbf{GVHD:} PGS. TS. Lê Hồng Trang 
     \end{center}
 
     \vspace{1cm}
@@ -270,10 +263,10 @@
         \small
         \begin{tabular}{|>{\centering\arraybackslash}m{1cm}|>{\centering\arraybackslash}m{5.3cm}|>{\centering\arraybackslash}m{1.7cm}|>{\centering\arraybackslash}m{4cm}|}
             \hline
-            \textbf{STT} & \textbf{Full name} & \textbf{ID} & \textbf{Note}\\
+            \textbf{STT} & \textbf{Họ và tên} & \textbf{MSSV} & \textbf{Ghi chú}\\
             \hline
-                1 & Nguyen Tran Dang Khoa & 2211635 &\\
-                2 & Ho Dang Khoa & 2211588 &\\
+                1 & Lâm Nữ Uyển Nhi & 2212429 &\\
+                2 & Vũ Đức Lâm & [Điền MSSV] &\\
             \hline
         \end{tabular}
     \end{adjustbox}
@@ -282,15 +275,15 @@
         ~\\
         ~\\        ~\\
         ~\\
-        \textit{Ho Chi Minh City, December 2025}
+        \textit{TP. Hồ Chí Minh, Tháng 12/2025}
     \end{center}
 \end{titlepage}
 
 % \thesislayout
 
 %\thispagestyle{empty}
-\renewcommand{\figurename}{\textbf{Figure}}
-\renewcommand{\tablename}{\textbf{Table}}
+\renewcommand{\figurename}{\textbf{Hình}}
+\renewcommand{\tablename}{\textbf{Bảng}}
 \newpage
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -304,7 +297,7 @@
 
 % \include{acknowledgement/main.tex}
 
-\include{abstraction/main.tex}
+\include{tom_tat/main.tex} % Tên cũ: abstraction
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \tableofcontents
@@ -317,20 +310,35 @@
 \pagenumbering{arabic}
 \setcounter{page}{1}
 \thesislayout
-\include{introduction/main}
-\include{theoretical-background/main}
-\include{related-work/main}
-\include{experiments/main}
-\include{future-plan/main}
-% \include{system-design/main.tex}
-% \newpage
-% \newpage
-% \include{future-plan/main.tex}
-% \newpage
+
+% --- PHẦN INCLUDE VỚI TÊN THƯ MỤC TIẾNG VIỆT ---
+% (Bạn nhớ đổi tên thư mục trên máy tính cho khớp nhé)
+
+% Chương 1: Giới thiệu
+\include{1_gioi_thieu/main} 
+
+% Chương 2: Cơ sở lý thuyết
+\include{2_co_so_ly_thuyet/main} 
+
+% Chương 3: Phân tích yêu cầu và Kiến trúc
+\include{3_phan_tich_va_kien_truc/main} 
+
+% Chương 4: Thiết kế Accelerator (Phần của Nhi)
+\include{4_thiet_ke_accelerator/main} 
+
+% Chương 5: Hiện thực SoC (Phần của Lâm)
+\include{5_hien_thuc_soc/main} 
+
+% Chương 6: Đánh giá hiệu năng (Phần tính toán)
+\include{6_danh_gia_hieu_nang/main} 
+
+% Chương 7: Kế hoạch phát triển
+\include{7_ke_hoach_phat_trien/main} 
+
 
 % \nocite{*}
-\addcontentsline{toc}{chapter}{References}
-\printbibliography[title=References]
+\addcontentsline{toc}{chapter}{Tài liệu tham khảo}
+\printbibliography[title=Tài liệu tham khảo]
 
-\include{appendix/main}
+\include{appendix/main} % Tên cũ: appendix
 \end{document}
