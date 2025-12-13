@@ -11,4 +11,3 @@
 \contentsline {chapter}{\numberline {5}Hiện thực nền tảng SoC}{5}{chapter.5}%
 \contentsline {chapter}{\numberline {6}Đánh giá hiệu năng lý thuyết}{6}{chapter.6}%
 \contentsline {chapter}{\numberline {7}Kế hoạch phát triển}{7}{chapter.7}%
-\contentsline {chapter}{Tài liệu tham khảo}{8}{chapter.7}%
