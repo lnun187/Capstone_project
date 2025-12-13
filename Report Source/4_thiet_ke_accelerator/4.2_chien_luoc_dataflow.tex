@@ -1,97 +1,235 @@
-\section{Chiến lược phân mảnh và Dòng dữ liệu đề xuất}
-\label{sec:dataflow_strategy}
 
-Dựa trên phân tích về tài nguyên phần cứng và đặc thù của các lớp tích chập (Convolution), nhóm đề xuất chiến lược quản lý dữ liệu dựa trên kỹ thuật **Ping-Pong Buffering** (Double Buffering) mở rộng. Chiến lược này không chỉ giúp che giấu độ trễ truy cập bộ nhớ mà còn giải quyết hiệu quả bài toán tính toán tại biên (boundary computation) mà không cần bộ nhớ đệm dòng (Line Buffer) riêng biệt.
+Để xử lý các Feature Map kích thước lớn trên tài nguyên phần cứng giới hạn, chúng tôi áp dụng chiến lược phân mảnh dữ liệu (Tiling) không chồng lấn. Mục này sẽ trình bày chi tiết cách thức chia nhỏ không gian dữ liệu và thuật toán điều phối các bước tính toán (Passes).
+\subsection{Định nghĩa khái niệm "Tile" (Mảnh dữ liệu)}
+Trong kiến trúc này, một "Tile" được định nghĩa là một phần nhỏ của khối dữ liệu gốc với kích thước được tối ưu hóa cho dung lượng bộ nhớ on-chip. Hệ thống xử lý ba loại Tile chính tương ứng với ba luồng dữ liệu. Đầu tiên, Input Tile (Mảnh đầu vào) là khối dữ liệu được cắt ra từ Input Feature Map gốc với kích thước $T_c \times T_h \times W$. Việc giới hạn số kênh nạp vào là $T_c$ và chiều cao là $T_h$ giúp dữ liệu vừa vặn với bộ nhớ đệm, trong khi chiều rộng $W$ được giữ nguyên để tận dụng tính liên tục của dữ liệu trong bộ nhớ (Burst Read). Tiếp theo, Weight Tile (Mảnh trọng số) tập hợp các bộ lọc cần thiết để xử lý cho Input Tile hiện tại, có kích thước $T_m \times T_c \times R \times S$. Cuối cùng, kết quả tính toán tương ứng tạo ra Output Tile (Mảnh đầu ra) với kích thước $T_m \times T_h \times W$.
+\subsection{Phương pháp Phân mảnh không gian dữ liệu (Space Partitioning)}
 
-\subsection{Chiến lược quản lý bộ nhớ Ping-Pong và Xử lý biên}
-Thay vì sử dụng một bộ đệm dòng chuyên dụng để lưu trữ dữ liệu đầu vào chồng lấn, hệ thống tận dụng chính cơ chế Ping-Pong của Output Buffer để lưu trữ và tích lũy các kết quả trung gian tại biên (Boundary Partial Sums).
+Không gian tính toán của một lớp tích chập được định nghĩa bởi ba chiều chính: Chiều cao không gian ($H$), Chiều sâu kênh đầu vào ($C$), và Số lượng bộ lọc/kênh đầu ra ($M$). Chúng tôi chia nhỏ không gian này thành các khối (Block/Tile) độc lập dựa trên tham số phần cứng.
 
-Hệ thống sử dụng hai bộ đệm đầu ra (Output Buffers): \textbf{Buffer A} và \textbf{Buffer B} hoạt động luân phiên:
+\subsubsection{Công thức chia khối (Block Calculation)}
+Giả sử phần cứng có khả năng xử lý song song một khối dữ liệu kích thước $T_c \times T_h \times W$ và tạo ra $T_m$ kênh đầu ra. Số lượng khối (Blocks) trên mỗi chiều được tính như sau:
+
 \begin{itemize}
-    \item \textbf{Cơ chế Tích lũy chéo (Cross-Accumulation):} Khi hệ thống đang tính toán cho vùng dữ liệu hiện tại (Tile $k$) và lưu kết quả vào Buffer A, các giá trị tính toán thuộc vùng biên dưới ("giá trị dôi ra" do kích thước bộ lọc $R$) sẽ được lưu trực tiếp vào các hàng đầu tiên của Buffer B.
-    \item \textbf{Trạng thái khởi tạo tự động:} Khi hệ thống chuyển sang xử lý vùng dữ liệu tiếp theo (Tile $k+1$) với Buffer B làm bộ đệm chính, các hàng đầu tiên của Buffer B đã chứa sẵn các giá trị tổng riêng (Partial Sums) cần thiết từ bước trước đó. Việc tính toán tiếp tục được cộng dồn (accumulate) vào các giá trị này.
-    \item \textbf{Điều kiện chuyển đổi:} Buffer A chỉ được giải phóng (ghi xuống DRAM) khi đã hoàn thành tích lũy đủ $T_h$ hàng của toàn bộ $C$ kênh đầu vào (với Standard Conv) hoặc $T_c$ kênh (với Depthwise Conv). Hệ thống phải đảm bảo Buffer A đã được giải phóng (trống) trước khi Buffer B cần ghi đè vùng biên ("dôi ra") của Tile $k+1$ vào Buffer A (để chuẩn bị cho Tile $k+2$).
+    \item \textbf{Số khối theo chiều dọc ($N_h$):} Ảnh đầu vào chiều cao $H$ được cắt thành $N_h$ phần không chồng lấn.
+    \begin{equation}
+        N_h = \lceil \frac{H}{T_h} \rceil
+    \end{equation}
+    Ví dụ: Với $H=21, T_h=11$, ta có $N_h = 2$ khối (Khối 0: hàng 0-10; Khối 1: hàng 11-20).
+    
+    \item \textbf{Số khối kênh đầu vào ($N_c$):} Tổng $C$ kênh được chia thành $N_c$ nhóm.
+    \begin{equation}
+        N_c = \lceil \frac{C}{T_c} \rceil
+    \end{equation}
+    
+    \item \textbf{Số khối kênh đầu ra ($N_m$):} Tổng $M$ bộ lọc được chia thành $N_m$ nhóm.
+    \begin{equation}
+        N_m = \lceil \frac{M}{T_m} \rceil
+    \end{equation}
 \end{itemize}
+Một đơn vị xử lý cơ sở, gọi là \textbf{1 Pass}, chính là quá trình hệ thống xử lý hoàn tất cho một cặp Input Tile và Weight Tile để cập nhật giá trị cho một Output Tile.
 
-\subsection{Tham số phân mảnh dữ liệu (Tiling Parameters)}
-Không gian tính toán được chia nhỏ dựa trên các tham số cấu hình phần cứng như sau:
-\begin{itemize}
-    \item $W, H$: Chiều rộng và chiều cao của Input Feature Map (IFM).
-    \item $T_h$: Chiều cao của một mảnh IFM (Input Tile Height) được xử lý trong một lần nạp. Mảnh cuối cùng có chiều cao $H \% T_h$.
-    \item $T_c$: Số kênh đầu vào (Input Channels) được xử lý song song trong 1 pass ($k_i$).
-    \item $T_m$: Số kênh đầu ra (Output Channels) được tính toán song song ($m_i$).
-    \item $R, S$: Kích thước nhân chập (Kernel Height, Width).
-\end{itemize}
+\subsection{Thuật toán Điều phối Pass (Pass Scheduling)}
 
-\subsection{Cấu trúc Dòng dữ liệu (Dataflow Description)}
-Quy trình thực hiện được mô tả chi tiết cho hai loại tích chập chính:
+Trình tự thực hiện các Pass phụ thuộc vào loại tích chập (Standard hay Depthwise) để tối ưu hóa việc tái sử dụng dữ liệu biên (như đã phân tích ở mục Dữ liệu dôi ra).
 
-\subsubsection{Standard Convolution}
-Trong Standard Convolution, mỗi kênh đầu ra là tổng hợp từ tất cả $C$ kênh đầu vào.
-\begin{itemize}
-    \item \textbf{Đơn vị xử lý (1 Pass):} Trong mỗi pass, hệ thống nạp $T_c$ kênh đầu vào và thực hiện tích chập với $T_m$ bộ lọc tương ứng để tạo ra $T_m$ mảnh Output Feature Map (OFM).
-    \item \textbf{Tích lũy kênh (Channel Accumulation):} Để hoàn thành một mảnh OFM (gồm $T_m$ kênh), hệ thống cần thực hiện $\lceil C/T_c \rceil$ passes. Các kết quả từ các pass này được cộng dồn vào Buffer hiện tại (A hoặc B).
-    \item \textbf{Hoàn thành toàn bộ OFM:}
-    \begin{itemize}
-        \item Để hoàn thành $T_m$ kênh OFM với chiều cao $H$: Cần $\lceil C/T_c \rceil \times \lceil H/T_h \rceil$ passes.
-        \item Để hoàn thành toàn bộ $M$ kênh OFM: Cần $\lceil C/T_c \rceil \times \lceil H/T_h \rceil \times \lceil M/T_m \rceil$ passes.
-    \end{itemize}
-    \item \textbf{Quản lý trọng số (Weight Management):} Trọng số không được nạp theo từng pass mà được nạp và tích lũy trong bộ nhớ on-chip (Weight Buffer) cho đến khi đầy giới hạn cho phép. Trọng số chỉ bị xóa (evicted) khi toàn bộ các tính toán liên quan đến bộ lọc đó đã hoàn tất, giúp tối đa hóa tái sử dụng trọng số (Weight Reuse).
-\end{itemize}
-
-\subsubsection{Depthwise Convolution}
-Trong Depthwise Convolution, mỗi kênh đầu vào tương ứng duy nhất với một kênh đầu ra ($C=M$).
-\begin{itemize}
-    \item \textbf{Đơn vị xử lý (1 Pass):} Một pass tính toán xong sẽ hoàn thành luôn $T_m$ mảnh OFM (tương ứng với $T_c$ mảnh IFM, với $T_m=T_c$). Không cần vòng lặp tích lũy kênh đầu vào.
-    \item \textbf{Hoàn thành toàn bộ OFM:}
-    \begin{itemize}
-        \item Để hoàn thành $T_m$ kênh OFM với chiều cao $H$: Cần $\lceil H/T_h \rceil$ passes.
-        \item Để hoàn thành toàn bộ $M$ kênh OFM: Cần $\lceil H/T_h \rceil \times \lceil M/T_m \rceil$ passes.
-    \end{itemize}
-\end{itemize}
-
-\subsection{Thuật toán và Loop Nest}
-Mã giả dưới đây mô tả chi tiết hoạt động của bộ điều khiển (Controller) và cơ chế Ping-Pong Buffer:
+\subsubsection{Thuật toán cho Standard Convolution}
+Trong Standard Convolution, một điểm ảnh đầu ra cần tổng hợp dữ liệu từ \textbf{tất cả} các khối kênh đầu vào ($N_c$). Do đó, ta cần vòng lặp tích lũy (Reduction Loop) chạy qua $N_c$ trước khi chuyển sang khối chiều cao khác.
 
 \begin{algorithm}[H]
-\caption{Dataflow với cơ chế Ping-Pong Accumulation}
-\label{alg:ping_pong_dataflow}
+\caption{Lịch trình Pass cho Standard Convolution}
+\label{alg:pass_standard}
 \SetAlgoLined
 \DontPrintSemicolon
-\KwIn{Input Tiles, Weights}
-\KwOut{Output Feature Map}
-
-Initialize $Buffer\_Current = A$, $Buffer\_Next = B$\;
-% Loop qua các Output Channel Blocks
-\For{$m_{blk} = 0$ \textbf{to} $\lceil M/T_m \rceil$}{
-    Load Weights into On-chip Memory\;
-    
-    % Loop qua chiều cao ảnh (Spatial Tiling)
-    \For{$h_{blk} = 0$ \textbf{to} $\lceil H/T_h \rceil$}{
-        % Loop qua các Input Channel Blocks (Reduction)
-        \For{$c_{blk} = 0$ \textbf{to} $\lceil C/T_c \rceil$}{
-            Load Input Tile ($T_c \times T_h$)\;
-            
-            % Tính toán trên PE Array (R x Tc x Tm PEs)
-            Compute Convolution\;
-            
-            % Cơ chế lưu trữ Ping-Pong
-            \eIf{pixel $\in$ Main Body ($T_h$ rows)}{
-                Accumulate to $Buffer\_Current$\;
-            }{
-                % Pixel thuộc vùng dôi ra (Overlap/Boundary)
-                Accumulate to $Buffer\_Next$ (start rows)\;
-            }
+\KwIn{$N_m$ (Output Blocks), $N_h$ (Height Blocks), $N_c$ (Input Blocks)}
+% Duyệt qua từng nhóm Filter (Output Channels)
+\For{$m = 0$ \textbf{to} $N_m - 1$}{
+    \textit{1. Load Weights for Output Block $m$ (Weight Stationary)}\;
+    % Duyệt qua chiều cao (để tận dụng Ping-Pong buffer cho biên)
+    \For{$h = 0$ \textbf{to} $N_h - 1$}{
+        % Vòng lặp Tích lũy (Reduction): Cộng dồn kết quả từ các nhóm kênh Input
+        \For{$c = 0$ \textbf{to} $N_c - 1$}{
+            \textbf{Pass $(m, h, c)$:} \;
+            - Nạp Input Block $(c, h)$ kích thước $T_c \times T_h$\;
+            - Tính toán với Weight Block $(m, c)$\;
+            - Cộng dồn kết quả vào Buffer hiện tại (A hoặc B)\;
         }
-        
-        % Sau khi tính đủ C kênh input cho Tile hiện tại
-        \If{Standard Convolution OR ($h_{blk}$ done in Depthwise)}{
-            Drain $Buffer\_Current$ to DRAM (Off-chip)\;
-            Swap($Buffer\_Current$, $Buffer\_Next$)\;
-            Clear $Buffer\_Next$ (prepare for future overlap)\;
-        }
+        \textit{2. Xử lý biên \& Ghi Output:}\;
+        - Sau khi cộng đủ $N_c$ passes: Output Block $(m, h)$ đã hoàn tất (Valid).\;
+        - Ghi phần Valid xuống DRAM.\;
+        - Hoán đổi Ping-Pong Buffer (để dùng phần Dôi ra cho $h+1$).\;
     }
 }
 \end{algorithm}
 
-Chiến lược này giúp giảm thiểu dung lượng bộ nhớ on-chip cần thiết vì mỗi thời điểm chỉ cần chứa tối đa dữ liệu cho 2 passes (Current và Next), đồng thời loại bỏ hoàn toàn việc nạp lại dữ liệu IFM chồng lấn từ bộ nhớ ngoài.
+\subsubsection{Thuật toán cho Depthwise Convolution}
+Trong Depthwise Convolution, kênh Input thứ $i$ chỉ tính toán với kênh Filter thứ $i$. Do đó $N_c = N_m$ (số nhóm kênh Input bằng số nhóm kênh Output) và không có sự cộng dồn chéo giữa các nhóm. Vòng lặp tích lũy biến mất.
+
+\begin{algorithm}[H]
+\caption{Lịch trình Pass cho Depthwise Convolution}
+\label{alg:pass_dw}
+\SetAlgoLined
+\DontPrintSemicolon
+\KwIn{$N_m$ (Channel Groups), $N_h$ (Height Blocks)}
+% Duyệt qua từng nhóm Kênh (Channel Groups)
+% Ở đây N_m đóng vai trò là cả nhóm Input lẫn Output (vì 1-1 mapping)
+\For{$g = 0$ \textbf{to} $N_m - 1$}{
+    \textit{1. Load Weights for Group $g$}\;
+    % Duyệt dứt điểm chiều cao cho nhóm kênh này
+    \For{$h = 0$ \textbf{to} $N_h - 1$}{
+        \textbf{Pass $(g, h)$:} \;
+        - Nạp Input Block $(g, h)$ kích thước $T_c \times T_h$\;
+        - Tính toán với Weight Block $g$\;
+        - Tạo ra ngay kết quả Output Block $(g, h)$ (không cần cộng dồn)\;
+        \textit{2. Xử lý biên \& Ghi Output:}\;
+        - Ghi ngay phần Valid xuống DRAM.\;
+        - Hoán đổi Ping-Pong Buffer (lưu phần Dôi ra cho $h+1$).\;
+    }
+}
+\end{algorithm}
+\begin{figure}[h!]
+    \centering
+    
+    % --- Hàng 1: Hình (a) ---
+    \begin{subfigure}[b]{0.8\textwidth} % Tăng độ rộng lên (ví dụ 0.8 hoặc 0.9)
+        \centering
+        \includegraphics[width=\linewidth]{image/4/std_conv_pass.png}
+        \caption{Standard Convolution ($H=21, M=2$)}
+        \label{fig:pass_div_std}
+    \end{subfigure}
+    
+    \par\bigskip % Xuống dòng và tạo khoảng cách lớn giữa 2 hình
+    % \vspace{0.5cm} % Hoặc dùng lệnh này để chỉnh khoảng cách cụ thể
+    
+    % --- Hàng 2: Hình (b) ---
+    \begin{subfigure}[b]{0.8\textwidth} 
+        \centering
+        \includegraphics[width=\linewidth]{image/4/dw_conv_pass.png}
+        \caption{Depthwise Convolution ($H=21, M=21$)}
+        \label{fig:pass_div_dw}
+    \end{subfigure}
+    
+    \caption{Minh họa chiến lược phân chia Pass cho hai loại tích chập với $T_h=11$. (a) Standard Convolution chia thành 2 phần theo chiều dọc và tích lũy theo chiều sâu. (b) Depthwise Convolution xử lý độc lập từng nhóm kênh và chia 2 phần theo chiều dọc.}
+    \label{fig:pass_division_strategy}
+\end{figure}
+\subsection{Phân tích vấn đề tại biên và Dữ liệu dôi ra}
+
+Mặc dù chiến lược phân mảnh dữ liệu được áp dụng trên cả chiều kênh và chiều không gian, tác động của chúng lên luồng dữ liệu là khác nhau.
+\begin{itemize}
+    \item Việc chia nhỏ chiều kênh ($C, M$) dẫn đến bài toán tích lũy tổng riêng (Partial Sum Accumulation).
+    \item Việc chia nhỏ chiều không gian ($H$) dẫn đến bài toán thiếu dữ liệu vùng lân cận cho cửa sổ trượt (Sliding Window Boundary).
+\end{itemize}
+
+Mục này tập trung phân tích vấn đề tại biên không gian, nguyên nhân chính dẫn đến sự cần thiết của cơ chế Ping-Pong Buffer đặc thù.
+
+\subsubsection{Cơ sở hình thành Dữ liệu dôi ra}
+Khi bộ lọc trượt theo chiều dọc, tại các hàng cuối cùng của một Tile không gian (gọi là Tile $H_k$), bộ lọc cần dữ liệu của các hàng tiếp theo (thuộc Tile $H_{k+1}$) để hoàn thành phép tính.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\linewidth]{image/4/du_lieu_doi_ra.png} % Giảm width xuống 0.8 để hình không quá to
+    \caption{Sơ đồ minh họa quá trình tính toán tích chập và sự hình thành dữ liệu dôi ra (Residual Data) trong một pass với tile đầu vào $T_h=4$ và bộ lọc kích thước $3 \times 3$ trong trường hợp số kênh của ifmap feature là 1.}
+    \label{fig:residual_data_generation}
+\end{figure}
+Xét ví dụ cụ thể với Tile đầu vào có kích thước chiều cao $T_h = 4$ (các hàng 0, 1, 2, 3) và bộ lọc kích thước $3 \times 3$. Khi thực hiện tích chập:
+\begin{itemize}
+    \item \textbf{Hàng 0, 1:} Có đầy đủ dữ liệu lân cận (trong phạm vi Tile hiện tại) $\rightarrow$ Tạo ra kết quả hoàn chỉnh (\textit{Valid Output}).
+    \item \textbf{Hàng 2:} Cần dữ liệu hàng [2, 3, \textbf{4}]. Thiếu hàng 4 (thuộc Tile $H_{k+1}$) $\rightarrow$ Kết quả chưa hoàn thiện.
+    \item \textbf{Hàng 3:} Cần dữ liệu hàng [3, \textbf{4}, \textbf{5}]. Thiếu hàng 4, 5 (thuộc Tile $H_{k+1}$) $\rightarrow$ Kết quả chưa hoàn thiện.
+\end{itemize}
+
+Các kết quả tại hàng 2 và 3 được gọi là \textbf{Dữ liệu dôi ra (Residual Data)}. Số lượng hàng dôi ra luôn là $R-1$. Để đảm bảo tính đúng đắn mà không cần nạp lại phần dữ liệu Input [2, 3] khi xử lý Tile $H_{k+1}$, hệ thống cần lưu trữ các giá trị dôi ra này và cộng dồn chúng với kết quả tính toán từ Tile tiếp theo.
+
+\subsection{Cơ chế Ping-Pong Buffer và Logic xử lý hàng hợp lệ}
+
+Để xử lý dữ liệu dôi ra (Residual Data) tại biên dưới của mỗi tile mà không cần nạp lại Input, hệ thống sử dụng hai bộ đệm đầu ra $Buffer_A$ và $Buffer_B$ hoạt động luân phiên.
+
+Điểm quan trọng trong chiến lược này là số lượng hàng đầu ra hợp lệ (Valid Rows) sẽ khác nhau giữa Tile đầu tiên và các Tile tiếp theo:
+
+\begin{itemize}
+    \item \textbf{Tile đầu tiên ($h=0$):} Do không có dữ liệu tích lũy từ phía trên, bộ lọc trượt qua $T_h$ hàng đầu vào chỉ tạo ra được $T_h - R + 1$ hàng đầu ra hoàn chỉnh. $R-1$ hàng cuối cùng là dữ liệu dôi ra.
+    \item \textbf{Các Tile tiếp theo ($h > 0$):} Nhờ tận dụng $R-1$ hàng dôi ra từ bước trước (đã lưu trong Buffer), hệ thống sẽ hoàn thiện được các hàng này. Tổng số hàng hoàn chỉnh được ghi xuống DRAM trong bước này là đủ $T_h$ hàng.
+\end{itemize}
+
+\subsection{Thuật toán Điều phối và Xoay vòng bộ nhớ}
+
+Thuật toán \ref{alg:ping_pong_logic} mô tả chi tiết quy trình quản lý bộ nhớ và luồng dữ liệu, minh họa rõ sự khác biệt khi xử lý Tile đầu tiên và các Tile sau.
+
+\begin{algorithm}[H]
+\caption{Cơ chế Ping-Pong Buffer xử lý Dữ liệu dôi ra}
+\label{alg:ping_pong_logic}
+\SetAlgoLined
+\DontPrintSemicolon
+\KwIn{Input Tiles, Weights}
+\KwOut{DRAM (Valid Output Feature Map)}
+
+% Khởi tạo con trỏ Buffer
+Initialize pointers: $Buf_{curr} \leftarrow A$, $Buf_{next} \leftarrow B$\;
+
+\For{$m = 0$ \textbf{to} $N_m - 1$}{
+    \For{$h = 0$ \textbf{to} $N_h - 1$}{
+        
+        \textit{// Bước 1: Tính toán và Tích lũy (Reduction Phase)}\;
+        \For{$c = 0$ \textbf{to} $N_c - 1$}{
+            Load Input Tile ($T_c \times T_h$)\;
+            Perform Convolution\;
+            
+            \uIf{$h == 0$ (First Tile)}{
+                Accumulate valid rows $[0 \dots T_h-R]$ into $Buf_{curr}$\;
+                Accumulate residual rows $[T_h-R+1 \dots T_h-1]$ into $Buf_{next}[0 \dots R-2]$\;
+            }
+            \Else{
+                \textit{// Kế thừa residual từ bước trước đang nằm trong Buf\_curr}\;
+                Accumulate boundary contribution into $Buf_{curr}[0 \dots R-2]$\;
+                Accumulate new body rows into $Buf_{curr}[R-1 \dots T_h-1]$\;
+                Accumulate new residual rows into $Buf_{next}[0 \dots R-2]$\;
+            }
+        }
+        
+        \textit{// Bước 2: Ghi kết quả và Xoay vòng (Drain \& Swap Phase)}\;
+        \eIf{$h == 0$}{
+            \textit{// Tile đầu chỉ có (Th - R + 1) hàng hợp lệ}\;
+            Drain $Buf_{curr}$ rows $[0 \dots T_h-R]$ to DRAM\;
+        }{
+            \textit{// Các Tile sau hoàn thành đủ Th hàng (gồm cả phần trả nợ tile trước)}\;
+            Drain $Buf_{curr}$ rows $[0 \dots T_h-1]$ to DRAM\;
+        }
+        
+        Clear $Buf_{curr}$ (Reset for future use)\;
+        \textbf{Swap pointers:} $Buf_{curr} \leftrightarrow Buf_{next}$\;
+        \textit{// Sau lệnh Swap, Buf\_curr mới đã chứa sẵn dữ liệu dôi ra (Residual) cho vòng lặp h+1}\;
+    }
+}
+\end{algorithm}
+
+\textbf{Giải thích cơ chế:}
+\begin{enumerate}
+    \item Tại vòng lặp $h$, $Buf_{curr}$ đóng vai trò tích lũy kết quả chính, còn $Buf_{next}$ đóng vai trò hứng các giá trị dôi ra (Residual) cho tương lai.
+    \item Khi $h=0$: Chúng ta ghi các hàng dôi ra vào đầu $Buf_{next}$.
+    \item Khi chuyển sang $h=1$: Ta thực hiện Swap. Lúc này $Buf_{curr}$ (vốn là $Buf_{next}$ cũ) đã có sẵn dữ liệu dôi ra ở các hàng đầu. Việc tính toán tiếp tục cộng dồn vào đó, biến chúng thành kết quả hoàn chỉnh (Valid).
+    \item Quá trình ghi xuống DRAM (Drain) ở $h>0$ sẽ ghi toàn bộ $T_h$ hàng, bao gồm cả những hàng vừa được hoàn thiện từ dữ liệu dôi ra.
+\end{enumerate}
+\begin{figure}[H]
+    \centering
+    
+    % --- Hàng 1: Trạng thái xử lý Tile Hk ---
+    \begin{subfigure}[b]{0.8\textwidth}
+        \centering
+        % Thay đường dẫn ảnh thực tế của bạn vào đây
+        \includegraphics[width=\linewidth]{image/4/buffer_hinh_a.png}
+        \caption{Trạng thái xử lý Tile $H_k$: Valid vào Buffer A, Residual vào Buffer B}
+        \label{fig:ping_pong_state_k}
+    \end{subfigure}
+    
+    \par\bigskip % Tạo khoảng cách dọc giữa 2 hình
+    
+    % --- Hàng 2: Trạng thái xử lý Tile Hk+1 ---
+    \begin{subfigure}[b]{0.8\textwidth} 
+        \centering
+        % Thay đường dẫn ảnh thực tế của bạn vào đây
+        \includegraphics[width=\linewidth]{image/4/buffer_hinh_b.png}
+        \caption{Trạng thái xử lý Tile $H_{k+1}$: Tích lũy vào Buffer B, Residual mới vào Buffer A}
+        \label{fig:ping_pong_state_k_plus_1}
+    \end{subfigure}
+    
+    \caption{Minh họa cơ chế Ping-Pong Buffer để xử lý dữ liệu dôi ra giữa hai Tile không gian liên tiếp. (a) Trong Pass xử lý Tile $H_k$, kết quả dôi ra được lưu chờ ở Buffer B. (b) Trong Pass xử lý Tile $H_{k+1}$, dữ liệu dôi ra từ Buffer B được cộng dồn với kết quả mới, đồng thời tạo ra dữ liệu dôi ra mới quay lại Buffer A.}
+    \label{fig:ping_pong_mechanism}
+\end{figure}

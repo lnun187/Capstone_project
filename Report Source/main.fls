@@ -63,6 +63,12 @@ INPUT D:\Tool\MikTex\New folder\tex\latex\ifoddpage\ifoddpage.sty
 INPUT D:\Tool\MikTex\New folder\tex\latex\varwidth\varwidth.sty
 INPUT D:\Tool\MikTex\New folder\tex\latex\varwidth\varwidth.sty
 INPUT D:\Tool\MikTex\New folder\tex\latex\varwidth\varwidth.sty
+INPUT D:\Tool\MikTex\New folder\tex\latex\caption\caption.sty
+INPUT D:\Tool\MikTex\New folder\tex\latex\caption\caption.sty
+INPUT D:\Tool\MikTex\New folder\tex\latex\caption\caption3.sty
+INPUT D:\Tool\MikTex\New folder\tex\latex\caption\caption3.sty
+INPUT D:\Tool\MikTex\New folder\tex\latex\caption\subcaption.sty
+INPUT D:\Tool\MikTex\New folder\tex\latex\caption\subcaption.sty
 INPUT D:\Tool\MikTex\New folder\tex\latex\csquotes\csquotes.sty
 INPUT D:\Tool\MikTex\New folder\tex\latex\csquotes\csquotes.sty
 INPUT D:\Tool\MikTex\New folder\tex\latex\etoolbox\etoolbox.sty
@@ -171,14 +177,6 @@ INPUT D:\Tool\MikTex\New folder\tex\latex\graphics\epsfig.sty
 INPUT D:\Tool\MikTex\New folder\tex\latex\graphics\epsfig.sty
 INPUT D:\Tool\MikTex\New folder\tex\latex\float\float.sty
 INPUT D:\Tool\MikTex\New folder\tex\latex\float\float.sty
-INPUT D:\Tool\MikTex\New folder\tex\latex\caption\subcaption.sty
-INPUT D:\Tool\MikTex\New folder\tex\latex\caption\subcaption.sty
-INPUT D:\Tool\MikTex\New folder\tex\latex\caption\caption.sty
-INPUT D:\Tool\MikTex\New folder\tex\latex\caption\caption.sty
-INPUT D:\Tool\MikTex\New folder\tex\latex\caption\caption3.sty
-INPUT D:\Tool\MikTex\New folder\tex\latex\caption\caption3.sty
-INPUT D:\Tool\MikTex\New folder\tex\latex\caption\ltcaption.sty
-INPUT D:\Tool\MikTex\New folder\tex\latex\caption\ltcaption.sty
 INPUT D:\Tool\MikTex\New folder\tex\latex\graphics\rotating.sty
 INPUT D:\Tool\MikTex\New folder\tex\latex\graphics\rotating.sty
 INPUT D:\Tool\MikTex\New folder\tex\latex\pgf\frontendlayer\tikz.sty
@@ -487,6 +485,8 @@ INPUT D:\Tool\MikTex\New folder\tex\latex\epstopdf-pkg\epstopdf-base.sty
 INPUT D:\Tool\MikTex\New folder\tex\latex\00miktex\epstopdf-sys.cfg
 INPUT D:\Tool\MikTex\New folder\tex\latex\00miktex\epstopdf-sys.cfg
 INPUT D:\Tool\MikTex\New folder\tex\latex\00miktex\epstopdf-sys.cfg
+INPUT D:\Tool\MikTex\New folder\tex\latex\caption\ltcaption.sty
+INPUT D:\Tool\MikTex\New folder\tex\latex\caption\ltcaption.sty
 INPUT D:\Tool\MikTex\New folder\tex\latex\pdflscape\pdflscape.sty
 INPUT D:\Tool\MikTex\New folder\tex\latex\pdflscape\pdflscape.sty
 INPUT D:\Tool\MikTex\New folder\tex\latex\pdflscape\pdflscape-nometadata.sty
@@ -625,6 +625,9 @@ INPUT .\main.lof
 INPUT .\main.lof
 INPUT main.lof
 OUTPUT main.lof
+INPUT D:\Tool\MikTex\New folder\fonts\enc\dvips\lm\lm-mathit.enc
+INPUT D:\Tool\MikTex\New folder\fonts\enc\dvips\lm\lm-rm.enc
+INPUT D:\Tool\MikTex\New folder\fonts\enc\dvips\lm\lm-mathsy.enc
 INPUT .\main.lot
 INPUT .\main.lot
 INPUT main.lot
@@ -637,7 +640,6 @@ INPUT .\tom_tat\danh_muc_ky_hieu.tex
 INPUT tom_tat\danh_muc_ky_hieu.tex
 INPUT D:\Tool\MikTex\New folder\fonts\tfm\public\lm\t5-lmr17.tfm
 INPUT D:\Tool\MikTex\New folder\fonts\tfm\public\lm\t5-lmbx12.tfm
-INPUT D:\Tool\MikTex\New folder\fonts\enc\dvips\lm\lm-mathit.enc
 INPUT .\1_gioi_thieu\main.tex
 INPUT .\1_gioi_thieu\main.tex
 OUTPUT 1_gioi_thieu\main.aux
@@ -707,15 +709,46 @@ INPUT D:\Tool\MikTex\New folder\tex\latex\lm\t5lmtt.fd
 INPUT D:\Tool\MikTex\New folder\tex\latex\lm\t5lmtt.fd
 INPUT D:\Tool\MikTex\New folder\tex\latex\lm\t5lmtt.fd
 INPUT D:\Tool\MikTex\New folder\fonts\tfm\public\lm\t5-lmtt12.tfm
-INPUT D:\Tool\MikTex\New folder\fonts\enc\dvips\lm\lm-rm.enc
-INPUT D:\Tool\MikTex\New folder\fonts\enc\dvips\lm\lm-mathsy.enc
 INPUT D:\Tool\MikTex\New folder\fonts\enc\dvips\lm\lm-mathex.enc
 INPUT D:\Tool\MikTex\New folder\fonts\enc\dvips\lm\lm-ts1.enc
 INPUT .\4_thiet_ke_accelerator\4.2_chien_luoc_dataflow.tex
 INPUT .\4_thiet_ke_accelerator\4.2_chien_luoc_dataflow.tex
 INPUT 4_thiet_ke_accelerator\4.2_chien_luoc_dataflow.tex
-INPUT D:\Tool\MikTex\New folder\fonts\tfm\public\lm\t5-lmr10.tfm
-INPUT D:\Tool\MikTex\New folder\fonts\tfm\public\lm\t5-lmr8.tfm
+INPUT .\image\4\std_conv_pass.png
+INPUT .\image\4\std_conv_pass.png
+INPUT .\image\4\std_conv_pass.png
+INPUT .\image\4\std_conv_pass.png
+INPUT .\image\4\std_conv_pass.png
+INPUT .\image\4\std_conv_pass.png
+INPUT .\image\4\std_conv_pass.png
+INPUT .\image\4\dw_conv_pass.png
+INPUT .\image\4\dw_conv_pass.png
+INPUT .\image\4\dw_conv_pass.png
+INPUT .\image\4\dw_conv_pass.png
+INPUT .\image\4\dw_conv_pass.png
+INPUT .\image\4\dw_conv_pass.png
+INPUT .\image\4\dw_conv_pass.png
+INPUT .\image\4\du_lieu_doi_ra.png
+INPUT .\image\4\du_lieu_doi_ra.png
+INPUT .\image\4\du_lieu_doi_ra.png
+INPUT .\image\4\du_lieu_doi_ra.png
+INPUT .\image\4\du_lieu_doi_ra.png
+INPUT .\image\4\du_lieu_doi_ra.png
+INPUT .\image\4\du_lieu_doi_ra.png
+INPUT .\image\4\buffer_hinh_a.png
+INPUT .\image\4\buffer_hinh_a.png
+INPUT .\image\4\buffer_hinh_a.png
+INPUT .\image\4\buffer_hinh_a.png
+INPUT .\image\4\buffer_hinh_a.png
+INPUT .\image\4\buffer_hinh_a.png
+INPUT .\image\4\buffer_hinh_a.png
+INPUT .\image\4\buffer_hinh_b.png
+INPUT .\image\4\buffer_hinh_b.png
+INPUT .\image\4\buffer_hinh_b.png
+INPUT .\image\4\buffer_hinh_b.png
+INPUT .\image\4\buffer_hinh_b.png
+INPUT .\image\4\buffer_hinh_b.png
+INPUT .\image\4\buffer_hinh_b.png
 INPUT .\4_thiet_ke_accelerator\4.3_kien_truc_vi_mo.tex
 INPUT .\4_thiet_ke_accelerator\4.3_kien_truc_vi_mo.tex
 INPUT 4_thiet_ke_accelerator\4.3_kien_truc_vi_mo.tex
@@ -813,12 +846,16 @@ INPUT D:\Tool\MikTex\New folder\fonts\type1\public\lm\lmmi10.pfb
 INPUT D:\Tool\MikTex\New folder\fonts\type1\public\lm\lmmi10.pfb
 INPUT D:\Tool\MikTex\New folder\fonts\type1\public\lm\lmmi12.pfb
 INPUT D:\Tool\MikTex\New folder\fonts\type1\public\lm\lmmi12.pfb
+INPUT D:\Tool\MikTex\New folder\fonts\type1\public\lm\lmmi9.pfb
+INPUT D:\Tool\MikTex\New folder\fonts\type1\public\lm\lmmi9.pfb
 INPUT D:\Tool\MikTex\New folder\fonts\type1\public\lm\lmr10.pfb
 INPUT D:\Tool\MikTex\New folder\fonts\type1\public\lm\lmr10.pfb
 INPUT D:\Tool\MikTex\New folder\fonts\type1\public\lm\lmr12.pfb
 INPUT D:\Tool\MikTex\New folder\fonts\type1\public\lm\lmr12.pfb
 INPUT D:\Tool\MikTex\New folder\fonts\type1\public\lm\lmr17.pfb
 INPUT D:\Tool\MikTex\New folder\fonts\type1\public\lm\lmr17.pfb
+INPUT D:\Tool\MikTex\New folder\fonts\type1\public\lm\lmr9.pfb
+INPUT D:\Tool\MikTex\New folder\fonts\type1\public\lm\lmr9.pfb
 INPUT D:\Tool\MikTex\New folder\fonts\type1\public\lm\lmri12.pfb
 INPUT D:\Tool\MikTex\New folder\fonts\type1\public\lm\lmri12.pfb
 INPUT D:\Tool\MikTex\New folder\fonts\type1\public\lm\lmsy10.pfb

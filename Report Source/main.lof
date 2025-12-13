@@ -3,6 +3,9 @@
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }
+\contentsline {figure}{\numberline {4.1}{\ignorespaces Minh họa chiến lược phân chia Pass cho hai loại tích chập với $T_h=11$. (a) Standard Convolution chia thành 2 phần theo chiều dọc và tích lũy theo chiều sâu. (b) Depthwise Convolution xử lý độc lập từng nhóm kênh và chia 2 phần theo chiều dọc.}}{14}{figure.caption.2}%
+\contentsline {figure}{\numberline {4.2}{\ignorespaces Sơ đồ minh họa quá trình tính toán tích chập và sự hình thành dữ liệu dôi ra (Residual Data) trong một pass với tile đầu vào $T_h=4$ và bộ lọc kích thước $3 \times 3$ trong trường hợp số kênh của ifmap feature là 1.}}{15}{figure.caption.3}%
+\contentsline {figure}{\numberline {4.3}{\ignorespaces Minh họa cơ chế Ping-Pong Buffer để xử lý dữ liệu dôi ra giữa hai Tile không gian liên tiếp. (a) Trong Pass xử lý Tile $H_k$, kết quả dôi ra được lưu chờ ở Buffer B. (b) Trong Pass xử lý Tile $H_{k+1}$, dữ liệu dôi ra từ Buffer B được cộng dồn với kết quả mới, đồng thời tạo ra dữ liệu dôi ra mới quay lại Buffer A.}}{20}{figure.caption.4}%
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }

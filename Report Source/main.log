@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (MiKTeX 25.4) (preloaded format=pdflatex 2025.12.13)  13 DEC 2025 16:48
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (MiKTeX 25.4) (preloaded format=pdflatex 2025.12.13)  13 DEC 2025 22:14
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -178,18 +178,43 @@ Package: varwidth 2009/03/30 ver 0.92;  Variable-width minipages
 \@vwid@roff=\dimen164
 )
 ==> First Aid for varwidth.sty applied!
+) (D:\Tool\MikTex\New folder\tex/latex/caption\caption.sty
+Package: caption 2023/08/05 v3.6o Customizing captions (AR)
+ (D:\Tool\MikTex\New folder\tex/latex/caption\caption3.sty
+Package: caption3 2023/07/31 v2.4d caption3 kernel (AR)
+\caption@tempdima=\dimen165
+\captionmargin=\dimen166
+\caption@leftmargin=\dimen167
+\caption@rightmargin=\dimen168
+\caption@width=\dimen169
+\caption@indent=\dimen170
+\caption@parindent=\dimen171
+\caption@hangindent=\dimen172
+Package caption Info: Standard document class detected.
+)
+\c@caption@flags=\count287
+\c@continuedfloat=\count288
+Package caption Info: scrextend package is loaded.
+\caption@addmargin@hsize=\dimen173
+\caption@addmargin@linewidth=\dimen174
+) (D:\Tool\MikTex\New folder\tex/latex/caption\subcaption.sty
+Package: subcaption 2023/07/28 v1.6b Sub-captions (AR)
+Package caption Info: New subtype `subfigure' on input line 238.
+\c@subfigure=\count289
+Package caption Info: New subtype `subtable' on input line 238.
+\c@subtable=\count290
 ) (D:\Tool\MikTex\New folder\tex/latex/csquotes\csquotes.sty
 Package: csquotes 2024-04-04 v5.2o context-sensitive quotations (JAW)
  (D:\Tool\MikTex\New folder\tex/latex/etoolbox\etoolbox.sty
 Package: etoolbox 2025/10/02 v2.5m e-TeX tools for LaTeX (JAW)
-\etb@tempcnta=\count287
+\etb@tempcnta=\count291
 )
-\csq@reset=\count288
-\csq@gtype=\count289
-\csq@glevel=\count290
-\csq@qlevel=\count291
-\csq@maxlvl=\count292
-\csq@tshold=\count293
+\csq@reset=\count292
+\csq@gtype=\count293
+\csq@glevel=\count294
+\csq@qlevel=\count295
+\csq@maxlvl=\count296
+\csq@tshold=\count297
 \csq@ltx@everypar=\toks20
  (D:\Tool\MikTex\New folder\tex/latex/csquotes\csquotes.def
 File: csquotes.def 2024-04-04 v5.2o csquotes generic definitions (JAW)
@@ -373,7 +398,7 @@ Package: inputenc 2024/02/08 v1.3d Input encoding file
 File: vncaps.tex 2006/06/07 v1.1 Captions in Vietnamese
 )) (D:\Tool\MikTex\New folder\tex/generic/babel\babel.sty
 Package: babel 2025/11/09 v25.15 The multilingual framework for LuaLaTeX, pdfLaTeX and XeLaTeX
-\babel@savecnt=\count294
+\babel@savecnt=\count298
 LaTeX Encoding Info:    Redeclaring text command \ij (encoding OT1) on input line 2050.
 LaTeX Encoding Info:    Redeclaring text command \IJ (encoding OT1) on input line 2052.
 LaTeX Encoding Info:    Redeclaring text command \ij (encoding T1) on input line 2054.
@@ -381,11 +406,11 @@ LaTeX Encoding Info:    Redeclaring text command \IJ (encoding T1) on input line
 LaTeX Encoding Info:    Ignoring declaration for text command \ij (encoding ?) on input line 2056.
 LaTeX Encoding Info:    Ignoring declaration for text command \IJ (encoding ?) on input line 2058.
 LaTeX Encoding Info:    Ignoring declaration for text command \SS (encoding ?) on input line 2083.
-\U@D=\dimen165
+\U@D=\dimen175
 \l@unhyphenated=\language79
  (D:\Tool\MikTex\New folder\tex/generic/babel\txtbabel.def)
 \bbl@readstream=\read2
-\bbl@dirlevel=\count295
+\bbl@dirlevel=\count299
 Package babel Info: Configuration files are deprecated, as
 (babel)             they can break document portability.
 (babel)             Reported on input line 4175.
@@ -407,17 +432,17 @@ Package: ifvtex 2019/10/25 v1.7 ifvtex legacy package. Use iftex instead.
  (D:\Tool\MikTex\New folder\tex/generic/iftex\iftex.sty
 Package: iftex 2024/12/12 v1.0g TeX engine tests
 ))
-\Gm@cnth=\count296
-\Gm@cntv=\count297
-\c@Gm@tempcnt=\count298
-\Gm@bindingoffset=\dimen166
-\Gm@wd@mp=\dimen167
-\Gm@odd@mp=\dimen168
-\Gm@even@mp=\dimen169
-\Gm@layoutwidth=\dimen170
-\Gm@layoutheight=\dimen171
-\Gm@layouthoffset=\dimen172
-\Gm@layoutvoffset=\dimen173
+\Gm@cnth=\count300
+\Gm@cntv=\count301
+\c@Gm@tempcnt=\count302
+\Gm@bindingoffset=\dimen176
+\Gm@wd@mp=\dimen177
+\Gm@odd@mp=\dimen178
+\Gm@even@mp=\dimen179
+\Gm@layoutwidth=\dimen180
+\Gm@layoutheight=\dimen181
+\Gm@layouthoffset=\dimen182
+\Gm@layoutvoffset=\dimen183
 \Gm@dimlist=\toks23
  (D:\Tool\MikTex\New folder\tex/latex/geometry\geometry.cfg)) (D:\Tool\MikTex\New folder\tex/latex/setspace\setspace.sty
 Package: setspace 2022/12/04 v6.7b set line spacing
@@ -449,21 +474,21 @@ Package: amstext 2024/11/17 v2.01 AMS text
  (D:\Tool\MikTex\New folder\tex/latex/amsmath\amsgen.sty
 File: amsgen.sty 1999/11/30 v2.0 generic functions
 \@emptytoks=\toks24
-\ex@=\dimen174
+\ex@=\dimen184
 )) (D:\Tool\MikTex\New folder\tex/latex/amsmath\amsbsy.sty
 Package: amsbsy 1999/11/29 v1.2d Bold Symbols
-\pmbraise@=\dimen175
+\pmbraise@=\dimen185
 ) (D:\Tool\MikTex\New folder\tex/latex/amsmath\amsopn.sty
 Package: amsopn 2022/04/08 v2.04 operator names
 )
-\inf@bad=\count299
+\inf@bad=\count303
 LaTeX Info: Redefining \frac on input line 233.
-\uproot@=\count300
-\leftroot@=\count301
+\uproot@=\count304
+\leftroot@=\count305
 LaTeX Info: Redefining \overline on input line 398.
 LaTeX Info: Redefining \colon on input line 409.
-\classnum@=\count302
-\DOTSCASE@=\count303
+\classnum@=\count306
+\DOTSCASE@=\count307
 LaTeX Info: Redefining \ldots on input line 495.
 LaTeX Info: Redefining \dots on input line 498.
 LaTeX Info: Redefining \cdots on input line 619.
@@ -473,30 +498,30 @@ LaTeX Info: Redefining \big on input line 721.
 LaTeX Info: Redefining \Big on input line 722.
 LaTeX Info: Redefining \bigg on input line 723.
 LaTeX Info: Redefining \Bigg on input line 724.
-\big@size=\dimen176
+\big@size=\dimen186
 LaTeX Font Info:    Redeclaring font encoding OML on input line 742.
 LaTeX Font Info:    Redeclaring font encoding OMS on input line 743.
-\macc@depth=\count304
+\macc@depth=\count308
 LaTeX Info: Redefining \bmod on input line 904.
 LaTeX Info: Redefining \pmod on input line 909.
 LaTeX Info: Redefining \smash on input line 939.
 LaTeX Info: Redefining \relbar on input line 969.
 LaTeX Info: Redefining \Relbar on input line 970.
-\c@MaxMatrixCols=\count305
+\c@MaxMatrixCols=\count309
 \dotsspace@=\muskip17
-\c@parentequation=\count306
-\dspbrk@lvl=\count307
+\c@parentequation=\count310
+\dspbrk@lvl=\count311
 \tag@help=\toks25
-\row@=\count308
-\column@=\count309
-\maxfields@=\count310
+\row@=\count312
+\column@=\count313
+\maxfields@=\count314
 \andhelp@=\toks26
-\eqnshift@=\dimen177
-\alignsep@=\dimen178
-\tagshift@=\dimen179
-\tagwidth@=\dimen180
-\totwidth@=\dimen181
-\lineht@=\dimen182
+\eqnshift@=\dimen187
+\alignsep@=\dimen188
+\tagshift@=\dimen189
+\tagwidth@=\dimen190
+\totwidth@=\dimen191
+\lineht@=\dimen192
 \@envbody=\toks27
 \multlinegap=\skip66
 \multlinetaggap=\skip67
@@ -528,27 +553,27 @@ Package: latexsym 1998/08/17 v2.2e Standard LaTeX package (lasy symbols)
 LaTeX Font Info:    Overwriting symbol font `lasy' in version `bold'
 (Font)                  U/lasy/m/n --> U/lasy/b/n on input line 52.
 ) (D:\Tool\MikTex\New folder\tex/latex/commath\commath.sty)
-LaTeX Font Info:    Redeclaring math alphabet \mathcal on input line 60.
-\c@theorem=\count311
-\c@property=\count312
-\c@proposition=\count313
+LaTeX Font Info:    Redeclaring math alphabet \mathcal on input line 63.
+\c@theorem=\count315
+\c@property=\count316
+\c@proposition=\count317
  (D:\Tool\MikTex\New folder\tex/latex/tools\array.sty
 Package: array 2025/09/25 v2.6n Tabular extension package (FMi)
-\col@sep=\dimen183
+\col@sep=\dimen193
 \ar@mcellbox=\box57
-\extrarowheight=\dimen184
+\extrarowheight=\dimen194
 \NC@list=\toks35
 \extratabsurround=\skip71
 \backup@length=\skip72
 \ar@cellbox=\box58
 ) (D:\Tool\MikTex\New folder\tex/latex/tools\tabularx.sty
 Package: tabularx 2023/12/11 v2.12a `tabularx' package (DPC)
-\TX@col@width=\dimen185
-\TX@old@table=\dimen186
-\TX@old@col=\dimen187
-\TX@target=\dimen188
-\TX@delta=\dimen189
-\TX@cols=\count314
+\TX@col@width=\dimen195
+\TX@old@table=\dimen196
+\TX@old@col=\dimen197
+\TX@target=\dimen198
+\TX@delta=\dimen199
+\TX@cols=\count318
 \TX@ftn=\toks36
 ) (D:\Tool\MikTex\New folder\tex/latex/tools\longtable.sty
 Package: longtable 2025-10-13 v4.24 Multi-page Table package (DPC)
@@ -556,44 +581,44 @@ Package: longtable 2025-10-13 v4.24 Multi-page Table package (DPC)
 \LTright=\skip74
 \LTpre=\skip75
 \LTpost=\skip76
-\LTchunksize=\count315
-\LTcapwidth=\dimen190
+\LTchunksize=\count319
+\LTcapwidth=\dimen256
 \LT@head=\box59
 \LT@firsthead=\box60
 \LT@foot=\box61
 \LT@lastfoot=\box62
 \LT@gbox=\box63
-\LT@cols=\count316
-\LT@rows=\count317
-\c@LT@tables=\count318
-\c@LT@chunks=\count319
+\LT@cols=\count320
+\LT@rows=\count321
+\c@LT@tables=\count322
+\c@LT@chunks=\count323
 \LT@p@ftn=\toks37
 ) (D:\Tool\MikTex\New folder\tex/latex/multirow\multirow.sty
 Package: multirow 2024/11/12 v2.9 Span multiple rows of a table
 \multirow@colwidth=\skip77
-\multirow@cntb=\count320
+\multirow@cntb=\count324
 \multirow@dima=\skip78
-\bigstrutjot=\dimen191
+\bigstrutjot=\dimen257
 ) (D:\Tool\MikTex\New folder\tex/latex/tools\multicol.sty
 Package: multicol 2025/10/21 v2.0b multicolumn formatting (FMi)
-\c@tracingmulticols=\count321
+\c@tracingmulticols=\count325
 \mult@box=\box64
-\multicol@leftmargin=\dimen192
-\c@unbalance=\count322
-\c@collectmore=\count323
-\doublecol@number=\count324
-\multicoltolerance=\count325
-\multicolpretolerance=\count326
-\full@width=\dimen193
-\page@free=\dimen194
-\premulticols=\dimen195
-\postmulticols=\dimen196
+\multicol@leftmargin=\dimen258
+\c@unbalance=\count326
+\c@collectmore=\count327
+\doublecol@number=\count328
+\multicoltolerance=\count329
+\multicolpretolerance=\count330
+\full@width=\dimen259
+\page@free=\dimen260
+\premulticols=\dimen261
+\postmulticols=\dimen262
 \multicolsep=\skip79
 \multicolbaselineskip=\skip80
 \partial@page=\box65
 \last@line=\box66
 \mc@boxedresult=\box67
-\maxbalancingoverflow=\dimen197
+\maxbalancingoverflow=\dimen263
 \mult@rightbox=\box68
 \mult@grightbox=\box69
 \mult@firstbox=\box70
@@ -634,37 +659,37 @@ Package: multicol 2025/10/21 v2.0b multicolumn formatting (FMi)
 \@tempa=\box105
 \@tempa=\box106
 \@tempa=\box107
-\c@minrows=\count327
-\c@columnbadness=\count328
-\c@finalcolumnbadness=\count329
-\last@try=\dimen198
-\multicolovershoot=\dimen199
-\multicolundershoot=\dimen256
+\c@minrows=\count331
+\c@columnbadness=\count332
+\c@finalcolumnbadness=\count333
+\last@try=\dimen264
+\multicolovershoot=\dimen265
+\multicolundershoot=\dimen266
 \mult@nat@firstbox=\box108
 \colbreak@box=\box109
-\mc@col@check@num=\count330
-\g__mc_curr_col_int=\count331
+\mc@col@check@num=\count334
+\g__mc_curr_col_int=\count335
 ) (D:\Tool\MikTex\New folder\tex/latex/tools\hhline.sty
 Package: hhline 2020/01/04 v2.04 Table rule package (DPC)
 ) (D:\Tool\MikTex\New folder\tex/latex/booktabs\booktabs.sty
 Package: booktabs 2020/01/12 v1.61803398 Publication quality tables
-\heavyrulewidth=\dimen257
-\lightrulewidth=\dimen258
-\cmidrulewidth=\dimen259
-\belowrulesep=\dimen260
-\belowbottomsep=\dimen261
-\aboverulesep=\dimen262
-\abovetopsep=\dimen263
-\cmidrulesep=\dimen264
-\cmidrulekern=\dimen265
-\defaultaddspace=\dimen266
-\@cmidla=\count332
-\@cmidlb=\count333
-\@aboverulesep=\dimen267
-\@belowrulesep=\dimen268
-\@thisruleclass=\count334
-\@lastruleclass=\count335
-\@thisrulewidth=\dimen269
+\heavyrulewidth=\dimen267
+\lightrulewidth=\dimen268
+\cmidrulewidth=\dimen269
+\belowrulesep=\dimen270
+\belowbottomsep=\dimen271
+\aboverulesep=\dimen272
+\abovetopsep=\dimen273
+\cmidrulesep=\dimen274
+\cmidrulekern=\dimen275
+\defaultaddspace=\dimen276
+\@cmidla=\count336
+\@cmidlb=\count337
+\@aboverulesep=\dimen277
+\@belowrulesep=\dimen278
+\@thisruleclass=\count338
+\@lastruleclass=\count339
+\@thisrulewidth=\dimen279
 ) (D:\Tool\MikTex\New folder\tex/latex/diagbox\diagbox.sty
 Package: diagbox 2020/02/09 v2.3 Making table heads with diagonal lines
  (D:\Tool\MikTex\New folder\tex/latex/pict2e\pict2e.sty
@@ -678,78 +703,47 @@ Package pict2e Info: Driver file for pict2e: p2e-pdftex.def on input line 114.
 File: p2e-pdftex.def 2016/02/05 v0.1u Driver-dependant file (RN,HjG,JT)
 )
 \pIIe@GRAPH=\toks38
-\@arclen=\dimen270
-\@arcrad=\dimen271
-\pIIe@tempdima=\dimen272
-\pIIe@tempdimb=\dimen273
-\pIIe@tempdimc=\dimen274
-\pIIe@tempdimd=\dimen275
-\pIIe@tempdime=\dimen276
-\pIIe@tempdimf=\dimen277
+\@arclen=\dimen280
+\@arcrad=\dimen281
+\pIIe@tempdima=\dimen282
+\pIIe@tempdimb=\dimen283
+\pIIe@tempdimc=\dimen284
+\pIIe@tempdimd=\dimen285
+\pIIe@tempdime=\dimen286
+\pIIe@tempdimf=\dimen287
 ) (D:\Tool\MikTex\New folder\tex/latex/tools\calc.sty
 Package: calc 2025/03/01 v4.3b Infix arithmetic (KKT,FJ)
-\calc@Acount=\count336
-\calc@Bcount=\count337
-\calc@Adimen=\dimen278
-\calc@Bdimen=\dimen279
+\calc@Acount=\count340
+\calc@Bcount=\count341
+\calc@Adimen=\dimen288
+\calc@Bdimen=\dimen289
 \calc@Askip=\skip81
 \calc@Bskip=\skip82
 LaTeX Info: Redefining \setlength on input line 86.
 LaTeX Info: Redefining \addtolength on input line 87.
-\calc@Ccount=\count338
+\calc@Ccount=\count342
 \calc@Cskip=\skip83
 )
 \diagbox@boxa=\box110
 \diagbox@boxb=\box111
 \diagbox@boxm=\box112
-\diagbox@wd=\dimen280
-\diagbox@ht=\dimen281
-\diagbox@insepl=\dimen282
-\diagbox@insepr=\dimen283
-\diagbox@outsepl=\dimen284
-\diagbox@outsepr=\dimen285
+\diagbox@wd=\dimen290
+\diagbox@ht=\dimen291
+\diagbox@insepl=\dimen292
+\diagbox@insepr=\dimen293
+\diagbox@outsepl=\dimen294
+\diagbox@outsepr=\dimen295
 ) (D:\Tool\MikTex\New folder\tex/latex/graphics\epsfig.sty
 Package: epsfig 2024/01/14 v1.7b (e)psfig emulation (SPQR)
-\epsfxsize=\dimen286
-\epsfysize=\dimen287
+\epsfxsize=\dimen296
+\epsfysize=\dimen297
 ) (D:\Tool\MikTex\New folder\tex/latex/float\float.sty
 Package: float 2001/11/08 v1.3d Float enhancements (AL)
-\c@float@type=\count339
+\c@float@type=\count343
 \float@exts=\toks39
 \float@box=\box113
 \@float@everytoks=\toks40
 \@floatcapt=\box114
-) (D:\Tool\MikTex\New folder\tex/latex/caption\subcaption.sty
-Package: subcaption 2023/07/28 v1.6b Sub-captions (AR)
- (D:\Tool\MikTex\New folder\tex/latex/caption\caption.sty
-Package: caption 2023/08/05 v3.6o Customizing captions (AR)
- (D:\Tool\MikTex\New folder\tex/latex/caption\caption3.sty
-Package: caption3 2023/07/31 v2.4d caption3 kernel (AR)
-\caption@tempdima=\dimen288
-\captionmargin=\dimen289
-\caption@leftmargin=\dimen290
-\caption@rightmargin=\dimen291
-\caption@width=\dimen292
-\caption@indent=\dimen293
-\caption@parindent=\dimen294
-\caption@hangindent=\dimen295
-Package caption Info: Standard document class detected.
-)
-\c@caption@flags=\count340
-\c@continuedfloat=\count341
-Package caption Info: float package is loaded.
-Package caption Info: longtable package is loaded.
- (D:\Tool\MikTex\New folder\tex/latex/caption\ltcaption.sty
-Package: ltcaption 2021/01/08 v1.4c longtable captions (AR)
-)
-Package caption Info: scrextend package is loaded.
-\caption@addmargin@hsize=\dimen296
-\caption@addmargin@linewidth=\dimen297
-)
-Package caption Info: New subtype `subfigure' on input line 238.
-\c@subfigure=\count342
-Package caption Info: New subtype `subtable' on input line 238.
-\c@subtable=\count343
 ) (D:\Tool\MikTex\New folder\tex/latex/graphics\rotating.sty
 Package: rotating 2025/01/14 v2.16e rotated objects in LaTeX
 \c@r@tfl@t=\count344
@@ -1454,7 +1448,7 @@ Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 28
 )
 \Hy@SectionHShift=\skip163
 )
-Package hyperref Info: Option `colorlinks' set `true' on input line 147.
+Package hyperref Info: Option `colorlinks' set `true' on input line 150.
  (D:\Tool\MikTex\New folder\tex/latex/fancyhdr\fancyhdr.sty
 Package: fancyhdr 2025/02/07 v5.2 Extensive control of page headers and footers
 \f@nch@headwidth=\skip164
@@ -1495,7 +1489,7 @@ Package: titlesec 2025/01/04 v2.17 Sectioning titles
 \c@subsubsubsection=\count527
 
 
-Package csquotes Warning: Load 'inputenc' before 'csquotes' on input line 220.
+Package csquotes Warning: Load 'inputenc' before 'csquotes' on input line 223.
 
 Package csquotes Info: Checking for multilingual support...
 Package csquotes Info: ... found 'babel' package.
@@ -1504,30 +1498,30 @@ Package csquotes Info: Redefining alias 'default' -> 'english'.
 (main.aux (tom_tat/main.aux) (tom_tat/danh_muc_ky_hieu.aux) (1_gioi_thieu/main.aux) (2_co_so_ly_thuyet/main.aux) (3_phan_tich_va_kien_truc/main.aux) (4_thiet_ke_accelerator/main.aux) (5_hien_thuc_soc/main.aux) (6_danh_gia_hieu_nang/main.aux) (7_ke_hoach_phat_trien/main.aux) (appendix/main.aux))
 \openout1 = `main.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 220.
-LaTeX Font Info:    ... okay on input line 220.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 220.
-LaTeX Font Info:    ... okay on input line 220.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 220.
-LaTeX Font Info:    ... okay on input line 220.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 220.
-LaTeX Font Info:    ... okay on input line 220.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 220.
-LaTeX Font Info:    ... okay on input line 220.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 220.
-LaTeX Font Info:    ... okay on input line 220.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 220.
-LaTeX Font Info:    ... okay on input line 220.
-LaTeX Font Info:    Checking defaults for T5/cmr/m/n on input line 220.
-LaTeX Font Info:    Trying to load font information for T5+cmr on input line 220.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 223.
+LaTeX Font Info:    ... okay on input line 223.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 223.
+LaTeX Font Info:    ... okay on input line 223.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 223.
+LaTeX Font Info:    ... okay on input line 223.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 223.
+LaTeX Font Info:    ... okay on input line 223.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 223.
+LaTeX Font Info:    ... okay on input line 223.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 223.
+LaTeX Font Info:    ... okay on input line 223.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 223.
+LaTeX Font Info:    ... okay on input line 223.
+LaTeX Font Info:    Checking defaults for T5/cmr/m/n on input line 223.
+LaTeX Font Info:    Trying to load font information for T5+cmr on input line 223.
  (D:\Tool\MikTex\New folder\tex/latex/vntex\t5cmr.fd
 File: t5cmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 )
-LaTeX Font Info:    ... okay on input line 220.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 220.
-LaTeX Font Info:    ... okay on input line 220.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 220.
-LaTeX Font Info:    ... okay on input line 220.
+LaTeX Font Info:    ... okay on input line 223.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 223.
+LaTeX Font Info:    ... okay on input line 223.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 223.
+LaTeX Font Info:    ... okay on input line 223.
  (D:\Tool\MikTex\New folder\tex/context/base/mkii\supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
 \scratchcounter=\count528
@@ -1547,6 +1541,17 @@ Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 48
  (D:\Tool\MikTex\New folder\tex/latex/00miktex\epstopdf-sys.cfg
 File: epstopdf-sys.cfg 2021/03/18 v2.0 Configuration of epstopdf for MiKTeX
 ))
+Package caption Info: Begin \AtBeginDocument code.
+Package caption Info: float package is loaded.
+Package caption Info: hyperref package is loaded.
+Package caption Info: listings package is loaded.
+Package caption Info: longtable package is loaded.
+ (D:\Tool\MikTex\New folder\tex/latex/caption\ltcaption.sty
+Package: ltcaption 2021/01/08 v1.4c longtable captions (AR)
+)
+Package caption Info: rotating package is loaded.
+Package caption Info: End \AtBeginDocument code.
+
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
 *geometry* verbose mode - [ preamble ] result:
@@ -1581,11 +1586,6 @@ File: epstopdf-sys.cfg 2021/03/18 v2.0 Configuration of epstopdf for MiKTeX
 * \@reversemarginfalse
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
-Package caption Info: Begin \AtBeginDocument code.
-Package caption Info: hyperref package is loaded.
-Package caption Info: listings package is loaded.
-Package caption Info: rotating package is loaded.
-Package caption Info: End \AtBeginDocument code.
 (D:\Tool\MikTex\New folder\tex/latex/pdflscape\pdflscape.sty
 Package: pdflscape 2022-10-27 v0.13 Display of landscape pages in PDF
  (D:\Tool\MikTex\New folder\tex/latex/pdflscape\pdflscape-nometadata.sty
@@ -1609,76 +1609,76 @@ Package biblatex Info: Automatic encoding selection.
 Package biblatex Info: Trying to load bibliographic data...
 Package biblatex Info: ... file 'main.bbl' found.
  (main.bbl)
-Package biblatex Info: Reference section=0 on input line 220.
-Package biblatex Info: Reference segment=0 on input line 220.
-Package hyperref Info: Link coloring ON on input line 220.
+Package biblatex Info: Reference section=0 on input line 223.
+Package biblatex Info: Reference segment=0 on input line 223.
+Package hyperref Info: Link coloring ON on input line 223.
  (main.out) (main.out)
 \@outlinefile=\write5
 \openout5 = `main.out'.
 
-<image/hcmut.png, id=210, 845.0772pt x 597.6729pt>
+<image/hcmut.png, id=222, 845.0772pt x 597.6729pt>
 File: image/hcmut.png Graphic file (type png)
 <use image/hcmut.png>
-Package pdftex.def Info: image/hcmut.png  used on input line 239.
+Package pdftex.def Info: image/hcmut.png  used on input line 242.
 (pdftex.def)             Requested size: 99.58464pt x 70.42264pt.
-LaTeX Font Info:    Calculating math sizes for size <15.59996> on input line 258.
-LaTeX Font Info:    Trying to load font information for OT1+lmr on input line 258.
+LaTeX Font Info:    Calculating math sizes for size <15.59996> on input line 261.
+LaTeX Font Info:    Trying to load font information for OT1+lmr on input line 261.
  (D:\Tool\MikTex\New folder\tex/latex/lm\ot1lmr.fd
 File: ot1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
-LaTeX Font Info:    Trying to load font information for OML+lmm on input line 258.
+LaTeX Font Info:    Trying to load font information for OML+lmm on input line 261.
  (D:\Tool\MikTex\New folder\tex/latex/lm\omllmm.fd
 File: omllmm.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
-LaTeX Font Info:    Trying to load font information for OMS+lmsy on input line 258.
+LaTeX Font Info:    Trying to load font information for OMS+lmsy on input line 261.
  (D:\Tool\MikTex\New folder\tex/latex/lm\omslmsy.fd
 File: omslmsy.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
-LaTeX Font Info:    Trying to load font information for OMX+lmex on input line 258.
+LaTeX Font Info:    Trying to load font information for OMX+lmex on input line 261.
  (D:\Tool\MikTex\New folder\tex/latex/lm\omxlmex.fd
 File: omxlmex.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <15.59996> on input line 258.
+(Font)              <15.59996> on input line 261.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <11.54405> on input line 258.
+(Font)              <11.54405> on input line 261.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <9.36006> on input line 258.
-LaTeX Font Info:    Trying to load font information for OT1+ptm on input line 258.
+(Font)              <9.36006> on input line 261.
+LaTeX Font Info:    Trying to load font information for OT1+ptm on input line 261.
  (D:\Tool\MikTex\New folder\tex/latex/psnfss\ot1ptm.fd
 File: ot1ptm.fd 2001/06/04 font definitions for OT1/ptm.
 )
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <15.59996> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 258.
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 261.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <11.54405> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 258.
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 261.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <9.36006> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 258.
-LaTeX Font Info:    Trying to load font information for U+lasy on input line 258.
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 261.
+LaTeX Font Info:    Trying to load font information for U+lasy on input line 261.
  (D:\Tool\MikTex\New folder\tex/latex/base\ulasy.fd
 File: ulasy.fd 1998/08/17 v2.2e LaTeX symbol font definitions
 )
 
 LaTeX Font Warning: Font shape `U/lasy/m/n' in size <15.59996> not available
-(Font)              size <14.4> substituted on input line 258.
+(Font)              size <14.4> substituted on input line 261.
 
 
 LaTeX Font Warning: Font shape `U/lasy/m/n' in size <11.54405> not available
-(Font)              size <12> substituted on input line 258.
+(Font)              size <12> substituted on input line 261.
 
-LaTeX Font Info:    Calculating math sizes for size <11.86258> on input line 271.
+LaTeX Font Info:    Calculating math sizes for size <11.86258> on input line 274.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <11.86258> on input line 271.
+(Font)              <11.86258> on input line 274.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <8.77837> on input line 271.
+(Font)              <8.77837> on input line 274.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <7.11761> on input line 271.
+(Font)              <7.11761> on input line 274.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <11.86258> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 271.
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 274.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <8.77837> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 271.
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 274.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <7.11761> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 271.
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 274.
 [1
 
 {C:/Users/langc/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}{D:/Tool/MikTex/New folder/fonts/enc/dvips/lm/lm-t5.enc} <./image/hcmut.png>]
@@ -1709,7 +1709,12 @@ LaTeX Font Warning: Font shape `U/lasy/m/n' in size <13> not available
 
 
 
-] [2])
+]
+Overfull \hbox (3.96545pt too wide) in paragraph at lines 30--30
+ [][] [][][]\T5/lmr/m/n/13 Ph÷ìng ph¡p Ph¥n m£nh khæng gian dú li»u (Space 
+ []
+
+[2])
 \tf@toc=\write6
 \openout6 = `main.toc'.
 
@@ -1717,7 +1722,7 @@ LaTeX Font Warning: Font shape `U/lasy/m/n' in size <13> not available
 \tf@lof=\write7
 \openout7 = `main.lof'.
 
- [4] (main.lot)
+ [4{D:/Tool/MikTex/New folder/fonts/enc/dvips/lm/lm-mathit.enc}{D:/Tool/MikTex/New folder/fonts/enc/dvips/lm/lm-rm.enc}{D:/Tool/MikTex/New folder/fonts/enc/dvips/lm/lm-mathsy.enc}] (main.lot)
 \tf@lot=\write8
 \openout8 = `main.lot'.
 
@@ -1742,7 +1747,7 @@ Overfull \hbox (52.45273pt too wide) in alignment at lines 8--47
 tom_tat/danh_muc_ky_hieu.tex:47: ignored error: Infinite glue shrinkage found in box being split [6
 
 
-{D:/Tool/MikTex/New folder/fonts/enc/dvips/lm/lm-mathit.enc}]) [7]
+]) [7]
 
 Package geometry Warning: `a4paper': not available in `\newgeometry'; skipped.
 
@@ -1786,7 +1791,7 @@ Chapter 1.
 pdfTeX warning (ext4): destination with the same identifier (name{page.1}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.327 \include{1_gioi_thieu/main}
+l.330 \include{1_gioi_thieu/main}
                                   [1
 
 
@@ -1835,17 +1840,48 @@ File: ts1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 LaTeX Font Info:    Trying to load font information for T5+lmtt on input line 55.
  (D:\Tool\MikTex\New folder\tex/latex/lm\t5lmtt.fd
 File: t5lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
-) [5{D:/Tool/MikTex/New folder/fonts/enc/dvips/lm/lm-rm.enc}{D:/Tool/MikTex/New folder/fonts/enc/dvips/lm/lm-mathsy.enc}{D:/Tool/MikTex/New folder/fonts/enc/dvips/lm/lm-mathex.enc}{D:/Tool/MikTex/New folder/fonts/enc/dvips/lm/lm-ts1.enc}] [6] [7] [8] [9]) (4_thiet_ke_accelerator/4.2_chien_luoc_dataflow.tex [10] [11] [12] [13])
+) [5{D:/Tool/MikTex/New folder/fonts/enc/dvips/lm/lm-mathex.enc}{D:/Tool/MikTex/New folder/fonts/enc/dvips/lm/lm-ts1.enc}] [6] [7] [8] [9]) (4_thiet_ke_accelerator/4.2_chien_luoc_dataflow.tex [10] [11] [12]
+<image/4/std_conv_pass.png, id=418, 696.80325pt x 125.268pt>
+File: image/4/std_conv_pass.png Graphic file (type png)
+<use image/4/std_conv_pass.png>
+Package pdftex.def Info: image/4/std_conv_pass.png  used on input line 95.
+(pdftex.def)             Requested size: 330.05322pt x 59.33661pt.
+<image/4/dw_conv_pass.png, id=419, 690.78075pt x 69.25874pt>
+File: image/4/dw_conv_pass.png Graphic file (type png)
+<use image/4/dw_conv_pass.png>
+Package pdftex.def Info: image/4/dw_conv_pass.png  used on input line 106.
+(pdftex.def)             Requested size: 330.05322pt x 33.09268pt.
+ [13] [14 <./image/4/std_conv_pass.png> <./image/4/dw_conv_pass.png>]
+<image/4/du_lieu_doi_ra.png, id=433, 540.21825pt x 451.6875pt>
+File: image/4/du_lieu_doi_ra.png Graphic file (type png)
+<use image/4/du_lieu_doi_ra.png>
+Package pdftex.def Info: image/4/du_lieu_doi_ra.png  used on input line 128.
+(pdftex.def)             Requested size: 330.05322pt x 275.97696pt.
+ [15 <./image/4/du_lieu_doi_ra.png>] [16] [17]
+Overfull \vbox (189.01392pt too high) has occurred while \output is active []
+
+ [18]
+<image/4/buffer_hinh_a.png, id=455, 461.3235pt x 320.99925pt>
+File: image/4/buffer_hinh_a.png Graphic file (type png)
+<use image/4/buffer_hinh_a.png>
+Package pdftex.def Info: image/4/buffer_hinh_a.png  used on input line 217.
+(pdftex.def)             Requested size: 330.05322pt x 229.65965pt.
+<image/4/buffer_hinh_b.png, id=456, 458.9145pt x 310.761pt>
+File: image/4/buffer_hinh_b.png Graphic file (type png)
+<use image/4/buffer_hinh_b.png>
+Package pdftex.def Info: image/4/buffer_hinh_b.png  used on input line 228.
+(pdftex.def)             Requested size: 330.05322pt x 223.50117pt.
+) [19]
 Overfull \hbox (42.93755pt too wide) in paragraph at lines 12--12
 |[]\T5/lmr/bx/n/18.72003 Thi¸t k¸ ki¸n tróc vi mæ (Micro-architecture)| 
  []
 
-(4_thiet_ke_accelerator/4.3_kien_truc_vi_mo.tex [14] [15])) [16]
+(4_thiet_ke_accelerator/4.3_kien_truc_vi_mo.tex [20 <./image/4/buffer_hinh_a.png> <./image/4/buffer_hinh_b.png>] [21])) [22]
 \openout2 = `5_hien_thuc_soc/main.aux'.
 
  (5_hien_thuc_soc/main.tex
 Chapter 5.
-(5_hien_thuc_soc/5.1_moi_truong_hien_thuc.tex) (5_hien_thuc_soc/5.2_he_thong_xu_ly.tex) (5_hien_thuc_soc/5.3_he_thong_ket_noi.tex) (5_hien_thuc_soc/5.4_tich_hop_kiem_thu.tex)) [17
+(5_hien_thuc_soc/5.1_moi_truong_hien_thuc.tex) (5_hien_thuc_soc/5.2_he_thong_xu_ly.tex) (5_hien_thuc_soc/5.3_he_thong_ket_noi.tex) (5_hien_thuc_soc/5.4_tich_hop_kiem_thu.tex)) [23
 
 
 
@@ -1865,7 +1901,7 @@ Overfull \hbox (5.425pt too wide) in paragraph at lines 6--6
 |[]\T5/lmr/bx/n/18.72003 Ph÷ìng ph¡p ^^_¡nh gi¡: Mæ h¼nh Roofline| 
  []
 
-(6_danh_gia_hieu_nang/6.1_phuong_phap_danh_gia.tex) (6_danh_gia_hieu_nang/6.2_uoc_luong_hieu_nang.tex) (6_danh_gia_hieu_nang/6.3_so_sanh_nghien_cuu.tex)) [18
+(6_danh_gia_hieu_nang/6.1_phuong_phap_danh_gia.tex) (6_danh_gia_hieu_nang/6.2_uoc_luong_hieu_nang.tex) (6_danh_gia_hieu_nang/6.3_so_sanh_nghien_cuu.tex)) [24
 
 
 
@@ -1875,14 +1911,14 @@ Overfull \hbox (5.425pt too wide) in paragraph at lines 6--6
 
  (7_ke_hoach_phat_trien/main.tex
 Chapter 7.
-(7_ke_hoach_phat_trien/7.1_danh_gia_giai_doan_1.tex) (7_ke_hoach_phat_trien/7.2_ke_hoach_giai_doan_2.tex) (7_ke_hoach_phat_trien/7.3_tien_do_du_kien.tex)) [19
+(7_ke_hoach_phat_trien/7.1_danh_gia_giai_doan_1.tex) (7_ke_hoach_phat_trien/7.2_ke_hoach_giai_doan_2.tex) (7_ke_hoach_phat_trien/7.3_tien_do_du_kien.tex)) [25
 
 
 
 
 ]
 
-LaTeX Warning: Empty bibliography on input line 350.
+LaTeX Warning: Empty bibliography on input line 353.
 
 \openout2 = `appendix/main.aux'.
 
@@ -1899,32 +1935,24 @@ L3 programming layer <2025-11-06>
 LaTeX Font Warning: Size substitutions with differences
 (Font)              up to 1.19997pt have occurred.
 
-
-LaTeX Warning: There were undefined references.
-
 Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: 1AABA8D4B77C0922EA942C64B52B3FD3;13182.
-
-Package biblatex Warning: Please (re)run Biber on the file:
-(biblatex)                main
-(biblatex)                and rerun LaTeX afterwards.
-
+(rerunfilecheck)             Checksum: 2BA509A597606581D321FCE38189CF96;14454.
 Package logreq Info: Writing requests to 'main.run.xml'.
 \openout1 = `main.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 41397 strings out of 467871
- 786929 string characters out of 5427480
- 1663507 words of memory out of 5000000
- 69293 multiletter control sequences out of 15000+600000
- 762021 words of font info for 130 fonts, out of 8000000 for 9000
+ 41480 strings out of 467871
+ 788898 string characters out of 5427480
+ 1666312 words of memory out of 5000000
+ 69356 multiletter control sequences out of 15000+600000
+ 751512 words of font info for 128 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 108i,29n,131p,1252b,2295s stack positions out of 10000i,1000n,20000p,200000b,200000s
-<D:/Tool/MikTex/New folder/fonts/type1/public/lm/lmbx12.pfb><D:/Tool/MikTex/New folder/fonts/type1/public/lm/lmbxi10.pfb><D:/Tool/MikTex/New folder/fonts/type1/public/lm/lmex10.pfb><D:/Tool/MikTex/New folder/fonts/type1/public/lm/lmmi10.pfb><D:/Tool/MikTex/New folder/fonts/type1/public/lm/lmmi12.pfb><D:/Tool/MikTex/New folder/fonts/type1/public/lm/lmr10.pfb><D:/Tool/MikTex/New folder/fonts/type1/public/lm/lmr12.pfb><D:/Tool/MikTex/New folder/fonts/type1/public/lm/lmr17.pfb><D:/Tool/MikTex/New folder/fonts/type1/public/lm/lmri12.pfb><D:/Tool/MikTex/New folder/fonts/type1/public/lm/lmsy10.pfb><D:/Tool/MikTex/New folder/fonts/type1/public/lm/lmtt12.pfb>
-Output written on main.pdf (27 pages, 379216 bytes).
+ 108i,29n,117p,1252b,2295s stack positions out of 10000i,1000n,20000p,200000b,200000s
+<D:/Tool/MikTex/New folder/fonts/type1/public/lm/lmbx12.pfb><D:/Tool/MikTex/New folder/fonts/type1/public/lm/lmbxi10.pfb><D:/Tool/MikTex/New folder/fonts/type1/public/lm/lmex10.pfb><D:/Tool/MikTex/New folder/fonts/type1/public/lm/lmmi10.pfb><D:/Tool/MikTex/New folder/fonts/type1/public/lm/lmmi12.pfb><D:/Tool/MikTex/New folder/fonts/type1/public/lm/lmmi9.pfb><D:/Tool/MikTex/New folder/fonts/type1/public/lm/lmr10.pfb><D:/Tool/MikTex/New folder/fonts/type1/public/lm/lmr12.pfb><D:/Tool/MikTex/New folder/fonts/type1/public/lm/lmr17.pfb><D:/Tool/MikTex/New folder/fonts/type1/public/lm/lmr9.pfb><D:/Tool/MikTex/New folder/fonts/type1/public/lm/lmri12.pfb><D:/Tool/MikTex/New folder/fonts/type1/public/lm/lmsy10.pfb><D:/Tool/MikTex/New folder/fonts/type1/public/lm/lmtt12.pfb>
+Output written on main.pdf (33 pages, 561713 bytes).
 PDF statistics:
- 488 PDF objects out of 1000 (max. 8388607)
- 96 named destinations out of 1000 (max. 500000)
- 426 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 584 PDF objects out of 1000 (max. 8388607)
+ 119 named destinations out of 1000 (max. 500000)
+ 475 words of extra memory for PDF output out of 10000 (max. 10000000)
 
