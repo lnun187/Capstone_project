@@ -1,21 +1,114 @@
-\subsection{Kiến trúc Mảng tính toán (PE Array Architecture)}
+Dựa trên chiến lược dòng dữ liệu đã phân tích, nhóm đề xuất kiến trúc phần cứng chuyên dụng mang tên \textbf{Beta Accelerator}. Kiến trúc này được thiết kế để tối ưu hóa khả năng tính toán song song ở mức bộ lọc (Filter parallelism) và mức kênh (Channel parallelism), đồng thời hỗ trợ cơ chế quản lý bộ nhớ Ping-Pong để che giấu độ trễ truy cập.
 
-\subsubsection{Cấu hình PE cho Tích chập Không gian (Spatial Convolution)}
-Mảng tính toán được tổ chức để ánh xạ trực tiếp chiều cao $R$ của bộ lọc lên phần cứng. Hệ thống sử dụng một nhóm gồm $R$ phần tử xử lý (PE) hoạt động phối hợp (Cooperative PEs) để tính toán cho một hàng đầu ra (Output Row).
+\subsection{Sơ đồ khối tổng quát hệ thống}
+Sơ đồ tổng thể của Beta Accelerator được trình bày trong Hình \ref{fig:system_arch}. Hệ thống bao gồm các khối chức năng chính sau:
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\linewidth]{image/4/system_arch.png} % Thay tên file ảnh tổng quan hệ thống của bạn
+    \caption{Sơ đồ khối tổng quát kiến trúc Beta Accelerator}
+    \label{fig:system_arch}
+\end{figure}
 
 \begin{itemize}
-    \item \textbf{Phân bố dữ liệu:} Mỗi PE trong nhóm $R$ này chịu trách nhiệm lưu trữ và tính toán cho một hàng trọng số (Weight Row) của bộ lọc kích thước $R \times S$.
-    \item \textbf{Cơ chế trượt (Sliding Mechanism):} Các PE cùng trượt trên các hàng dữ liệu đầu vào tương ứng. Kết quả từ $R$ PE này được cộng dồn (Reduction) để tạo ra một điểm pixel đầu ra hoàn chỉnh.
-    \item \textbf{Tổng số PE:} Để hỗ trợ tính toán song song cho $T_c$ kênh đầu vào và $T_m$ kênh đầu ra, tổng số PE của hệ thống là:
-    \begin{equation}
-        N_{PE} = R \times T_c \times T_m
-    \end{equation}
+    \item \textbf{Khối Control Data (Controller):} Đóng vai trò bộ điều khiển trung tâm và quản lý giao tiếp với bộ nhớ ngoài. Do hệ thống chỉ sử dụng một bus dữ liệu chung (shared data bus) cho cả luồng vào và luồng ra, khối này chịu trách nhiệm điều phối (arbitration) tài nguyên bus, quyết định thời điểm thực hiện nạp dữ liệu đầu vào (Load IFM) hoặc ghi kết quả đầu ra (Store OFM) để tránh xung đột dữ liệu.
+    
+    \item \textbf{Khối Mapping (Dispatcher):} Chịu trách nhiệm phân phối dữ liệu IFM và trọng số (Weights) từ các bus dữ liệu chính tới các bộ nhớ đệm cục bộ của từng đơn vị tính toán, đảm bảo băng thông và tính đồng bộ.
+    
+    \item \textbf{Hệ thống Bộ đệm (Filter + Ifmap Buffer):} Được tổ chức theo cơ chế \textbf{Ping-Pong Buffer} (Double Buffering) để cho phép nạp dữ liệu cho Pass $k+1$ trong khi Pass $k$ đang được tính toán. 
+    \begin{itemize}
+        \item Mỗi khối buffer lưu trữ một tile IFM kích thước $T_h \times W$ của 1 kênh.
+        \item Đồng thời lưu trữ bộ trọng số kích thước $S \times R \times T_m$ (trong đó $S, R$ là kích thước filter, $T_m$ là số filter tính song song).
+    \end{itemize}
+    
+    \item \textbf{Mảng xử lý (Process Array - PA):} Là trái tim tính toán của hệ thống, bao gồm $T_c$ khối PA hoạt động song song. Mỗi khối PA phụ trách xử lý 1 kênh đầu vào (Input Channel) và $T_m$ bộ lọc tương ứng.
+    
+    \item \textbf{Khối Tổng hợp (Reduction Unit - Mapping + Summary):} Thực hiện chức năng cộng dồn (Reduction) kết quả từ $T_c$ khối PA. Do tích chập là phép tổng trọng số qua các kênh, khối này sẽ cộng giá trị Partial Sum từ các kênh IFM khác nhau để tạo ra $T_m$ giá trị OFM bán hoàn chỉnh.
+    
+    \item \textbf{Khối Tích lũy (Accumulator):} Sử dụng bộ nhớ Ping-Pong để lưu trữ và cộng dồn kết quả qua các Pass (theo chiều sâu kênh $C$). Khi một điểm ảnh OFM đã được tích lũy đủ số kênh cần thiết, nó sẽ được gửi đi thông qua bus dữ liệu chung và vị trí nhớ đó sẽ được reset về 0 để chuẩn bị cho lượt tính mới.
 \end{itemize}
 
-\subsubsection{Hỗ trợ Depthwise Convolution}
-Trong chế độ Depthwise, vì mỗi kênh đầu vào chỉ tương tác với một bộ lọc duy nhất ($T_c$ input channels $\leftrightarrow$ $T_c$ output channels), kiến trúc phần cứng tự động cấu hình lại đường dẫn dữ liệu:
+\subsection{Tổ chức Mảng tính toán (Processing Hierarchy)}
+Kiến trúc tính toán được tổ chức theo mô hình phân cấp gồm 3 tầng: Process Array (PA), Process Unit (PU) và Process Element (PE).
+
+\subsubsection{Mảng xử lý (Process Array - PA)}
+Khối PA (Hình \ref{fig:pa_arch}) được thiết kế để khai thác tính song song mức kênh đầu ra (Output Channel Parallelism).
 \begin{itemize}
-    \item Nhóm $R$ PE vẫn hoạt động như cũ để xử lý không gian.
-    \item Tuy nhiên, $T_c$ nhóm PE (vốn dùng để cộng dồn kênh trong Standard Conv) giờ đây sẽ hoạt động độc lập, mỗi nhóm xử lý một kênh riêng biệt (Channel-Parallelism).
-    \item Điều này đảm bảo không có PE nào bị lãng phí (idle) khi chuyển từ Standard sang Depthwise, giải quyết triệt để vấn đề hiệu suất thấp thường gặp ở các kiến trúc systolic array truyền thống.
+    \item Mỗi PA chịu trách nhiệm tính toán cho 1 kênh đầu vào (Input Channel) duy nhất nhưng tạo ra kết quả cho $T_m$ bộ lọc (Filters) khác nhau.
+    \item \textbf{Luồng dữ liệu:} Trọng số đầu vào (Input Filter Weights) được rẽ nhánh (demultiplex) tới các PU cụ thể (ví dụ: $PU_0$ nhận trọng số của Filter 0). Ngược lại, dữ liệu IFM được quảng bá (broadcast) dùng chung cho tất cả các PU trong cùng một PA, giúp tiết kiệm băng thông đọc IFM.
 \end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\linewidth]{image/4/pa_arch.png} % Thay ảnh PA
+    \caption{Kiến trúc bên trong khối Process Array (PA)}
+    \label{fig:pa_arch}
+\end{figure}
+
+\subsubsection{Đơn vị xử lý (Process Unit - PU)}
+Mỗi PU (Hình \ref{fig:pu_arch}) bao gồm 11 phần tử xử lý (PE) hoạt động song song, tương ứng với khả năng hỗ trợ kích thước bộ lọc tối đa là $11 \times 11$ (chiều cao $R=11$).
+\begin{itemize}
+    \item Mỗi PE trong PU chịu trách nhiệm tính toán tích chập cho \textbf{1 hàng} của bộ lọc (Filter Row).
+    \item Các PE hoạt động đồng bộ. Sau mỗi khoảng thời gian $\Delta T$ chu kỳ, PU sẽ tạo ra một cột kết quả gồm $R$ giá trị tương ứng với $R$ hàng của bộ lọc.
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\linewidth]{image/4/pu_arch.png} % Thay ảnh PU
+    \caption{Kiến trúc khối Process Unit (PU) với các PE hoạt động song song}
+    \label{fig:pu_arch}
+\end{figure}
+
+\subsubsection{Phần tử xử lý (Process Element - PE)}
+PE là đơn vị tính toán cơ sở nhỏ nhất (Hình \ref{fig:pe_arch}), thực hiện phép tính nhân-cộng (MAC).
+\begin{itemize}
+    \item \textbf{Filter Buffer:} Lưu trữ $S$ giá trị trọng số của một hàng filter ($1 \times S$). Buffer này hoạt động theo chế độ Weight Stationary, giữ giá trị không đổi trong suốt quá trình thực hiện 1 Pass.
+    \item \textbf{Sliding Window Register:} Chứa $S$ giá trị IFM ($1 \times S$). Đây là thanh ghi dịch, sau mỗi $\Delta T$ chu kỳ, dữ liệu sẽ dịch đi 1 vị trí (stride = 1) để thực hiện phép trượt cửa sổ.
+    \item Vì mỗi PE chứa 1 bộ nhân và 1 bộ cộng, để tính tích chập 1 hàng kích thước $S$, hệ thống cần $\Delta T = S$ chu kỳ.
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\linewidth]{image/4/pe_arch.png} % Thay ảnh PE
+    \caption{Cấu trúc bên trong một Process Element (PE)}
+    \label{fig:pe_arch}
+\end{figure}
+
+\subsection{Đánh giá thời gian thực thi (Performance Estimation)}
+Thời gian thực thi của hệ thống phụ thuộc vào loại lớp tích chập (Standard hay Depthwise) do sự khác biệt trong chiến lược luồng dữ liệu.
+
+\subsubsection{Thời gian xử lý một Pass cơ sở ($T_{pass}$)}
+Dựa trên kiến trúc Pipeline của các Process Element (PE), thời gian để hoàn thành tính toán cho một tile có chiều cao $T_h$ và độ rộng OFM $W_{out}$ được xác định bởi:
+
+\begin{equation}
+    T_{pass} = \left[ (W_{out} - 1) \times (S + U - 1) + S \right] \times T_h
+    \label{eq:t_pass}
+\end{equation}
+
+Trong đó:
+\begin{itemize}
+    \item $S$: Kích thước bộ lọc (Filter width).
+    \item $U$: Bước trượt (Stride).
+    \item $W_{out}$: Chiều rộng của OFM.
+    \item $(S + U - 1)$: Số chu kỳ trung bình để tính một điểm ảnh tiếp theo nhờ tối ưu hóa Pipeline (khi $U=1$, thời gian này là $S$).
+\end{itemize}
+
+\subsubsection{Tổng thời gian thực thi ($T_{total}$)}
+
+\textbf{Trường hợp 1: Standard Convolution} \\
+Với tích chập tiêu chuẩn, mỗi điểm ảnh đầu ra là tổng hợp của tất cả $C$ kênh đầu vào. Hệ thống phải thực hiện vòng lặp tích lũy qua các khối kênh $T_c$.
+
+\begin{equation}
+    T_{total\_std} = \underbrace{\left\lceil \frac{N_f}{T_m} \right\rceil}_{\text{Output Blocks}} \times \underbrace{\left\lceil \frac{C}{T_c} \right\rceil}_{\text{Input Blocks}} \times \underbrace{\left\lceil \frac{H}{T_h} \right\rceil}_{\text{Height Blocks}} \times T_{pass}
+    \label{eq:total_std}
+\end{equation}
+
+\textbf{Trường hợp 2: Depthwise Convolution} \\
+Với tích chập chiều sâu, các kênh hoạt động độc lập ($N_f = C$). Hệ thống không cần thực hiện vòng lặp tích lũy kênh đầu vào ($\lceil C/T_c \rceil$ bị loại bỏ). Các nhóm kênh được xử lý song song dựa trên khả năng của phần cứng ($T_m$).
+
+\begin{equation}
+    T_{total\_dw} = \underbrace{\left\lceil \frac{N_f}{T_m} \right\rceil}_{\text{Channel Groups}} \times \underbrace{\left\lceil \frac{H}{T_h} \right\rceil}_{\text{Height Blocks}} \times T_{pass}
+    \label{eq:total_dw}
+\end{equation}
+
+\textbf{Nhận xét:} So với Standard Convolution, Depthwise Convolution giảm được hệ số $\lceil C/T_c \rceil$ lần số lượng tính toán, giúp tăng tốc độ xử lý đáng kể đối với các mạng nhẹ (Lightweight CNNs) như MobileNet.

@@ -44,21 +44,39 @@
 \newlabel{fig:residual_data_generation}{{4.2}{15}{Sơ đồ minh họa quá trình tính toán tích chập và sự hình thành dữ liệu dôi ra (Residual Data) trong một pass với tile đầu vào $T_h=4$ và bộ lọc kích thước $3 \times 3$ trong trường hợp số kênh của ifmap feature là 1}{figure.caption.3}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {4.2.5}Cơ chế Ping-Pong Buffer và Logic xử lý hàng hợp lệ}{16}{subsection.4.2.5}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {4.2.6}Thuật toán Điều phối và Xoay vòng bộ nhớ}{17}{subsection.4.2.6}\protected@file@percent }
-\@writefile{loa}{\contentsline {algocf}{\numberline {5}{\ignorespaces Cơ chế Ping-Pong Buffer xử lý Dữ liệu dôi ra}}{18}{algocf.5}\protected@file@percent }
-\newlabel{alg:ping_pong_logic}{{5}{18}{Thuật toán Điều phối và Xoay vòng bộ nhớ}{algocf.5}{}}
-\newlabel{fig:ping_pong_state_k}{{4.3a}{20}{Trạng thái xử lý Tile $H_k$: Valid vào Buffer A, Residual vào Buffer B}{figure.caption.4}{}}
-\newlabel{sub@fig:ping_pong_state_k}{{a}{20}{Trạng thái xử lý Tile $H_k$: Valid vào Buffer A, Residual vào Buffer B}{figure.caption.4}{}}
-\newlabel{fig:ping_pong_state_k_plus_1}{{4.3b}{20}{Trạng thái xử lý Tile $H_{k+1}$: Tích lũy vào Buffer B, Residual mới vào Buffer A}{figure.caption.4}{}}
-\newlabel{sub@fig:ping_pong_state_k_plus_1}{{b}{20}{Trạng thái xử lý Tile $H_{k+1}$: Tích lũy vào Buffer B, Residual mới vào Buffer A}{figure.caption.4}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4.3}{\ignorespaces Minh họa cơ chế Ping-Pong Buffer để xử lý dữ liệu dôi ra giữa hai Tile không gian liên tiếp. (a) Trong Pass xử lý Tile $H_k$, kết quả dôi ra được lưu chờ ở Buffer B. (b) Trong Pass xử lý Tile $H_{k+1}$, dữ liệu dôi ra từ Buffer B được cộng dồn với kết quả mới, đồng thời tạo ra dữ liệu dôi ra mới quay lại Buffer A.}}{20}{figure.caption.4}\protected@file@percent }
-\newlabel{fig:ping_pong_mechanism}{{4.3}{20}{Minh họa cơ chế Ping-Pong Buffer để xử lý dữ liệu dôi ra giữa hai Tile không gian liên tiếp. (a) Trong Pass xử lý Tile $H_k$, kết quả dôi ra được lưu chờ ở Buffer B. (b) Trong Pass xử lý Tile $H_{k+1}$, dữ liệu dôi ra từ Buffer B được cộng dồn với kết quả mới, đồng thời tạo ra dữ liệu dôi ra mới quay lại Buffer A}{figure.caption.4}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {4.3}Thiết kế kiến trúc vi mô (Micro-architecture)}{21}{section.4.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.3.1}Kiến trúc Mảng tính toán (PE Array Architecture)}{21}{subsection.4.3.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.3.1.1}Cấu hình PE cho Tích chập Không gian (Spatial Convolution)}{21}{subsubsection.4.3.1.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.3.1.2}Hỗ trợ Depthwise Convolution}{21}{subsubsection.4.3.1.2}\protected@file@percent }
+\@writefile{loa}{\contentsline {algocf}{\numberline {5}{\ignorespaces Lịch trình Pass cho Standard Conv (Phần 1: Tích lũy)}}{17}{algocf.5}\protected@file@percent }
+\newlabel{alg:pass_std_part1}{{5}{17}{Thuật toán Điều phối và Xoay vòng bộ nhớ}{algocf.5}{}}
+\@writefile{loa}{\contentsline {algocf}{\numberline {6}{\ignorespaces Lịch trình Pass cho Standard Conv (Phần 2: Xử lý biên)}}{17}{algocf.6}\protected@file@percent }
+\newlabel{alg:pass_std_part2}{{6}{17}{Thuật toán Điều phối và Xoay vòng bộ nhớ}{algocf.6}{}}
+\newlabel{fig:ping_pong_state_k}{{4.3a}{19}{Giai đoạn 1 (Xử lý Tile $H_k$): Buffer A tích lũy kết quả Valid, Buffer B lưu trữ dữ liệu Dôi ra (Residual)}{figure.caption.4}{}}
+\newlabel{sub@fig:ping_pong_state_k}{{a}{19}{Giai đoạn 1 (Xử lý Tile $H_k$): Buffer A tích lũy kết quả Valid, Buffer B lưu trữ dữ liệu Dôi ra (Residual)}{figure.caption.4}{}}
+\newlabel{fig:ping_pong_state_k_plus_1}{{4.3b}{19}{Giai đoạn 2 (Xử lý Tile $H_{k+1}$): Buffer B hoàn thiện kết quả biên (từ Residual cũ), Buffer A lưu trữ dữ liệu Dôi ra mới}{figure.caption.4}{}}
+\newlabel{sub@fig:ping_pong_state_k_plus_1}{{b}{19}{Giai đoạn 2 (Xử lý Tile $H_{k+1}$): Buffer B hoàn thiện kết quả biên (từ Residual cũ), Buffer A lưu trữ dữ liệu Dôi ra mới}{figure.caption.4}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4.3}{\ignorespaces Sơ đồ luồng dữ liệu minh họa cơ chế Ping-Pong Buffer dùng để quản lý vùng dữ liệu dôi ra (Residual Data). Hệ thống luân phiên vai trò của Buffer A và B để đảm bảo tính liên tục của phép tính biên mà không cần nạp lại dữ liệu đầu vào.}}{19}{figure.caption.4}\protected@file@percent }
+\newlabel{fig:ping_pong_mechanism}{{4.3}{19}{Sơ đồ luồng dữ liệu minh họa cơ chế Ping-Pong Buffer dùng để quản lý vùng dữ liệu dôi ra (Residual Data). Hệ thống luân phiên vai trò của Buffer A và B để đảm bảo tính liên tục của phép tính biên mà không cần nạp lại dữ liệu đầu vào}{figure.caption.4}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {4.3}Thiết kế kiến trúc vi mô (Micro-architecture)}{20}{section.4.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3.1}Sơ đồ khối tổng quát hệ thống}{20}{subsection.4.3.1}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {4.4}{\ignorespaces Sơ đồ khối tổng quát kiến trúc Beta Accelerator}}{20}{figure.caption.5}\protected@file@percent }
+\newlabel{fig:system_arch}{{4.4}{20}{Sơ đồ khối tổng quát kiến trúc Beta Accelerator}{figure.caption.5}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3.2}Tổ chức Mảng tính toán (Processing Hierarchy)}{22}{subsection.4.3.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.3.2.1}Mảng xử lý (Process Array - PA)}{22}{subsubsection.4.3.2.1}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {4.5}{\ignorespaces Kiến trúc bên trong khối Process Array (PA)}}{22}{figure.caption.6}\protected@file@percent }
+\newlabel{fig:pa_arch}{{4.5}{22}{Kiến trúc bên trong khối Process Array (PA)}{figure.caption.6}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.3.2.2}Đơn vị xử lý (Process Unit - PU)}{22}{subsubsection.4.3.2.2}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {4.6}{\ignorespaces Kiến trúc khối Process Unit (PU) với các PE hoạt động song song}}{23}{figure.caption.7}\protected@file@percent }
+\newlabel{fig:pu_arch}{{4.6}{23}{Kiến trúc khối Process Unit (PU) với các PE hoạt động song song}{figure.caption.7}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.3.2.3}Phần tử xử lý (Process Element - PE)}{23}{subsubsection.4.3.2.3}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {4.7}{\ignorespaces Cấu trúc bên trong một Process Element (PE)}}{24}{figure.caption.8}\protected@file@percent }
+\newlabel{fig:pe_arch}{{4.7}{24}{Cấu trúc bên trong một Process Element (PE)}{figure.caption.8}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3.3}Đánh giá thời gian thực thi (Performance Estimation)}{24}{subsection.4.3.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.3.3.1}Thời gian xử lý một Pass cơ sở ($T_{pass}$)}{24}{subsubsection.4.3.3.1}\protected@file@percent }
+\newlabel{eq:t_pass}{{4.12}{24}{Thời gian xử lý một Pass cơ sở ($T_{pass}$)}{equation.4.12}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.3.3.2}Tổng thời gian thực thi ($T_{total}$)}{25}{subsubsection.4.3.3.2}\protected@file@percent }
+\newlabel{eq:total_std}{{4.13}{25}{Tổng thời gian thực thi ($T_{total}$)}{equation.4.13}{}}
+\newlabel{eq:total_dw}{{4.14}{25}{Tổng thời gian thực thi ($T_{total}$)}{equation.4.14}{}}
 \@setckpt{4_thiet_ke_accelerator/main}{
-\setcounter{page}{23}
-\setcounter{equation}{12}
+\setcounter{page}{26}
+\setcounter{equation}{14}
 \setcounter{enumi}{4}
 \setcounter{enumii}{0}
 \setcounter{enumiii}{0}
@@ -68,15 +86,15 @@
 \setcounter{part}{0}
 \setcounter{chapter}{4}
 \setcounter{section}{3}
-\setcounter{subsection}{1}
+\setcounter{subsection}{3}
 \setcounter{subsubsection}{2}
 \setcounter{paragraph}{0}
 \setcounter{subparagraph}{0}
-\setcounter{figure}{3}
+\setcounter{figure}{7}
 \setcounter{table}{0}
-\setcounter{caption@flags}{6}
+\setcounter{caption@flags}{2}
 \setcounter{continuedfloat}{0}
-\setcounter{subfigure}{2}
+\setcounter{subfigure}{0}
 \setcounter{subtable}{0}
 \setcounter{parentequation}{0}
 \setcounter{theorem}{0}
@@ -89,10 +107,10 @@
 \setcounter{AM@survey}{0}
 \setcounter{lofdepth}{1}
 \setcounter{lotdepth}{1}
-\setcounter{AlgoLine}{0}
-\setcounter{algocfline}{5}
-\setcounter{algocfproc}{5}
-\setcounter{algocf}{5}
+\setcounter{AlgoLine}{10}
+\setcounter{algocfline}{6}
+\setcounter{algocfproc}{6}
+\setcounter{algocf}{6}
 \setcounter{ALC@unique}{0}
 \setcounter{ALC@line}{0}
 \setcounter{ALC@rem}{0}
@@ -215,7 +233,7 @@
 \setcounter{section@level}{0}
 \setcounter{Item}{6}
 \setcounter{Hfootnote}{0}
-\setcounter{bookmark@seq@number}{41}
+\setcounter{bookmark@seq@number}{46}
 \setcounter{lastpagecount}{0}
 \setcounter{subsubsubsection}{0}
 \setcounter{lstlisting}{0}

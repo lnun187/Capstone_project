@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (MiKTeX 25.4) (preloaded format=pdflatex 2025.12.13)  13 DEC 2025 22:14
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (MiKTeX 25.4) (preloaded format=pdflatex 2025.12.13)  13 DEC 2025 23:14
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -1616,7 +1616,7 @@ Package hyperref Info: Link coloring ON on input line 223.
 \@outlinefile=\write5
 \openout5 = `main.out'.
 
-<image/hcmut.png, id=222, 845.0772pt x 597.6729pt>
+<image/hcmut.png, id=242, 845.0772pt x 597.6729pt>
 File: image/hcmut.png Graphic file (type png)
 <use image/hcmut.png>
 Package pdftex.def Info: image/hcmut.png  used on input line 242.
@@ -1714,7 +1714,7 @@ Overfull \hbox (3.96545pt too wide) in paragraph at lines 30--30
  [][] [][][]\T5/lmr/m/n/13 Ph÷ìng ph¡p Ph¥n m£nh khæng gian dú li»u (Space 
  []
 
-[2])
+[2{D:/Tool/MikTex/New folder/fonts/enc/dvips/lm/lm-mathit.enc}])
 \tf@toc=\write6
 \openout6 = `main.toc'.
 
@@ -1722,7 +1722,7 @@ Overfull \hbox (3.96545pt too wide) in paragraph at lines 30--30
 \tf@lof=\write7
 \openout7 = `main.lof'.
 
- [4{D:/Tool/MikTex/New folder/fonts/enc/dvips/lm/lm-mathit.enc}{D:/Tool/MikTex/New folder/fonts/enc/dvips/lm/lm-rm.enc}{D:/Tool/MikTex/New folder/fonts/enc/dvips/lm/lm-mathsy.enc}] (main.lot)
+ [4{D:/Tool/MikTex/New folder/fonts/enc/dvips/lm/lm-rm.enc}{D:/Tool/MikTex/New folder/fonts/enc/dvips/lm/lm-mathsy.enc}] (main.lot)
 \tf@lot=\write8
 \openout8 = `main.lot'.
 
@@ -1841,47 +1841,92 @@ LaTeX Font Info:    Trying to load font information for T5+lmtt on input line 55
  (D:\Tool\MikTex\New folder\tex/latex/lm\t5lmtt.fd
 File: t5lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 ) [5{D:/Tool/MikTex/New folder/fonts/enc/dvips/lm/lm-mathex.enc}{D:/Tool/MikTex/New folder/fonts/enc/dvips/lm/lm-ts1.enc}] [6] [7] [8] [9]) (4_thiet_ke_accelerator/4.2_chien_luoc_dataflow.tex [10] [11] [12]
-<image/4/std_conv_pass.png, id=418, 696.80325pt x 125.268pt>
+<image/4/std_conv_pass.png, id=450, 696.80325pt x 125.268pt>
 File: image/4/std_conv_pass.png Graphic file (type png)
 <use image/4/std_conv_pass.png>
 Package pdftex.def Info: image/4/std_conv_pass.png  used on input line 95.
 (pdftex.def)             Requested size: 330.05322pt x 59.33661pt.
-<image/4/dw_conv_pass.png, id=419, 690.78075pt x 69.25874pt>
+<image/4/dw_conv_pass.png, id=451, 690.78075pt x 69.25874pt>
 File: image/4/dw_conv_pass.png Graphic file (type png)
 <use image/4/dw_conv_pass.png>
 Package pdftex.def Info: image/4/dw_conv_pass.png  used on input line 106.
 (pdftex.def)             Requested size: 330.05322pt x 33.09268pt.
  [13] [14 <./image/4/std_conv_pass.png> <./image/4/dw_conv_pass.png>]
-<image/4/du_lieu_doi_ra.png, id=433, 540.21825pt x 451.6875pt>
+<image/4/du_lieu_doi_ra.png, id=465, 540.21825pt x 451.6875pt>
 File: image/4/du_lieu_doi_ra.png Graphic file (type png)
 <use image/4/du_lieu_doi_ra.png>
-Package pdftex.def Info: image/4/du_lieu_doi_ra.png  used on input line 128.
+Package pdftex.def Info: image/4/du_lieu_doi_ra.png  used on input line 129.
 (pdftex.def)             Requested size: 330.05322pt x 275.97696pt.
  [15 <./image/4/du_lieu_doi_ra.png>] [16] [17]
-Overfull \vbox (189.01392pt too high) has occurred while \output is active []
-
- [18]
-<image/4/buffer_hinh_a.png, id=455, 461.3235pt x 320.99925pt>
+<image/4/buffer_hinh_a.png, id=491, 461.3235pt x 320.99925pt>
 File: image/4/buffer_hinh_a.png Graphic file (type png)
 <use image/4/buffer_hinh_a.png>
-Package pdftex.def Info: image/4/buffer_hinh_a.png  used on input line 217.
+Package pdftex.def Info: image/4/buffer_hinh_a.png  used on input line 207.
 (pdftex.def)             Requested size: 330.05322pt x 229.65965pt.
-<image/4/buffer_hinh_b.png, id=456, 458.9145pt x 310.761pt>
+<image/4/buffer_hinh_b.png, id=492, 458.9145pt x 310.761pt>
 File: image/4/buffer_hinh_b.png Graphic file (type png)
 <use image/4/buffer_hinh_b.png>
-Package pdftex.def Info: image/4/buffer_hinh_b.png  used on input line 228.
+Package pdftex.def Info: image/4/buffer_hinh_b.png  used on input line 217.
 (pdftex.def)             Requested size: 330.05322pt x 223.50117pt.
-) [19]
+) [18]
 Overfull \hbox (42.93755pt too wide) in paragraph at lines 12--12
 |[]\T5/lmr/bx/n/18.72003 Thi¸t k¸ ki¸n tróc vi mæ (Micro-architecture)| 
  []
 
-(4_thiet_ke_accelerator/4.3_kien_truc_vi_mo.tex [20 <./image/4/buffer_hinh_a.png> <./image/4/buffer_hinh_b.png>] [21])) [22]
+(4_thiet_ke_accelerator/4.3_kien_truc_vi_mo.tex [19 <./image/4/buffer_hinh_a.png> <./image/4/buffer_hinh_b.png>]
+<image/4/system_arch.png, id=506, 397.485pt x 340.8735pt>
+File: image/4/system_arch.png Graphic file (type png)
+<use image/4/system_arch.png>
+Package pdftex.def Info: image/4/system_arch.png  used on input line 8.
+(pdftex.def)             Requested size: 330.05322pt x 283.05495pt.
+ [20 <./image/4/system_arch.png>] [21]
+<image/4/pa_arch.png, id=517, 348.1005pt x 205.9695pt>
+File: image/4/pa_arch.png Graphic file (type png)
+<use image/4/pa_arch.png>
+Package pdftex.def Info: image/4/pa_arch.png  used on input line 43.
+(pdftex.def)             Requested size: 247.54149pt x 146.46878pt.
+ [22 <./image/4/pa_arch.png>]
+<image/4/pu_arch.png, id=524, 248.127pt x 186.6975pt>
+File: image/4/pu_arch.png Graphic file (type png)
+<use image/4/pu_arch.png>
+Package pdftex.def Info: image/4/pu_arch.png  used on input line 57.
+(pdftex.def)             Requested size: 247.54149pt x 186.25546pt.
+<image/4/pe_arch.png, id=526, 254.1495pt x 123.46124pt>
+File: image/4/pe_arch.png Graphic file (type png)
+<use image/4/pe_arch.png>
+Package pdftex.def Info: image/4/pe_arch.png  used on input line 72.
+(pdftex.def)             Requested size: 206.28249pt x 100.21027pt.
+ [23 <./image/4/pu_arch.png>]
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 80.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `subscript' on input line 80.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 80.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 96.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `subscript' on input line 96.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 96.
+
+[24 <./image/4/pe_arch.png>])) [25]
 \openout2 = `5_hien_thuc_soc/main.aux'.
 
  (5_hien_thuc_soc/main.tex
 Chapter 5.
-(5_hien_thuc_soc/5.1_moi_truong_hien_thuc.tex) (5_hien_thuc_soc/5.2_he_thong_xu_ly.tex) (5_hien_thuc_soc/5.3_he_thong_ket_noi.tex) (5_hien_thuc_soc/5.4_tich_hop_kiem_thu.tex)) [23
+(5_hien_thuc_soc/5.1_moi_truong_hien_thuc.tex) (5_hien_thuc_soc/5.2_he_thong_xu_ly.tex) (5_hien_thuc_soc/5.3_he_thong_ket_noi.tex) (5_hien_thuc_soc/5.4_tich_hop_kiem_thu.tex)) [26
 
 
 
@@ -1901,7 +1946,7 @@ Overfull \hbox (5.425pt too wide) in paragraph at lines 6--6
 |[]\T5/lmr/bx/n/18.72003 Ph÷ìng ph¡p ^^_¡nh gi¡: Mæ h¼nh Roofline| 
  []
 
-(6_danh_gia_hieu_nang/6.1_phuong_phap_danh_gia.tex) (6_danh_gia_hieu_nang/6.2_uoc_luong_hieu_nang.tex) (6_danh_gia_hieu_nang/6.3_so_sanh_nghien_cuu.tex)) [24
+(6_danh_gia_hieu_nang/6.1_phuong_phap_danh_gia.tex) (6_danh_gia_hieu_nang/6.2_uoc_luong_hieu_nang.tex) (6_danh_gia_hieu_nang/6.3_so_sanh_nghien_cuu.tex)) [27
 
 
 
@@ -1911,7 +1956,7 @@ Overfull \hbox (5.425pt too wide) in paragraph at lines 6--6
 
  (7_ke_hoach_phat_trien/main.tex
 Chapter 7.
-(7_ke_hoach_phat_trien/7.1_danh_gia_giai_doan_1.tex) (7_ke_hoach_phat_trien/7.2_ke_hoach_giai_doan_2.tex) (7_ke_hoach_phat_trien/7.3_tien_do_du_kien.tex)) [25
+(7_ke_hoach_phat_trien/7.1_danh_gia_giai_doan_1.tex) (7_ke_hoach_phat_trien/7.2_ke_hoach_giai_doan_2.tex) (7_ke_hoach_phat_trien/7.3_tien_do_du_kien.tex)) [28
 
 
 
@@ -1936,23 +1981,23 @@ LaTeX Font Warning: Size substitutions with differences
 (Font)              up to 1.19997pt have occurred.
 
 Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: 2BA509A597606581D321FCE38189CF96;14454.
+(rerunfilecheck)             Checksum: 17D095D982373A3A1CB4A83A0BC9F2EE;15809.
 Package logreq Info: Writing requests to 'main.run.xml'.
 \openout1 = `main.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 41480 strings out of 467871
- 788898 string characters out of 5427480
- 1666312 words of memory out of 5000000
- 69356 multiletter control sequences out of 15000+600000
- 751512 words of font info for 128 fonts, out of 8000000 for 9000
+ 41541 strings out of 467871
+ 790145 string characters out of 5427480
+ 1667109 words of memory out of 5000000
+ 69399 multiletter control sequences out of 15000+600000
+ 762021 words of font info for 130 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  108i,29n,117p,1252b,2295s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <D:/Tool/MikTex/New folder/fonts/type1/public/lm/lmbx12.pfb><D:/Tool/MikTex/New folder/fonts/type1/public/lm/lmbxi10.pfb><D:/Tool/MikTex/New folder/fonts/type1/public/lm/lmex10.pfb><D:/Tool/MikTex/New folder/fonts/type1/public/lm/lmmi10.pfb><D:/Tool/MikTex/New folder/fonts/type1/public/lm/lmmi12.pfb><D:/Tool/MikTex/New folder/fonts/type1/public/lm/lmmi9.pfb><D:/Tool/MikTex/New folder/fonts/type1/public/lm/lmr10.pfb><D:/Tool/MikTex/New folder/fonts/type1/public/lm/lmr12.pfb><D:/Tool/MikTex/New folder/fonts/type1/public/lm/lmr17.pfb><D:/Tool/MikTex/New folder/fonts/type1/public/lm/lmr9.pfb><D:/Tool/MikTex/New folder/fonts/type1/public/lm/lmri12.pfb><D:/Tool/MikTex/New folder/fonts/type1/public/lm/lmsy10.pfb><D:/Tool/MikTex/New folder/fonts/type1/public/lm/lmtt12.pfb>
-Output written on main.pdf (33 pages, 561713 bytes).
+Output written on main.pdf (36 pages, 632111 bytes).
 PDF statistics:
- 584 PDF objects out of 1000 (max. 8388607)
- 119 named destinations out of 1000 (max. 500000)
- 475 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 654 PDF objects out of 1000 (max. 8388607)
+ 135 named destinations out of 1000 (max. 500000)
+ 535 words of extra memory for PDF output out of 10000 (max. 10000000)
 

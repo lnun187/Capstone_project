@@ -111,6 +111,7 @@ Trong Depthwise Convolution, kênh Input thứ $i$ chỉ tính toán với kênh
     \caption{Minh họa chiến lược phân chia Pass cho hai loại tích chập với $T_h=11$. (a) Standard Convolution chia thành 2 phần theo chiều dọc và tích lũy theo chiều sâu. (b) Depthwise Convolution xử lý độc lập từng nhóm kênh và chia 2 phần theo chiều dọc.}
     \label{fig:pass_division_strategy}
 \end{figure}
+
 \subsection{Phân tích vấn đề tại biên và Dữ liệu dôi ra}
 
 Mặc dù chiến lược phân mảnh dữ liệu được áp dụng trên cả chiều kênh và chiều không gian, tác động của chúng lên luồng dữ liệu là khác nhau.
@@ -151,53 +152,43 @@ Các kết quả tại hàng 2 và 3 được gọi là \textbf{Dữ liệu dôi
 
 \subsection{Thuật toán Điều phối và Xoay vòng bộ nhớ}
 
-Thuật toán \ref{alg:ping_pong_logic} mô tả chi tiết quy trình quản lý bộ nhớ và luồng dữ liệu, minh họa rõ sự khác biệt khi xử lý Tile đầu tiên và các Tile sau.
+Thuật toán \ref{alg:pass_std_part1} và \ref{alg:pass_std_part2} mô tả chi tiết quy trình quản lý bộ nhớ và luồng dữ liệu, minh họa rõ sự khác biệt khi xử lý Tile đầu tiên và các Tile sau.
 
+% --- PHẦN 1 ---
 \begin{algorithm}[H]
-\caption{Cơ chế Ping-Pong Buffer xử lý Dữ liệu dôi ra}
-\label{alg:ping_pong_logic}
-\SetAlgoLined
-\DontPrintSemicolon
-\KwIn{Input Tiles, Weights}
-\KwOut{DRAM (Valid Output Feature Map)}
-
-% Khởi tạo con trỏ Buffer
-Initialize pointers: $Buf_{curr} \leftarrow A$, $Buf_{next} \leftarrow B$\;
-
-\For{$m = 0$ \textbf{to} $N_m - 1$}{
-    \For{$h = 0$ \textbf{to} $N_h - 1$}{
-        
-        \textit{// Bước 1: Tính toán và Tích lũy (Reduction Phase)}\;
-        \For{$c = 0$ \textbf{to} $N_c - 1$}{
-            Load Input Tile ($T_c \times T_h$)\;
-            Perform Convolution\;
-            
-            \uIf{$h == 0$ (First Tile)}{
-                Accumulate valid rows $[0 \dots T_h-R]$ into $Buf_{curr}$\;
-                Accumulate residual rows $[T_h-R+1 \dots T_h-1]$ into $Buf_{next}[0 \dots R-2]$\;
+    \caption{Lịch trình Pass cho Standard Conv (Phần 1: Tích lũy)}
+    \label{alg:pass_std_part1}
+    \SetAlgoLined
+    \DontPrintSemicolon
+    \KwIn{$N_m, N_h, N_c$}
+    
+    \For{$m = 0$ \textbf{to} $N_m - 1$}{
+        \textit{1. Load Weights...}\;
+        \For{$h = 0$ \textbf{to} $N_h - 1$}{
+            \For{$c = 0$ \textbf{to} $N_c - 1$}{
+                \textbf{Pass $(m, h, c)$:} ...\;
+                ... (Code phần tích lũy) ...\;
             }
-            \Else{
-                \textit{// Kế thừa residual từ bước trước đang nằm trong Buf\_curr}\;
-                Accumulate boundary contribution into $Buf_{curr}[0 \dots R-2]$\;
-                Accumulate new body rows into $Buf_{curr}[R-1 \dots T_h-1]$\;
-                Accumulate new residual rows into $Buf_{next}[0 \dots R-2]$\;
-            }
+            \textit{(Xem tiếp xử lý biên ở Thuật toán \ref{alg:pass_std_part2})}\;
         }
-        
-        \textit{// Bước 2: Ghi kết quả và Xoay vòng (Drain \& Swap Phase)}\;
-        \eIf{$h == 0$}{
-            \textit{// Tile đầu chỉ có (Th - R + 1) hàng hợp lệ}\;
-            Drain $Buf_{curr}$ rows $[0 \dots T_h-R]$ to DRAM\;
-        }{
-            \textit{// Các Tile sau hoàn thành đủ Th hàng (gồm cả phần trả nợ tile trước)}\;
-            Drain $Buf_{curr}$ rows $[0 \dots T_h-1]$ to DRAM\;
-        }
-        
-        Clear $Buf_{curr}$ (Reset for future use)\;
-        \textbf{Swap pointers:} $Buf_{curr} \leftrightarrow Buf_{next}$\;
-        \textit{// Sau lệnh Swap, Buf\_curr mới đã chứa sẵn dữ liệu dôi ra (Residual) cho vòng lặp h+1}\;
     }
-}
+\end{algorithm}
+
+% --- PHẦN 2 ---
+\begin{algorithm}[H]
+    \caption{Lịch trình Pass cho Standard Conv (Phần 2: Xử lý biên)}
+    \label{alg:pass_std_part2}
+    \SetAlgoLined
+    \DontPrintSemicolon
+    \setcounter{AlgoLine}{10} % (Tuỳ chọn) Đặt lại số dòng để khớp với phần 1
+    
+    \textit{...Tiếp tục từ vòng lặp h của Thuật toán \ref{alg:pass_std_part1}}\;
+    \ForEach{Tile $h$ đã hoàn tất tích lũy}{
+        \textit{2. Xử lý biên \& Ghi Output:}\;
+        - Kiểm tra điều kiện biên... \;
+        - Ghi phần Valid xuống DRAM.\;
+        - Hoán đổi Ping-Pong Buffer.\;
+    }
 \end{algorithm}
 
 \textbf{Giải thích cơ chế:}
@@ -210,26 +201,24 @@ Initialize pointers: $Buf_{curr} \leftarrow A$, $Buf_{next} \leftarrow B$\;
 \begin{figure}[H]
     \centering
     
-    % --- Hàng 1: Trạng thái xử lý Tile Hk ---
+    % --- Hàng 1: Giai đoạn 1 ---
     \begin{subfigure}[b]{0.8\textwidth}
         \centering
-        % Thay đường dẫn ảnh thực tế của bạn vào đây
         \includegraphics[width=\linewidth]{image/4/buffer_hinh_a.png}
-        \caption{Trạng thái xử lý Tile $H_k$: Valid vào Buffer A, Residual vào Buffer B}
+        \caption{Giai đoạn 1 (Xử lý Tile $H_k$): Buffer A tích lũy kết quả Valid, Buffer B lưu trữ dữ liệu Dôi ra (Residual).}
         \label{fig:ping_pong_state_k}
     \end{subfigure}
     
-    \par\bigskip % Tạo khoảng cách dọc giữa 2 hình
+    \par\bigskip 
     
-    % --- Hàng 2: Trạng thái xử lý Tile Hk+1 ---
+    % --- Hàng 2: Giai đoạn 2 ---
     \begin{subfigure}[b]{0.8\textwidth} 
         \centering
-        % Thay đường dẫn ảnh thực tế của bạn vào đây
         \includegraphics[width=\linewidth]{image/4/buffer_hinh_b.png}
-        \caption{Trạng thái xử lý Tile $H_{k+1}$: Tích lũy vào Buffer B, Residual mới vào Buffer A}
+        \caption{Giai đoạn 2 (Xử lý Tile $H_{k+1}$): Buffer B hoàn thiện kết quả biên (từ Residual cũ), Buffer A lưu trữ dữ liệu Dôi ra mới.}
         \label{fig:ping_pong_state_k_plus_1}
     \end{subfigure}
     
-    \caption{Minh họa cơ chế Ping-Pong Buffer để xử lý dữ liệu dôi ra giữa hai Tile không gian liên tiếp. (a) Trong Pass xử lý Tile $H_k$, kết quả dôi ra được lưu chờ ở Buffer B. (b) Trong Pass xử lý Tile $H_{k+1}$, dữ liệu dôi ra từ Buffer B được cộng dồn với kết quả mới, đồng thời tạo ra dữ liệu dôi ra mới quay lại Buffer A.}
+    \caption{Sơ đồ luồng dữ liệu minh họa cơ chế Ping-Pong Buffer dùng để quản lý vùng dữ liệu dôi ra (Residual Data). Hệ thống luân phiên vai trò của Buffer A và B để đảm bảo tính liên tục của phép tính biên mà không cần nạp lại dữ liệu đầu vào.}
     \label{fig:ping_pong_mechanism}
 \end{figure}

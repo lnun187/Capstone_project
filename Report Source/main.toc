@@ -36,20 +36,25 @@
 \contentsline {subsubsection}{\numberline {4.2.4.1}Cơ sở hình thành Dữ liệu dôi ra}{15}{subsubsection.4.2.4.1}%
 \contentsline {subsection}{\numberline {4.2.5}Cơ chế Ping-Pong Buffer và Logic xử lý hàng hợp lệ}{16}{subsection.4.2.5}%
 \contentsline {subsection}{\numberline {4.2.6}Thuật toán Điều phối và Xoay vòng bộ nhớ}{17}{subsection.4.2.6}%
-\contentsline {section}{\numberline {4.3}Thiết kế kiến trúc vi mô (Micro-architecture)}{21}{section.4.3}%
-\contentsline {subsection}{\numberline {4.3.1}Kiến trúc Mảng tính toán (PE Array Architecture)}{21}{subsection.4.3.1}%
-\contentsline {subsubsection}{\numberline {4.3.1.1}Cấu hình PE cho Tích chập Không gian (Spatial Convolution)}{21}{subsubsection.4.3.1.1}%
-\contentsline {subsubsection}{\numberline {4.3.1.2}Hỗ trợ Depthwise Convolution}{21}{subsubsection.4.3.1.2}%
-\contentsline {chapter}{\numberline {5}Hiện thực nền tảng SoC}{23}{chapter.5}%
-\contentsline {section}{\numberline {5.1}Môi trường và Công cụ hiện thực}{23}{section.5.1}%
-\contentsline {section}{\numberline {5.2}Cấu hình hệ thống xử lý (Processing System)}{23}{section.5.2}%
-\contentsline {section}{\numberline {5.3}Thiết kế hệ thống kết nối (Interconnect Subsystem)}{23}{section.5.3}%
-\contentsline {section}{\numberline {5.4}Tích hợp và Kiểm thử nền tảng cơ sở}{23}{section.5.4}%
-\contentsline {chapter}{\numberline {6}Đánh giá hiệu năng lý thuyết}{24}{chapter.6}%
-\contentsline {section}{\numberline {6.1}Phương pháp đánh giá: Mô hình Roofline}{24}{section.6.1}%
-\contentsline {section}{\numberline {6.2}Ước lượng độ trễ và Tài nguyên}{24}{section.6.2}%
-\contentsline {section}{\numberline {6.3}So sánh với các nghiên cứu liên quan}{24}{section.6.3}%
-\contentsline {chapter}{\numberline {7}Kế hoạch phát triển}{25}{chapter.7}%
-\contentsline {section}{\numberline {7.1}Đánh giá mức độ hoàn thành Giai đoạn 1}{25}{section.7.1}%
-\contentsline {section}{\numberline {7.2}Kế hoạch thực hiện Giai đoạn 2}{25}{section.7.2}%
-\contentsline {section}{\numberline {7.3}Tiến độ dự kiến}{25}{section.7.3}%
+\contentsline {section}{\numberline {4.3}Thiết kế kiến trúc vi mô (Micro-architecture)}{20}{section.4.3}%
+\contentsline {subsection}{\numberline {4.3.1}Sơ đồ khối tổng quát hệ thống}{20}{subsection.4.3.1}%
+\contentsline {subsection}{\numberline {4.3.2}Tổ chức Mảng tính toán (Processing Hierarchy)}{22}{subsection.4.3.2}%
+\contentsline {subsubsection}{\numberline {4.3.2.1}Mảng xử lý (Process Array - PA)}{22}{subsubsection.4.3.2.1}%
+\contentsline {subsubsection}{\numberline {4.3.2.2}Đơn vị xử lý (Process Unit - PU)}{22}{subsubsection.4.3.2.2}%
+\contentsline {subsubsection}{\numberline {4.3.2.3}Phần tử xử lý (Process Element - PE)}{23}{subsubsection.4.3.2.3}%
+\contentsline {subsection}{\numberline {4.3.3}Đánh giá thời gian thực thi (Performance Estimation)}{24}{subsection.4.3.3}%
+\contentsline {subsubsection}{\numberline {4.3.3.1}Thời gian xử lý một Pass cơ sở ($T_{pass}$)}{24}{subsubsection.4.3.3.1}%
+\contentsline {subsubsection}{\numberline {4.3.3.2}Tổng thời gian thực thi ($T_{total}$)}{25}{subsubsection.4.3.3.2}%
+\contentsline {chapter}{\numberline {5}Hiện thực nền tảng SoC}{26}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Môi trường và Công cụ hiện thực}{26}{section.5.1}%
+\contentsline {section}{\numberline {5.2}Cấu hình hệ thống xử lý (Processing System)}{26}{section.5.2}%
+\contentsline {section}{\numberline {5.3}Thiết kế hệ thống kết nối (Interconnect Subsystem)}{26}{section.5.3}%
+\contentsline {section}{\numberline {5.4}Tích hợp và Kiểm thử nền tảng cơ sở}{26}{section.5.4}%
+\contentsline {chapter}{\numberline {6}Đánh giá hiệu năng lý thuyết}{27}{chapter.6}%
+\contentsline {section}{\numberline {6.1}Phương pháp đánh giá: Mô hình Roofline}{27}{section.6.1}%
+\contentsline {section}{\numberline {6.2}Ước lượng độ trễ và Tài nguyên}{27}{section.6.2}%
+\contentsline {section}{\numberline {6.3}So sánh với các nghiên cứu liên quan}{27}{section.6.3}%
+\contentsline {chapter}{\numberline {7}Kế hoạch phát triển}{28}{chapter.7}%
+\contentsline {section}{\numberline {7.1}Đánh giá mức độ hoàn thành Giai đoạn 1}{28}{section.7.1}%
+\contentsline {section}{\numberline {7.2}Kế hoạch thực hiện Giai đoạn 2}{28}{section.7.2}%
+\contentsline {section}{\numberline {7.3}Tiến độ dự kiến}{28}{section.7.3}%
