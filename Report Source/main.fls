@@ -634,57 +634,114 @@ INPUT .\1_gioi_thieu\main.tex
 INPUT 1_gioi_thieu\main.tex
 INPUT D:\Tool\MikTex\New folder\fonts\tfm\public\lm\t5-lmr17.tfm
 INPUT D:\Tool\MikTex\New folder\fonts\tfm\public\lm\t5-lmbx12.tfm
-INPUT .\1_gioi_thieu\Đặt vấn đề.tex
-INPUT .\1_gioi_thieu\Đặt vấn đề.tex
-INPUT 1_gioi_thieu\Đặt vấn đề.tex
-INPUT .\1_gioi_thieu\Mục tiêu đề tài.tex
-INPUT .\1_gioi_thieu\Mục tiêu đề tài.tex
-INPUT 1_gioi_thieu\Mục tiêu đề tài.tex
-INPUT .\1_gioi_thieu\Phạm vi đề tài.tex
-INPUT .\1_gioi_thieu\Phạm vi đề tài.tex
-INPUT 1_gioi_thieu\Phạm vi đề tài.tex
-INPUT .\1_gioi_thieu\Phân chia công việc.tex
-INPUT .\1_gioi_thieu\Phân chia công việc.tex
-INPUT 1_gioi_thieu\Phân chia công việc.tex
-INPUT .\1_gioi_thieu\Cấu trúc báo cáo.tex
-INPUT .\1_gioi_thieu\Cấu trúc báo cáo.tex
-INPUT 1_gioi_thieu\Cấu trúc báo cáo.tex
+INPUT .\1_gioi_thieu\1.1_dat_van_de.tex
+INPUT .\1_gioi_thieu\1.1_dat_van_de.tex
+INPUT 1_gioi_thieu\1.1_dat_van_de.tex
+INPUT .\1_gioi_thieu\1.2_muc_tieu_de_tai.tex
+INPUT .\1_gioi_thieu\1.2_muc_tieu_de_tai.tex
+INPUT 1_gioi_thieu\1.2_muc_tieu_de_tai.tex
+INPUT .\1_gioi_thieu\1.3_pham_vi_de_tai.tex
+INPUT .\1_gioi_thieu\1.3_pham_vi_de_tai.tex
+INPUT 1_gioi_thieu\1.3_pham_vi_de_tai.tex
+INPUT .\1_gioi_thieu\1.4_phan_chia_cong_viec.tex
+INPUT .\1_gioi_thieu\1.4_phan_chia_cong_viec.tex
+INPUT 1_gioi_thieu\1.4_phan_chia_cong_viec.tex
+INPUT .\1_gioi_thieu\1.5_cau_truc_bao_cao.tex
+INPUT .\1_gioi_thieu\1.5_cau_truc_bao_cao.tex
+INPUT 1_gioi_thieu\1.5_cau_truc_bao_cao.tex
 INPUT .\2_co_so_ly_thuyet\main.tex
 INPUT .\2_co_so_ly_thuyet\main.tex
 OUTPUT 2_co_so_ly_thuyet\main.aux
 INPUT .\2_co_so_ly_thuyet\main.tex
 INPUT .\2_co_so_ly_thuyet\main.tex
 INPUT 2_co_so_ly_thuyet\main.tex
+INPUT .\2_co_so_ly_thuyet\2.1_tong_quan_cnn.tex
+INPUT .\2_co_so_ly_thuyet\2.1_tong_quan_cnn.tex
+INPUT 2_co_so_ly_thuyet\2.1_tong_quan_cnn.tex
+INPUT .\2_co_so_ly_thuyet\2.2_ky_thuat_thiet_ke.tex
+INPUT .\2_co_so_ly_thuyet\2.2_ky_thuat_thiet_ke.tex
+INPUT 2_co_so_ly_thuyet\2.2_ky_thuat_thiet_ke.tex
+INPUT .\2_co_so_ly_thuyet\2.3_kien_truc_soc.tex
+INPUT .\2_co_so_ly_thuyet\2.3_kien_truc_soc.tex
+INPUT 2_co_so_ly_thuyet\2.3_kien_truc_soc.tex
 INPUT .\3_phan_tich_va_kien_truc\main.tex
 INPUT .\3_phan_tich_va_kien_truc\main.tex
 OUTPUT 3_phan_tich_va_kien_truc\main.aux
 INPUT .\3_phan_tich_va_kien_truc\main.tex
 INPUT .\3_phan_tich_va_kien_truc\main.tex
 INPUT 3_phan_tich_va_kien_truc\main.tex
+INPUT .\3_phan_tich_va_kien_truc\3.1_yeu_cau_thiet_ke.tex
+INPUT .\3_phan_tich_va_kien_truc\3.1_yeu_cau_thiet_ke.tex
+INPUT 3_phan_tich_va_kien_truc\3.1_yeu_cau_thiet_ke.tex
+INPUT .\3_phan_tich_va_kien_truc\3.2_kien_truc_tong_quan.tex
+INPUT .\3_phan_tich_va_kien_truc\3.2_kien_truc_tong_quan.tex
+INPUT 3_phan_tich_va_kien_truc\3.2_kien_truc_tong_quan.tex
+INPUT .\3_phan_tich_va_kien_truc\3.3_giao_dien_ket_noi.tex
+INPUT .\3_phan_tich_va_kien_truc\3.3_giao_dien_ket_noi.tex
+INPUT 3_phan_tich_va_kien_truc\3.3_giao_dien_ket_noi.tex
 INPUT .\4_thiet_ke_accelerator\main.tex
 INPUT .\4_thiet_ke_accelerator\main.tex
 OUTPUT 4_thiet_ke_accelerator\main.aux
 INPUT .\4_thiet_ke_accelerator\main.tex
 INPUT .\4_thiet_ke_accelerator\main.tex
 INPUT 4_thiet_ke_accelerator\main.tex
+INPUT .\4_thiet_ke_accelerator\4.1_phan_tich_toan_hoc.tex
+INPUT .\4_thiet_ke_accelerator\4.1_phan_tich_toan_hoc.tex
+INPUT 4_thiet_ke_accelerator\4.1_phan_tich_toan_hoc.tex
+INPUT .\4_thiet_ke_accelerator\4.2_chien_luoc_dataflow.tex
+INPUT .\4_thiet_ke_accelerator\4.2_chien_luoc_dataflow.tex
+INPUT 4_thiet_ke_accelerator\4.2_chien_luoc_dataflow.tex
+INPUT .\4_thiet_ke_accelerator\4.3_kien_truc_vi_mo.tex
+INPUT .\4_thiet_ke_accelerator\4.3_kien_truc_vi_mo.tex
+INPUT 4_thiet_ke_accelerator\4.3_kien_truc_vi_mo.tex
 INPUT .\5_hien_thuc_soc\main.tex
 INPUT .\5_hien_thuc_soc\main.tex
 OUTPUT 5_hien_thuc_soc\main.aux
 INPUT .\5_hien_thuc_soc\main.tex
 INPUT .\5_hien_thuc_soc\main.tex
 INPUT 5_hien_thuc_soc\main.tex
+INPUT .\5_hien_thuc_soc\5.1_moi_truong_hien_thuc.tex
+INPUT .\5_hien_thuc_soc\5.1_moi_truong_hien_thuc.tex
+INPUT 5_hien_thuc_soc\5.1_moi_truong_hien_thuc.tex
+INPUT .\5_hien_thuc_soc\5.2_he_thong_xu_ly.tex
+INPUT .\5_hien_thuc_soc\5.2_he_thong_xu_ly.tex
+INPUT 5_hien_thuc_soc\5.2_he_thong_xu_ly.tex
+INPUT .\5_hien_thuc_soc\5.3_he_thong_ket_noi.tex
+INPUT .\5_hien_thuc_soc\5.3_he_thong_ket_noi.tex
+INPUT 5_hien_thuc_soc\5.3_he_thong_ket_noi.tex
+INPUT .\5_hien_thuc_soc\5.4_tich_hop_kiem_thu.tex
+INPUT .\5_hien_thuc_soc\5.4_tich_hop_kiem_thu.tex
+INPUT 5_hien_thuc_soc\5.4_tich_hop_kiem_thu.tex
 INPUT .\6_danh_gia_hieu_nang\main.tex
 INPUT .\6_danh_gia_hieu_nang\main.tex
 OUTPUT 6_danh_gia_hieu_nang\main.aux
 INPUT .\6_danh_gia_hieu_nang\main.tex
 INPUT .\6_danh_gia_hieu_nang\main.tex
 INPUT 6_danh_gia_hieu_nang\main.tex
+INPUT .\6_danh_gia_hieu_nang\6.1_phuong_phap_danh_gia.tex
+INPUT .\6_danh_gia_hieu_nang\6.1_phuong_phap_danh_gia.tex
+INPUT 6_danh_gia_hieu_nang\6.1_phuong_phap_danh_gia.tex
+INPUT .\6_danh_gia_hieu_nang\6.2_uoc_luong_hieu_nang.tex
+INPUT .\6_danh_gia_hieu_nang\6.2_uoc_luong_hieu_nang.tex
+INPUT 6_danh_gia_hieu_nang\6.2_uoc_luong_hieu_nang.tex
+INPUT .\6_danh_gia_hieu_nang\6.3_so_sanh_nghien_cuu.tex
+INPUT .\6_danh_gia_hieu_nang\6.3_so_sanh_nghien_cuu.tex
+INPUT 6_danh_gia_hieu_nang\6.3_so_sanh_nghien_cuu.tex
 INPUT .\7_ke_hoach_phat_trien\main.tex
 INPUT .\7_ke_hoach_phat_trien\main.tex
 OUTPUT 7_ke_hoach_phat_trien\main.aux
 INPUT .\7_ke_hoach_phat_trien\main.tex
 INPUT .\7_ke_hoach_phat_trien\main.tex
 INPUT 7_ke_hoach_phat_trien\main.tex
+INPUT .\7_ke_hoach_phat_trien\7.1_danh_gia_giai_doan_1.tex
+INPUT .\7_ke_hoach_phat_trien\7.1_danh_gia_giai_doan_1.tex
+INPUT 7_ke_hoach_phat_trien\7.1_danh_gia_giai_doan_1.tex
+INPUT .\7_ke_hoach_phat_trien\7.2_ke_hoach_giai_doan_2.tex
+INPUT .\7_ke_hoach_phat_trien\7.2_ke_hoach_giai_doan_2.tex
+INPUT 7_ke_hoach_phat_trien\7.2_ke_hoach_giai_doan_2.tex
+INPUT .\7_ke_hoach_phat_trien\7.3_tien_do_du_kien.tex
+INPUT .\7_ke_hoach_phat_trien\7.3_tien_do_du_kien.tex
+INPUT 7_ke_hoach_phat_trien\7.3_tien_do_du_kien.tex
 OUTPUT appendix\main.aux
 INPUT main.aux
 INPUT .\tom_tat\main.aux

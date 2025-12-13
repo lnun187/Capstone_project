@@ -6,8 +6,27 @@
 \contentsline {section}{\numberline {1.4}Phân chia công việc}{1}{section.1.4}%
 \contentsline {section}{\numberline {1.5}Cấu trúc báo cáo}{1}{section.1.5}%
 \contentsline {chapter}{\numberline {2}Cơ sở lý thuyết}{2}{chapter.2}%
+\contentsline {section}{\numberline {2.1}Tổng quan về Mạng nơ-ron tích chập (CNN)}{2}{section.2.1}%
+\contentsline {section}{\numberline {2.2}Kỹ thuật thiết kế bộ tăng tốc phần cứng (AI Accelerator)}{2}{section.2.2}%
+\contentsline {section}{\numberline {2.3}Kiến trúc System-on-Chip trên nền tảng FPGA}{2}{section.2.3}%
 \contentsline {chapter}{\numberline {3}Phân tích yêu cầu và Kiến trúc tổng quan}{3}{chapter.3}%
-\contentsline {chapter}{\numberline {4}Thiết kế kiến trúc Accelerator}{4}{chapter.4}%
+\contentsline {section}{\numberline {3.1}Phân tích yêu cầu thiết kế}{3}{section.3.1}%
+\contentsline {section}{\numberline {3.2}Kiến trúc hệ thống tổng quan}{3}{section.3.2}%
+\contentsline {section}{\numberline {3.3}Đặc tả giao diện kết nối}{3}{section.3.3}%
+\contentsline {chapter}{\numberline {4}Thiết kế kiến trúc Accelerator và Chiến lược dòng dữ liệu}{4}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Phân tích toán học của phép tính tích chập}{4}{section.4.1}%
+\contentsline {section}{\numberline {4.2}Chiến lược phân mảnh và Dòng dữ liệu đề xuất}{4}{section.4.2}%
+\contentsline {section}{\numberline {4.3}Thiết kế kiến trúc vi mô (Micro-architecture)}{4}{section.4.3}%
 \contentsline {chapter}{\numberline {5}Hiện thực nền tảng SoC}{5}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Môi trường và Công cụ hiện thực}{5}{section.5.1}%
+\contentsline {section}{\numberline {5.2}Cấu hình hệ thống xử lý (Processing System)}{5}{section.5.2}%
+\contentsline {section}{\numberline {5.3}Thiết kế hệ thống kết nối (Interconnect Subsystem)}{5}{section.5.3}%
+\contentsline {section}{\numberline {5.4}Tích hợp và Kiểm thử nền tảng cơ sở}{5}{section.5.4}%
 \contentsline {chapter}{\numberline {6}Đánh giá hiệu năng lý thuyết}{6}{chapter.6}%
+\contentsline {section}{\numberline {6.1}Phương pháp đánh giá: Mô hình Roofline}{6}{section.6.1}%
+\contentsline {section}{\numberline {6.2}Ước lượng độ trễ và Tài nguyên}{6}{section.6.2}%
+\contentsline {section}{\numberline {6.3}So sánh với các nghiên cứu liên quan}{6}{section.6.3}%
 \contentsline {chapter}{\numberline {7}Kế hoạch phát triển}{7}{chapter.7}%
+\contentsline {section}{\numberline {7.1}Đánh giá mức độ hoàn thành Giai đoạn 1}{7}{section.7.1}%
+\contentsline {section}{\numberline {7.2}Kế hoạch thực hiện Giai đoạn 2}{7}{section.7.2}%
+\contentsline {section}{\numberline {7.3}Tiến độ dự kiến}{7}{section.7.3}%
