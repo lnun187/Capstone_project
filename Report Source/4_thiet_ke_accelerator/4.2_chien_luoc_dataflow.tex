@@ -27,7 +27,83 @@ Giả sử phần cứng có khả năng xử lý song song một khối dữ li
     \end{equation}
 \end{itemize}
 Một đơn vị xử lý cơ sở, gọi là \textbf{1 Pass}, chính là quá trình hệ thống xử lý hoàn tất cho một cặp Input Tile và Weight Tile để cập nhật giá trị cho một Output Tile.
+\subsection{Mô hình hóa toán học và Tham số thiết kế}
+\label{subsec:math_model}
 
+Để hiện thực hóa chiến lược phân mảnh, chúng tôi xây dựng mô hình toán học cho lớp tích chập thứ $i$. Các ký hiệu và tham số thiết kế được chuẩn hóa trong Bảng \ref{tab:design_params}.
+
+\begin{table}[H]
+\centering
+\caption{Bảng tham số thiết kế và ánh xạ ký hiệu}
+\label{tab:design_params}
+\begin{tabularx}{\textwidth}{|l|c|X|}
+\hline
+\textbf{Nhóm tham số} & \textbf{Ký hiệu} & \textbf{Mô tả} \\ \hline
+\multirow{2}{*}{Filter} & $S, R$ & Độ rộng ($w_f$) và Độ dài ($h_f$) của bộ lọc \\ \cline{2-3} 
+ & $N_f$ & Tổng số bộ lọc (Filters) \\ \hline
+\multirow{3}{*}{Feature Map} & $W, H, C$ & Kích thước Input Feature Map (Rộng, Dài, Số kênh) \\ \cline{2-3} 
+ & $W_{out}, H_{out}, N_f$ & Kích thước Output Feature Map \\ \hline
+\multirow{3}{*}{Tiling (Pass)} & $T_h$ & Chiều cao IFM nạp trong 1 pass ($h$) \\ \cline{2-3} 
+ & $T_c$ & Số kênh IFM tính toán song song ($k$) \\ \cline{2-3} 
+ & $T_m$ & Số bộ lọc tính toán song song ($m$) \\ \hline
+\multirow{2}{*}{Output Tile} & $T_{ho}$ & Chiều cao OFM hợp lệ tạo ra trong 1 pass ($h_o$) \\ \hline
+Khác & $P, Str$ & Padding và Stride \\ \hline
+\end{tabularx}
+\end{table}
+
+\subsubsection{Công thức tính kích thước không gian toàn cục}
+Dựa trên nguyên lý tích chập, một layer cần xử lý khối dữ liệu vào $W \times H \times C$. Kích thước không gian của Output Feature Map (OFM) toàn cục được tính như sau:
+
+\begin{equation}
+    W_{out} = \left\lfloor \frac{W - S + 2P}{Str} \right\rfloor + 1; \quad H_{out} = \left\lfloor \frac{H - R + 2P}{Str} \right\rfloor + 1
+\end{equation}
+
+\subsubsection{Tính toán kích thước Output Tile theo cơ chế Ping-Pong}
+Trong chiến lược phân mảnh đề xuất, chiều cao đầu ra hợp lệ ($T_{ho}$) không cố định mà phụ thuộc vào việc hệ thống có tận dụng được dữ liệu dôi ra (Residual Data) từ pass trước đó hay không.
+
+Giả sử bước trượt $Str = 1$ và Padding được xử lý tại biên ảnh gốc, số lượng hàng Output hợp lệ ghi xuống DRAM trong mỗi Pass được xác định bởi công thức:
+
+\begin{equation}
+    T_{ho} = 
+    \begin{cases}
+        T_h - R + 1 & \text{nếu là Tile đầu tiên } (Tile\_idx = 0) \\
+        T_h & \text{nếu là các Tile tiếp theo } (Tile\_idx > 0)
+    \end{cases}
+\end{equation}
+
+\textbf{Giải thích:}
+\begin{itemize}
+    \item \textbf{Tile đầu tiên ($T_{ho} = T_h - R + 1$):} Do không có dữ liệu tích lũy từ phía trên, $R-1$ hàng cuối cùng không đủ dữ liệu lân cận để hoàn thành phép tính tích chập, trở thành dữ liệu dôi ra (Residual) được lưu vào Buffer.
+    \item \textbf{Các Tile tiếp theo ($T_{ho} = T_h$):} Hệ thống nạp $T_h$ hàng input mới, kết hợp với $R-1$ hàng residual từ tile trước đó. Điều này cho phép hoàn thiện $R-1$ hàng biên cũ và tính trọn vẹn phần thân mới, tạo ra đủ $T_h$ hàng output hợp lệ.
+\end{itemize}
+
+\subsubsection{Phân tích số lượng Pass và Dữ liệu biên}
+Tổng số pass cần thiết được xác định bởi tích số các phân mảnh trên 3 chiều:
+
+\begin{equation}
+    Total\_Pass = \underbrace{\left\lceil \frac{C}{T_c} \right\rceil}_{N_c} \times \underbrace{\left\lceil \frac{H}{T_h} \right\rceil}_{N_h} \times \underbrace{\left\lceil \frac{N_f}{T_m} \right\rceil}_{N_m}
+\end{equation}
+
+Do kích thước layer thường không chia hết cho kích thước Tile, lượng dữ liệu xử lý trong các pass cuối (Boundary Passes) sẽ khác biệt:
+
+\begin{itemize}
+    \item \textbf{Phân mảnh theo kênh ($C$):} Để hoàn thiện một phần output, cần thực hiện $\lceil C / T_c \rceil$ pass tích lũy. Pass cuối cùng xử lý phần dư: $T_h \times W \times (C \pmod{T_c})$.
+    
+    \item \textbf{Phân mảnh theo chiều dọc ($H$):} Cần $\lceil H / T_h \rceil$ bước trượt dọc.
+    \begin{itemize}
+        \item Pass cuối cùng (Last Tile) xử lý chiều cao input dư: $H_{rem} = H \pmod{T_h}$.
+        \item Số hàng Output hợp lệ của Pass cuối cũng tuân theo logic Ping-Pong: Nếu $H_{rem}$ đủ lớn, nó sẽ tạo ra $H_{rem}$ hàng output (do thừa hưởng biên trên).
+    \end{itemize}
+    
+    \item \textbf{Phân mảnh theo số bộ lọc ($N_f$):} Pass cuối xử lý số bộ lọc dư: $N_f \pmod{T_m}$.
+\end{itemize}
+
+\subsubsection{Trường hợp Depthwise Convolution}
+Đối với Depthwise Convolution ($N_f = C$), quy trình được đơn giản hóa do không có vòng lặp tích lũy kênh ($N_c = 1$):
+\begin{itemize}
+    \item Tổng số Pass: $\lceil H / T_h \rceil \times \lceil N_f / T_m \rceil$.
+    \item Kích thước Output Tile $T_{ho}$ vẫn tuân theo quy tắc (3) nêu trên.
+\end{itemize}
 \subsection{Thuật toán Điều phối Pass (Pass Scheduling)}
 
 Trình tự thực hiện các Pass phụ thuộc vào loại tích chập (Standard hay Depthwise) để tối ưu hóa việc tái sử dụng dữ liệu biên (như đã phân tích ở mục Dữ liệu dôi ra).

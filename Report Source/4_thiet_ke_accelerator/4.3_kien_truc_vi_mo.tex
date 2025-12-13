@@ -112,3 +112,89 @@ Với tích chập chiều sâu, các kênh hoạt động độc lập ($N_f = 
 \end{equation}
 
 \textbf{Nhận xét:} So với Standard Convolution, Depthwise Convolution giảm được hệ số $\lceil C/T_c \rceil$ lần số lượng tính toán, giúp tăng tốc độ xử lý đáng kể đối với các mạng nhẹ (Lightweight CNNs) như MobileNet.
+\subsection{Chiến lược Che giấu độ trễ và Mô hình hiệu năng toàn hệ thống}
+\label{subsec:latency_hiding}
+
+Để tối ưu hóa hiệu năng, Beta Accelerator áp dụng kỹ thuật \textbf{Che giấu độ trễ (Latency Hiding)} thông qua cơ chế Ping-Pong Buffer. Mục tiêu là thực hiện song song quá trình tính toán (Computation) và quá trình truyền tải dữ liệu (Data Transfer) để ẩn đi thời gian giao tiếp với bộ nhớ ngoài.
+
+\subsubsection{Cơ chế hoạt động}
+Trước khi bắt đầu tính toán Pass đầu tiên, hệ thống cần nạp đầy đủ dữ liệu (IFM, Weights) vào buffer. Sau giai đoạn khởi tạo này, quy trình hoạt động theo nguyên lý "gối đầu":
+\begin{itemize}
+    \item Trong khi lõi tính toán đang xử lý Pass $i$, bộ điều khiển DMA đồng thời nạp dữ liệu cho Pass $i+1$ vào nửa còn lại của Buffer.
+    \item Đồng thời, kết quả của Pass $i-1$ (nếu đã hoàn tất) được ghi trả về bộ nhớ ngoài.
+\end{itemize}
+
+Do hệ thống sử dụng bus dữ liệu dùng chung (Shared Data Bus) cho cả luồng nạp (Load) và ghi (Store), băng thông bộ nhớ phải được chia sẻ thời gian. Bộ điều khiển sẽ ưu tiên nạp Pass tiếp theo, sau đó mới đến ghi Pass trước đó (hoặc xen kẽ tùy theo chính sách trọng tài).
+
+\subsubsection{Các kịch bản hiệu năng (Performance Scenarios)}
+Gọi $T_{load}$ là thời gian nạp 1 Input Pass, $T_{store}$ là thời gian ghi 1 Output Pass, và $T_{comp}$ là thời gian tính toán 1 Pass ($T_{pass}$ đã tính ở mục 4.3.3). Ta định nghĩa tham số $b$ là \textbf{số chu kỳ đồng hồ cần thiết để truyền 1 giá trị dữ liệu} (Cycles per Data Transfer).
+
+Mô hình thời gian hoàn thành 1 layer được phân tích dựa trên sự chênh lệch giữa năng lực tính toán và băng thông bộ nhớ, được minh họa trong Hình \ref{fig:timing_diagrams}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\linewidth]{image/4/image_f8eee0.png} 
+    \caption{Biểu đồ thời gian thực thi trong 3 trường hợp: (Trên cùng) Memory Bound 1, (Giữa) Memory Bound 2, (Dưới cùng) Compute Bound.}
+    \label{fig:timing_diagrams}
+\end{figure}
+
+\textbf{Trường hợp 1: Memory Bound 1 (Nghẽn băng thông nghiêm trọng)} \\
+Xảy ra khi thời gian nạp dữ liệu lớn hơn thời gian tính toán ($T_{load} \ge T_{comp}$). Lõi tính toán phải chờ dữ liệu nạp xong mới có thể chạy. Tổng thời gian hoàn thành layer được quyết định chủ yếu bởi tổng lượng dữ liệu cần truyền tải (Input + Output).
+
+\begin{itemize}
+    \item \textbf{Đối với Standard Convolution:}
+    Do phải nạp lại Input Feature Map cho mỗi nhóm Filter khác nhau (nếu không đủ bộ nhớ on-chip), tổng thời gian là:
+    \begin{equation}
+        T_{total} \approx \left[ \left( H \times W \times C \times \left\lceil \frac{N_f}{T_m} \right\rceil \right) + \left( H_{out} \times W_{out} \times N_f \right) \right] \times b
+    \end{equation}
+    
+    \item \textbf{Đối với Depthwise Convolution:}
+    Mỗi kênh Input chỉ tương tác với 1 kênh Filter tương ứng ($N_f = C$), nên Input Feature Map chỉ cần nạp 1 lần duy nhất:
+    \begin{equation}
+        T_{total} \approx \left[ \left( H \times W \times C \right) + \left( H_{out} \times W_{out} \times C \right) \right] \times b
+    \end{equation}
+\end{itemize}
+
+\textbf{Trường hợp 2: Memory Bound 2 (Nghẽn băng thông trung bình)} \\
+Xảy ra khi thời gian tính toán nhanh hơn tổng thời gian nạp và ghi, nhưng chậm hơn thời gian nạp ($T_{load} < T_{comp} < T_{load} + T_{store}$). Lúc này, thời gian thực thi bao gồm thời gian nạp, ghi và một phần chênh lệch thời gian tính toán.
+\begin{equation}
+    T_{total} \approx T_{total\_IO} + (T_{comp} - T_{load})
+\end{equation}
+Trong đó $T_{total\_IO}$ được tính theo công thức tại Trường hợp 1 tùy thuộc loại Convolution.
+
+\textbf{Trường hợp 3: Compute Bound (Nghẽn tính toán)} \\
+Xảy ra khi thời gian tính toán lớn hơn tổng thời gian nạp và ghi ($T_{comp} > T_{load} + T_{store}$). Lúc này, toàn bộ thời gian truyền tải dữ liệu (trừ pass đầu và cuối) được che giấu hoàn toàn bên dưới thời gian tính toán.
+
+Công thức tổng quát:
+\begin{equation}
+    T_{total} = T_{load\_first\_pass} + \sum_{all\_passes} T_{comp} + T_{store\_residual}
+\end{equation}
+
+\begin{itemize}
+    \item \textbf{Đối với Standard Convolution:}
+    \begin{equation}
+        T_{total} \approx (T_h W T_c b) + \left( \left\lceil \frac{H}{T_h} \right\rceil \left\lceil \frac{C}{T_c} \right\rceil \left\lceil \frac{N_f}{T_m} \right\rceil \times T_{comp} \right) + T_{res\_std}
+    \end{equation}
+    Với $T_{res\_std}$ là thời gian ghi phần dư cuối cùng phụ thuộc số filter dư ($N_f \% T_m$):
+    \begin{equation}
+        T_{res\_std} = \left( \left\lfloor \frac{H \% T_h}{Str} \right\rfloor + 1 \right) \times W_{out} \times (N_f \% T_m) \times b
+    \end{equation}
+
+    \item \textbf{Đối với Depthwise Convolution:}
+    Do không có vòng lặp tích lũy kênh đầu vào ($C/T_c$), tổng số pass giảm đi đáng kể:
+    \begin{equation}
+        T_{total} \approx (T_h W T_c b) + \left( \left\lceil \frac{H}{T_h} \right\rceil \left\lceil \frac{C}{T_m} \right\rceil \times T_{comp} \right) + T_{res\_dw}
+    \end{equation}
+    Với $T_{res\_dw}$ là thời gian ghi phần dư cuối cùng phụ thuộc số kênh dư ($C \% T_m$):
+    \begin{equation}
+        T_{res\_dw} = \left( \left\lfloor \frac{H \% T_h}{Str} \right\rfloor + 1 \right) \times W_{out} \times (C \% T_m) \times b
+    \end{equation}
+\end{itemize}
+
+\subsubsection{Tổng thời gian toàn mạng (Model Latency)}
+Thời gian thực thi của toàn bộ mô hình (Model) bao gồm $N$ lớp tích chập là tổng thời gian của từng lớp, do sự phụ thuộc dữ liệu tuần tự giữa các lớp (Layer $i+1$ cần OFM của Layer $i$ làm IFM):
+\begin{equation}
+    T_{model} = \sum_{i=1}^{N} T_{total}^{(i)}
+\end{equation}
+
+Mục tiêu của bài toán tối ưu hóa thiết kế là tìm bộ tham số cấu hình ($T_h, T_m, T_c$) cho từng layer sao cho $T_{total}^{(i)}$ là nhỏ nhất, cân bằng giữa tài nguyên tính toán và băng thông bộ nhớ.

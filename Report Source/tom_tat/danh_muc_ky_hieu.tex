@@ -7,41 +7,60 @@
     \hline
     \endhead
     
-    $N$ & Kích thước lô (Batch size) \\
+    % --- Kích thước mạng nơ-ron cơ bản ---
+    $H, W$ & Chiều cao và chiều rộng của đặc trưng đầu vào (Input Feature Map) \\
     $C$ & Số lượng kênh đầu vào (Input Channels) \\
-    $M$ & Số lượng kênh đầu ra (Output Channels/Filters) \\
-    $H_{in}, W_{in}$ & Chiều cao và chiều rộng của đặc trưng đầu vào (Input Feature Map) \\
+    $N_f$ & Số lượng bộ lọc / Số kênh đầu ra (Number of Filters / Output Channels) \\
     $H_{out}, W_{out}$ & Chiều cao và chiều rộng của đặc trưng đầu ra (Output Feature Map) \\
     $R, S$ & Chiều cao và chiều rộng của bộ lọc (Kernel Height, Kernel Width) \\
-    $U$ & Bước trượt (Stride) \\
     $P$ & Kích thước vùng đệm (Padding) \\
+    $Str$ (hoặc $U$) & Bước trượt (Stride) \\
+    
+    % --- Tham số Phân mảnh (Tiling) - Mới thêm vào ---
+    $T_h$ & Chiều cao của mảnh dữ liệu đầu vào trong một Pass (Tile Height) \\
+    $T_c$ & Số kênh đầu vào được xử lý song song trong một Pass (Tile Input Channels) \\
+    $T_m$ & Số bộ lọc được tính toán song song trong một Pass (Tile Output Channels) \\
+    $T_{ho}$ & Chiều cao hợp lệ của mảnh dữ liệu đầu ra trong một Pass \\
+    
+    % --- Tham số Hiệu năng & Thời gian - Mới thêm vào ---
+    $b$ & Số chu kỳ đồng hồ để truyền một giá trị dữ liệu (Cycles per Data Transfer) \\
+    $T_{comp}$ & Thời gian tính toán (Computation time) \\
+    $T_{load}$ & Thời gian nạp dữ liệu (Load time) \\
+    $T_{store}$ & Thời gian ghi dữ liệu (Store time) \\
+    $T_{pass}$ & Thời gian hoàn thành một Pass \\
+    
+    % --- Các ký hiệu toán học khác ---
     $I$ & Tensor dữ liệu đầu vào \\
     $O$ & Tensor dữ liệu đầu ra \\
     $W$ & Tensor trọng số (Weights) \\
     $B$ & Vector hệ số chệch (Bias) \\
-    $O_{dw}$ & Đầu ra của lớp Depthwise Convolution \\
-    $O_{pw}$ & Đầu ra của lớp Pointwise Convolution \\
-    $\mu$ & Giá trị trung bình (Mean) trong Batch Normalization \\
-    $\sigma$ & Phương sai (Variance) trong Batch Normalization \\
-    $\gamma$ & Tham số tỉ lệ (Scale factor) \\
-    $\beta$ & Tham số dịch chuyển (Shift factor) \\
-    $\epsilon$ & Hằng số Epsilon \\
+    $\mu, \sigma$ & Giá trị trung bình (Mean) và Phương sai (Variance) trong Batch Norm \\
+    $\gamma, \beta$ & Tham số tỉ lệ (Scale) và dịch chuyển (Shift) trong Batch Norm \\
+    
     & \\
     \textbf{Viết tắt} & \textbf{Ý nghĩa} \\
     \hline
+    % --- Viết tắt chung ---
     AI & Trí tuệ nhân tạo (Artificial Intelligence) \\
-    SoC & Hệ thống trên chip (System-on-Chip) \\
-    FPGA & Mảng cổng lập trình được dạng trường (Field-Programmable Gate Array) \\
     CNN & Mạng nơ-ron tích chập (Convolutional Neural Network) \\
     DNN & Mạng nơ-ron sâu (Deep Neural Network) \\
+    FPGA & Mảng cổng lập trình được dạng trường (Field-Programmable Gate Array) \\
+    SoC & Hệ thống trên chip (System-on-Chip) \\
     RTL & Mức chuyển giao thanh ghi (Register Transfer Level) \\
-    IP & Sở hữu trí tuệ (Intellectual Property - Khối thiết kế phần cứng) \\
+    
+    % --- Viết tắt chuyên ngành phần cứng (Architecture) ---
+    IFM & Đặc trưng đầu vào (Input Feature Map) \\
+    OFM & Đặc trưng đầu ra (Output Feature Map) \\
     PE & Phần tử xử lý (Processing Element) \\
+    PU & Đơn vị xử lý (Processing Unit - Chứa nhiều PE) \\
+    PA & Mảng xử lý (Process Array - Chứa nhiều PU) \\
     MAC & Phép tính Nhân-Cộng tích lũy (Multiply-Accumulate) \\
-    DMA & Truy cập bộ nhớ trực tiếp (Direct Memory Access) \\
-    AXI & Giao diện mở rộng nâng cao (Advanced eXtensible Interface - chuẩn AMBA) \\
     BRAM & Block RAM (Bộ nhớ nội trên FPGA) \\
+    DMA & Truy cập bộ nhớ trực tiếp (Direct Memory Access) \\
+    AXI & Giao diện mở rộng nâng cao (Advanced eXtensible Interface) \\
     DSP & Digital Signal Processing (Khối xử lý tín hiệu số trên FPGA) \\
     LUT & Bảng tra (Look-Up Table) \\
     FF & Flip-Flop \\
+    DRAM & Bộ nhớ truy cập ngẫu nhiên động (Dynamic Random Access Memory - Bộ nhớ ngoài) \\
+    FSM & Máy trạng thái hữu hạn (Finite State Machine) \\
 \end{longtable}

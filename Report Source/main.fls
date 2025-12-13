@@ -69,6 +69,10 @@ INPUT D:\Tool\MikTex\New folder\tex\latex\caption\caption3.sty
 INPUT D:\Tool\MikTex\New folder\tex\latex\caption\caption3.sty
 INPUT D:\Tool\MikTex\New folder\tex\latex\caption\subcaption.sty
 INPUT D:\Tool\MikTex\New folder\tex\latex\caption\subcaption.sty
+INPUT D:\Tool\MikTex\New folder\tex\latex\tools\tabularx.sty
+INPUT D:\Tool\MikTex\New folder\tex\latex\tools\tabularx.sty
+INPUT D:\Tool\MikTex\New folder\tex\latex\tools\array.sty
+INPUT D:\Tool\MikTex\New folder\tex\latex\tools\array.sty
 INPUT D:\Tool\MikTex\New folder\tex\latex\csquotes\csquotes.sty
 INPUT D:\Tool\MikTex\New folder\tex\latex\csquotes\csquotes.sty
 INPUT D:\Tool\MikTex\New folder\tex\latex\etoolbox\etoolbox.sty
@@ -147,10 +151,6 @@ INPUT D:\Tool\MikTex\New folder\tex\latex\base\latexsym.sty
 INPUT D:\Tool\MikTex\New folder\tex\latex\base\latexsym.sty
 INPUT D:\Tool\MikTex\New folder\tex\latex\commath\commath.sty
 INPUT D:\Tool\MikTex\New folder\tex\latex\commath\commath.sty
-INPUT D:\Tool\MikTex\New folder\tex\latex\tools\array.sty
-INPUT D:\Tool\MikTex\New folder\tex\latex\tools\array.sty
-INPUT D:\Tool\MikTex\New folder\tex\latex\tools\tabularx.sty
-INPUT D:\Tool\MikTex\New folder\tex\latex\tools\tabularx.sty
 INPUT D:\Tool\MikTex\New folder\tex\latex\tools\longtable.sty
 INPUT D:\Tool\MikTex\New folder\tex\latex\tools\longtable.sty
 INPUT D:\Tool\MikTex\New folder\tex\latex\multirow\multirow.sty
@@ -620,8 +620,8 @@ INPUT D:\Tool\MikTex\New folder\fonts\tfm\public\amsfonts\symbols\msbm10.tfm
 INPUT D:\Tool\MikTex\New folder\fonts\tfm\public\amsfonts\symbols\msbm10.tfm
 INPUT D:\Tool\MikTex\New folder\fonts\tfm\public\latex-fonts\lasy10.tfm
 INPUT D:\Tool\MikTex\New folder\fonts\tfm\public\latex-fonts\lasy8.tfm
-INPUT D:\Tool\MikTex\New folder\fonts\enc\dvips\lm\lm-mathit.enc
 OUTPUT main.toc
+INPUT D:\Tool\MikTex\New folder\fonts\enc\dvips\lm\lm-mathit.enc
 INPUT .\main.lof
 INPUT .\main.lof
 INPUT main.lof
@@ -714,6 +714,8 @@ INPUT D:\Tool\MikTex\New folder\fonts\enc\dvips\lm\lm-ts1.enc
 INPUT .\4_thiet_ke_accelerator\4.2_chien_luoc_dataflow.tex
 INPUT .\4_thiet_ke_accelerator\4.2_chien_luoc_dataflow.tex
 INPUT 4_thiet_ke_accelerator\4.2_chien_luoc_dataflow.tex
+INPUT D:\Tool\MikTex\New folder\fonts\tfm\public\lm\t5-lmr10.tfm
+INPUT D:\Tool\MikTex\New folder\fonts\tfm\public\lm\t5-lmr8.tfm
 INPUT .\image\4\std_conv_pass.png
 INPUT .\image\4\std_conv_pass.png
 INPUT .\image\4\std_conv_pass.png
@@ -780,8 +782,13 @@ INPUT .\image\4\pe_arch.png
 INPUT .\image\4\pe_arch.png
 INPUT .\image\4\pe_arch.png
 INPUT .\image\4\pe_arch.png
-INPUT D:\Tool\MikTex\New folder\fonts\tfm\public\lm\t5-lmr10.tfm
-INPUT D:\Tool\MikTex\New folder\fonts\tfm\public\lm\t5-lmr8.tfm
+INPUT .\image\4\image_f8eee0.png
+INPUT .\image\4\image_f8eee0.png
+INPUT .\image\4\image_f8eee0.png
+INPUT .\image\4\image_f8eee0.png
+INPUT .\image\4\image_f8eee0.png
+INPUT .\image\4\image_f8eee0.png
+INPUT .\image\4\image_f8eee0.png
 INPUT .\5_hien_thuc_soc\main.tex
 INPUT .\5_hien_thuc_soc\main.tex
 OUTPUT 5_hien_thuc_soc\main.aux
@@ -876,6 +883,8 @@ INPUT D:\Tool\MikTex\New folder\fonts\type1\public\lm\lmmi10.pfb
 INPUT D:\Tool\MikTex\New folder\fonts\type1\public\lm\lmmi10.pfb
 INPUT D:\Tool\MikTex\New folder\fonts\type1\public\lm\lmmi12.pfb
 INPUT D:\Tool\MikTex\New folder\fonts\type1\public\lm\lmmi12.pfb
+INPUT D:\Tool\MikTex\New folder\fonts\type1\public\lm\lmmi8.pfb
+INPUT D:\Tool\MikTex\New folder\fonts\type1\public\lm\lmmi8.pfb
 INPUT D:\Tool\MikTex\New folder\fonts\type1\public\lm\lmmi9.pfb
 INPUT D:\Tool\MikTex\New folder\fonts\type1\public\lm\lmmi9.pfb
 INPUT D:\Tool\MikTex\New folder\fonts\type1\public\lm\lmr10.pfb
