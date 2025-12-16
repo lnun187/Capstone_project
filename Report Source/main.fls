@@ -620,8 +620,8 @@ INPUT D:\Tool\MikTex\New folder\fonts\tfm\public\amsfonts\symbols\msbm10.tfm
 INPUT D:\Tool\MikTex\New folder\fonts\tfm\public\amsfonts\symbols\msbm10.tfm
 INPUT D:\Tool\MikTex\New folder\fonts\tfm\public\latex-fonts\lasy10.tfm
 INPUT D:\Tool\MikTex\New folder\fonts\tfm\public\latex-fonts\lasy8.tfm
-OUTPUT main.toc
 INPUT D:\Tool\MikTex\New folder\fonts\enc\dvips\lm\lm-mathit.enc
+OUTPUT main.toc
 INPUT .\main.lof
 INPUT .\main.lof
 INPUT main.lof
@@ -789,6 +789,12 @@ INPUT .\image\4\image_f8eee0.png
 INPUT .\image\4\image_f8eee0.png
 INPUT .\image\4\image_f8eee0.png
 INPUT .\image\4\image_f8eee0.png
+INPUT .\4_thiet_ke_accelerator\4.4_toi_uu_tham_so_codegen.tex
+INPUT .\4_thiet_ke_accelerator\4.4_toi_uu_tham_so_codegen.tex
+INPUT 4_thiet_ke_accelerator\4.4_toi_uu_tham_so_codegen.tex
+INPUT D:\Tool\MikTex\New folder\fonts\tfm\public\lm\rm-lmbx12.tfm
+INPUT D:\Tool\MikTex\New folder\fonts\tfm\public\lm\rm-lmbx10.tfm
+INPUT D:\Tool\MikTex\New folder\fonts\tfm\public\lm\rm-lmbx8.tfm
 INPUT .\5_hien_thuc_soc\main.tex
 INPUT .\5_hien_thuc_soc\main.tex
 OUTPUT 5_hien_thuc_soc\main.aux

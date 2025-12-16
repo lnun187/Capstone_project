@@ -142,7 +142,7 @@ Trong Depthwise Convolution, kênh Input thứ $i$ chỉ tính toán với kênh
 
 \begin{algorithm}[H]
 \caption{Lịch trình Pass cho Depthwise Convolution}
-\label{alg:pass_dw}
+\label{alg:pass_dw_a}
 \SetAlgoLined
 \DontPrintSemicolon
 \KwIn{$N_m$ (Channel Groups), $N_h$ (Height Blocks)}
@@ -228,7 +228,7 @@ Các kết quả tại hàng 2 và 3 được gọi là \textbf{Dữ liệu dôi
 
 \subsection{Thuật toán Điều phối và Xoay vòng bộ nhớ}
 
-Thuật toán \ref{alg:pass_std_part1} và \ref{alg:pass_std_part2} mô tả chi tiết quy trình quản lý bộ nhớ và luồng dữ liệu, minh họa rõ sự khác biệt khi xử lý Tile đầu tiên và các Tile sau.
+Thuật toán \ref{alg:pass_std_part1}, \ref{alg:pass_std_part2} và \ref{alg:pass_dw} mô tả chi tiết quy trình quản lý bộ nhớ và luồng dữ liệu, minh họa rõ sự khác biệt khi xử lý Tile đầu tiên và các Tile sau.
 
 % --- PHẦN 1 ---
 \begin{algorithm}[H]
@@ -264,6 +264,49 @@ Thuật toán \ref{alg:pass_std_part1} và \ref{alg:pass_std_part2} mô tả chi
         - Kiểm tra điều kiện biên... \;
         - Ghi phần Valid xuống DRAM.\;
         - Hoán đổi Ping-Pong Buffer.\;
+    }
+\end{algorithm}
+\begin{algorithm}[H]
+    \caption{Lịch trình Pass cho Depthwise Convolution}
+    \label{alg:pass_dw}
+    \SetAlgoLined
+    \DontPrintSemicolon
+    \KwIn{$N_m$ (Số nhóm kênh), $N_h$ (Số khối dọc)}
+    \KwOut{DRAM (Valid Output Feature Map)}
+    
+    % Khởi tạo
+    Initialize pointers: $Buf_{curr} \leftarrow A$, $Buf_{next} \leftarrow B$\;
+    
+    % Vòng lặp Filter Groups
+    \For{$m = 0$ \textbf{to} $N_m - 1$}{
+        \textit{1. Load Weights for Group $m$}\;
+        
+        % Vòng lặp chiều cao
+        \For{$h = 0$ \textbf{to} $N_h - 1$}{
+            \textbf{Pass $(m, h)$:} \;
+            - Nạp Input Tile $(m, h)$ kích thước $T_c \times T_h$\;
+            - Tính toán Depthwise (1-to-1 mapping)\;
+            
+            \textit{2. Xử lý biên \& Quản lý Ping-Pong:}\;
+            
+            % Sử dụng \eIf chuẩn để tránh lỗi
+            \eIf{$h == 0$}{
+                \textit{// Trường hợp Tile đầu tiên}\;
+                - Lưu $T_h - R + 1$ hàng Output hợp lệ vào $Buf_{curr}$\;
+                - Lưu phần dư ($R-1$ hàng cuối) vào $Buf_{next}$\;
+                - \textbf{Drain:} Ghi $Buf_{curr}$ xuống DRAM\;
+            }{
+                \textit{// Các Tile tiếp theo (Tận dụng Residual)}\;
+                - Hoàn thiện $R-1$ hàng biên (từ $Buf_{curr}$ cũ)\;
+                - Tạo thêm các hàng thân mới (đủ $T_h$ hàng)\;
+                - Lưu phần dư mới vào $Buf_{next}$\;
+                - \textbf{Drain:} Ghi toàn bộ $T_h$ hàng hợp lệ xuống DRAM\;
+            }
+            
+            \textit{3. Chuẩn bị cho tile tiếp theo:}\;
+            - Clear $Buf_{curr}$\;
+            - \textbf{Swap pointers:} $Buf_{curr} \leftrightarrow Buf_{next}$\;
+        }
     }
 \end{algorithm}
 
