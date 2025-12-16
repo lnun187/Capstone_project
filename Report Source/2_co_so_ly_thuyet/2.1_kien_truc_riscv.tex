@@ -1,0 +1,122 @@
+% File: 2_co_so_ly_thuyet/2.1_kien_truc_riscv.tex
+
+\subsection{Tổng quan về kiến trúc RISC-V}
+RISC-V là một kiến trúc tập lệnh (ISA - Instruction Set Architecture) mã nguồn mở, ra đời vào năm 2010 tại Đại học California, Berkeley. Khác với các kiến trúc thương mại phổ biến như x86 (Intel) hay ARM, RISC-V được thiết kế dựa trên nguyên lý máy tính tập lệnh rút gọn (RISC) thuần túy, loại bỏ các gánh nặng tương thích ngược của các kiến trúc cũ để tối ưu hóa hiệu năng và năng lượng.
+
+Đặc điểm cốt lõi của RISC-V là tính mô-đun hóa và khả năng mở rộng. Kiến trúc này không định nghĩa một tập lệnh khổng lồ duy nhất, mà chia thành:
+\begin{itemize}
+    \item \textbf{Tập lệnh cơ sở (Base ISA):} Là phần cứng tối thiểu bắt buộc phải có để một vi xử lý được gọi là RISC-V. Đối với các ứng dụng nhúng 32-bit, chuẩn này là \textbf{RV32I} (Base Integer). Nó cung cấp đầy đủ các lệnh để thực thi tính toán nguyên, truy cập bộ nhớ và điều khiển luồng chương trình.
+    \item \textbf{Các phần mở rộng (Extensions):} Là các mô-đun tùy chọn để tăng cường sức mạnh xử lý. Ví dụ: M (Integer Multiplication/Division), A (Atomic instructions), F (Single-precision Floating-point), C (Compressed instructions - nén lệnh 16-bit để tiết kiệm bộ nhớ).
+\end{itemize}
+Sự kết hợp này tạo nên chuỗi định danh cho vi xử lý, ví dụ \textbf{RV32IMAC} biểu thị vi xử lý 32-bit có hỗ trợ nhân chia, thao tác nguyên tử và lệnh nén.
+
+\subsection{Mô hình lập trình và Tập thanh ghi}
+Theo đặc tả của RV32I, trạng thái kiến trúc của một luồng xử lý (Hart - Hardware Thread) bao gồm hai thành phần chính: bộ đếm chương trình (PC) và tập thanh ghi mục đích chung (GPR).
+
+\subsubsection{Bộ đếm chương trình (Program Counter - PC)}
+PC là một thanh ghi 32-bit lưu trữ địa chỉ của lệnh đang được thực thi. Trong RISC-V, PC không phải là một thanh ghi mục đích chung (không thể đánh địa chỉ trực tiếp như GPR). Giá trị của PC chỉ có thể thay đổi thông qua các lệnh rẽ nhánh, nhảy hoặc lệnh hệ thống. Khi khởi động (Reset), PC sẽ được nạp một địa chỉ cố định (Reset Vector) để bắt đầu chu trình nạp lệnh.
+
+\subsubsection{Tập thanh ghi mục đích chung (General Purpose Registers)}
+RV32I cung cấp 32 thanh ghi, được đánh số từ \texttt{x0} đến \texttt{x31}, mỗi thanh ghi rộng 32-bit (XLEN=32). Để đảm bảo chương trình phần mềm hoạt động chính xác với phần cứng, đặc biệt khi sử dụng bộ công cụ biên dịch \textbf{RISC-V GNU Toolchain (GCC)}, các thanh ghi này phải tuân thủ chuẩn Giao diện Nhị phân Ứng dụng (ABI - Application Binary Interface). Trình biên dịch GCC sử dụng các tên quy ước (như \texttt{sp}, \texttt{ra}, \texttt{a0}...) thay vì tên phần cứng (\texttt{x2}, \texttt{x1}, \texttt{x10}...) để quản lý việc gọi hàm và truyền tham số. Chi tiết chức năng được trình bày trong Bảng \ref{tab:riscv_registers}.
+\begin{table}[H]
+    \centering
+    \caption{Tập thanh ghi mục đích chung của RISC-V (RV32I)}
+    \label{tab:riscv_registers}
+    \begin{adjustbox}{width=0.95\textwidth}
+    \begin{tabular}{|c|c|l|l|}
+        \hline
+        \textbf{Tên thanh ghi} & \textbf{Tên ABI} & \textbf{Mô tả chức năng} & \textbf{Lưu bởi} \\ \hline
+        \texttt{x0} & \texttt{zero} & Luôn bằng 0 (Hardwired zero) & N/A \\ \hline
+        \texttt{x1} & \texttt{ra} & Địa chỉ trả về (Return Address) & Caller \\ \hline
+        \texttt{x2} & \texttt{sp} & Con trỏ ngăn xếp (Stack Pointer) & Callee \\ \hline
+        \texttt{x3} & \texttt{gp} & Con trỏ toàn cục (Global Pointer) & N/A \\ \hline
+        \texttt{x4} & \texttt{tp} & Con trỏ luồng (Thread Pointer) & N/A \\ \hline
+        \texttt{x5} & \texttt{t0} & Thanh ghi tạm thời / Địa chỉ trả về thay thế & Caller \\ \hline
+        \texttt{x6 - x7} & \texttt{t1 - t2} & Thanh ghi tạm thời (Temporaries) & Caller \\ \hline
+        \texttt{x8} & \texttt{s0 / fp} & Thanh ghi lưu trữ / Con trỏ khung (Frame Pointer) & Callee \\ \hline
+        \texttt{x9} & \texttt{s1} & Thanh ghi lưu trữ (Saved register) & Callee \\ \hline
+        \texttt{x10 - x11} & \texttt{a0 - a1} & Đối số hàm / Giá trị trả về & Caller \\ \hline
+        \texttt{x12 - x17} & \texttt{a2 - a7} & Đối số hàm (Function Arguments) & Caller \\ \hline
+        \texttt{x18 - x27} & \texttt{s2 - s11} & Thanh ghi lưu trữ (Saved registers) & Callee \\ \hline
+        \texttt{x28 - x31} & \texttt{t3 - t6} & Thanh ghi tạm thời (Temporaries) & Caller \\ \hline
+    \end{tabular}
+    \end{adjustbox}
+\end{table}
+
+Trong đó:
+\begin{itemize}
+    \item \textbf{Caller-saved:} Giá trị không được bảo toàn qua lời gọi hàm (hàm con có thể ghi đè).
+    \item \textbf{Callee-saved:} Giá trị phải được bảo toàn (nếu hàm con muốn dùng, phải lưu ra stack trước và khôi phục lại trước khi return).
+\end{itemize}
+
+\subsection{Đặc tả tập lệnh cơ sở RV32I}
+Tập lệnh RV32I bao gồm 47 lệnh cơ bản. Một điểm đặc biệt trong thiết kế của RISC-V là việc cố định độ dài lệnh ở 32-bit và căn chỉnh bộ nhớ theo từ (word-aligned), giúp đơn giản hóa mạch giải mã lệnh và dự đoán rẽ nhánh.
+
+\subsubsection{Định dạng lệnh (Instruction Formats)}
+RISC-V sử dụng 6 định dạng lệnh cơ bản (R, I, S, B, U, J). Điểm tối ưu trong thiết kế định dạng lệnh của RISC-V là vị trí của các trường thanh ghi nguồn (\texttt{rs1}, \texttt{rs2}) và thanh ghi đích (\texttt{rd}) luôn được giữ cố định tại các bit giống nhau trong mọi định dạng lệnh (xem Hình \ref{fig:rv32i_formats}).
+
+Điều này cho phép bộ giải mã (Decoder) có thể bắt đầu đọc dữ liệu từ tập thanh ghi (Register File) ngay lập tức mà không cần phải chờ xác định xong loại lệnh (Opcode), giúp giảm độ trễ trong đường ống xử lý.
+
+\begin{figure}[H]
+    \centering
+    \begin{tabular}{|c|c|c|c|c|c|c|}
+        \hline
+        \textbf{Bit} & \textbf{31...25} & \textbf{24...20} & \textbf{19...15} & \textbf{14...12} & \textbf{11...7} & \textbf{6...0} \\ \hline
+        R-type & funct7 & rs2 & rs1 & funct3 & rd & opcode \\ \hline
+        I-type & \multicolumn{2}{c|}{imm[11:0]} & rs1 & funct3 & rd & opcode \\ \hline
+        S-type & imm[11:5] & rs2 & rs1 & funct3 & imm[4:0] & opcode \\ \hline
+        B-type & imm[12|10:5] & rs2 & rs1 & funct3 & imm[4:1|11] & opcode \\ \hline
+        U-type & \multicolumn{4}{c|}{imm[31:12]} & rd & opcode \\ \hline
+        J-type & \multicolumn{4}{c|}{imm[20|10:1|11|19]} & rd & opcode \\ \hline
+    \end{tabular}
+    \caption{Cấu trúc bit của các định dạng lệnh RV32I}
+    \label{fig:rv32i_formats}
+\end{figure}
+
+Dưới đây là giải thích chi tiết ý nghĩa của từng loại định dạng lệnh:
+\begin{itemize}
+    \item \textbf{R-type (Register):} Dùng cho các lệnh thao tác trực tiếp giữa thanh ghi và thanh ghi (ví dụ: \texttt{add x1, x2, x3}).
+    \item \textbf{I-type (Immediate):} Dùng cho các lệnh thao tác với hằng số ngắn (Immediate) và các lệnh nạp dữ liệu (Load) từ bộ nhớ.
+    \item \textbf{S-type (Store):} Dùng chuyên biệt cho các lệnh lưu dữ liệu từ thanh ghi vào bộ nhớ.
+    \item \textbf{B-type (Branch):} Dùng cho các lệnh rẽ nhánh có điều kiện (ví dụ: so sánh bằng, so sánh lớn hơn).
+    \item \textbf{U-type (Upper Immediate):} Dùng để thao tác với các hằng số lớn (20-bit cao), thường dùng để nạp địa chỉ nền.
+    \item \textbf{J-type (Jump):} Dùng cho các lệnh nhảy vô điều kiện (dùng trong gọi hàm hoặc vòng lặp).
+\end{itemize}
+
+Một kỹ thuật quan trọng khác là việc mã hóa giá trị tức thời (Immediate Encoding). Trong các lệnh dạng S và B, các bit giá trị tức thời bị phân mảnh và xáo trộn. Tuy nhiên, việc xáo trộn này được thiết kế có chủ đích để các bit này luôn tương ứng với cùng một vị trí bit đầu ra của bộ tạo giá trị tức thời (Immediate Generator), giúp giảm số lượng tầng logic (Fan-out) trong phần cứng.
+
+\subsubsection{Phân nhóm chức năng chi tiết}
+
+\textbf{1. Lệnh tính toán số nguyên (Integer Computational Instructions):} \\
+Nhóm lệnh này thực hiện các phép toán số học và logic. Chúng không gây ra ngoại lệ số học và không thay đổi bất kỳ cờ trạng thái nào (RISC-V không sử dụng thanh ghi cờ như ARM/x86).
+\begin{itemize}
+    \item \textbf{Tính toán với hằng số (I-Type):} \texttt{ADDI}, \texttt{ANDI}, \texttt{ORI}, \texttt{XORI}, \texttt{SLTI} (Set Less Than Immediate). Lệnh \texttt{LUI} (Load Upper Immediate) dùng để nạp 20-bit cao vào thanh ghi.
+    \item \textbf{Tính toán giữa các thanh ghi (R-Type):} \texttt{ADD}, \texttt{SUB}, \texttt{AND}, \texttt{OR}, \texttt{XOR}. Lệnh \texttt{SLT/SLTU} so sánh hai thanh ghi và ghi giá trị 1 vào đích nếu nhỏ hơn, ngược lại ghi 0.
+    \item \textbf{Dịch bit:} \texttt{SLL/SLLI} (Dịch trái logic), \texttt{SRL/SRLI} (Dịch phải logic - chèn 0), \texttt{SRA/SRAI} (Dịch phải số học - giữ nguyên dấu).
+\end{itemize}
+
+\textbf{2. Lệnh truy cập bộ nhớ (Load and Store Instructions):} \\
+RISC-V sử dụng kiến trúc Load-Store thuần túy. Việc tính toán địa chỉ bộ nhớ luôn thông qua công thức: $Address = rs1 + sign\_extend(imm)$.
+\begin{itemize}
+    \item \textbf{Load:} \texttt{LW} (32-bit), \texttt{LH} (16-bit), \texttt{LB} (8-bit). Các biến thể \texttt{LHU} và \texttt{LBU} dùng để nạp dữ liệu không dấu, trong đó phần bit cao của thanh ghi đích sẽ được điền 0 (Zero-extension) thay vì mở rộng dấu (Sign-extension).
+    \item \textbf{Store:} \texttt{SW}, \texttt{SH}, \texttt{SB}. Lệnh store chỉ lấy các bit thấp tương ứng trong thanh ghi nguồn để ghi vào bộ nhớ.
+\end{itemize}
+
+\textbf{3. Lệnh điều khiển luồng (Control Transfer Instructions):} \\
+RISC-V khác biệt so với các kiến trúc cũ ở chỗ lệnh rẽ nhánh thực hiện so sánh trực tiếp hai thanh ghi.
+\begin{itemize}
+    \item \textbf{Rẽ nhánh có điều kiện (Branch):} \texttt{BEQ} (Bằng), \texttt{BNE} (Không bằng), \texttt{BLT/BGE} (So sánh có dấu), \texttt{BLTU/BGEU} (So sánh không dấu). Việc tách biệt so sánh có dấu và không dấu giúp lập trình viên kiểm soát chính xác các cấu trúc điều khiển.
+    \item \textbf{Nhảy vô điều kiện (Jump):} 
+    \begin{itemize}
+        \item \texttt{JAL} (Jump and Link): Nhảy đến địa chỉ tương đối so với PC, đồng thời lưu địa chỉ lệnh kế tiếp (PC+4) vào thanh ghi \texttt{rd} (thường là \texttt{ra}).
+        \item \texttt{JALR} (Jump and Link Register): Nhảy đến địa chỉ tuyệt đối được tính từ thanh ghi cơ sở + offset. Lệnh này hỗ trợ việc gọi hàm qua con trỏ hoặc quay về từ hàm (Return).
+    \end{itemize}
+\end{itemize}
+
+\textbf{4. Lệnh môi trường hệ thống (System Environment):} \\
+Hai lệnh quan trọng nhất là \texttt{ECALL} (Environment Call) dùng để tạo yêu cầu phục vụ từ hệ điều hành (System Call) và \texttt{EBREAK} (Environment Break) dùng để chuyển quyền kiểm soát cho trình gỡ lỗi (Debugger). Ngoài ra, các lệnh \texttt{CSRRW, CSRRS, CSRRC} dùng để đọc/ghi các thanh ghi trạng thái điều khiển (CSR) nhằm quản lý ngắt và cấu hình hệ thống.
+
+\subsection{Vi xử lý PicoRV32}
+Trong đồ án này, nhóm thực hiện lựa chọn lõi vi xử lý \textbf{PicoRV32} để làm bộ xử lý trung tâm cho hệ thống SoC.
+
+PicoRV32 là một hiện thực phần cứng (CPU Core) của kiến trúc RISC-V, hỗ trợ đầy đủ tập lệnh cơ sở \textbf{RV32I}. Đặc điểm nổi bật của PicoRV32 là sự tối ưu hóa về mặt diện tích và tài nguyên trên FPGA, thay vì tập trung vào hiệu năng đường ống (Pipeline) phức tạp. Nó hoạt động dựa trên máy trạng thái đa chu kỳ, cho phép đạt tần số hoạt động cao và dễ dàng tích hợp vào các thiết kế SoC nhỏ gọn phục vụ ứng dụng IoT. Ngoài ra, PicoRV32 cung cấp giao diện đồng xử lý (PCPI), cho phép mở rộng khả năng tính toán thông qua các bộ tăng tốc phần cứng bên ngoài.
