@@ -1,16 +1,32 @@
 \chapter{Hiện thực SoC và Tích hợp hệ thống}
 \label{ch:soc_impl}
 
-\textit{Chương này trình bày quá trình xây dựng hệ thống SoC cơ sở trên FPGA, bao gồm cấu hình vi xử lý, hệ thống bus và tích hợp các ngoại vi.}
+\textit{Chương này trình bày chi tiết quá trình hiện thực hệ thống SoC trên nền tảng FPGA. Nội dung bao gồm việc tích hợp lõi vi xử lý RISC-V, thiết kế các khối ngoại vi (Camera, DMA, UART), xây dựng hệ thống Bus kết nối và phát triển lớp phần mềm điều khiển (Firmware) để vận hành toàn bộ hệ thống.}
 
 \section{Môi trường và Công cụ hiện thực}
+% Mô tả Vivado, board FPGA sử dụng, toolchain GCC cho RISC-V
 \input{5_hien_thuc_soc/5.1_moi_truong_hien_thuc.tex}
 
-\section{Cấu hình hệ thống xử lý (Processing System)}
-\input{5_hien_thuc_soc/5.2_he_thong_xu_ly.tex}
+\section{Tích hợp Lõi RISC-V và Hệ thống Bus}
+% Phần này mô tả backbone của hệ thống:
+% - Cấu hình Core (Clock, Reset, Boot address).
+% - Cấu hình AXI Interconnect/Crossbar (Phân giải địa chỉ Master/Slave).
+\input{5_hien_thuc_soc/5.2_riscv_bus_integration.tex}
 
-\section{Thiết kế hệ thống kết nối (Interconnect Subsystem)}
-\input{5_hien_thuc_soc/5.3_he_thong_ket_noi.tex}
+\section{Thiết kế và Tích hợp các khối Ngoại vi}
+% Đây là phần trọng tâm công việc của bạn (System Design):
+% - Khối DMA Controller (Để chuyển ảnh).
+% - Khối DVP Interface (Giao tiếp Camera).
+% - Các khối cơ bản: UART, SPI, GPIO, Timer.
+\input{5_hien_thuc_soc/5.3_tich_hop_ngoai_vi.tex}
 
-\section{Tích hợp và Kiểm thử nền tảng cơ sở}
-\input{5_hien_thuc_soc/5.4_tich_hop_kiem_thu.tex}
+\section{Phát triển Firmware và Trình điều khiển (Driver)}
+% Phần mềm để chạy hệ thống:
+% - File Linker script (.ld), Startup code (.S).
+% - Các hàm thư viện (HAL) để điều khiển DMA, Camera, Accelerator.
+\input{5_hien_thuc_soc/5.4_firmware_driver.tex}
+
+\section{Quy trình Tổng hợp và Triển khai trên FPGA}
+% Các bước thực hiện: Synthesis -> Implementation -> Bitstream Generation.
+% Thiết lập ràng buộc (Constraints file .xdc): Gán chân PIN, ràng buộc thời gian (Timing).
+\input{5_hien_thuc_soc/5.5_trien_khai_fpga.tex}

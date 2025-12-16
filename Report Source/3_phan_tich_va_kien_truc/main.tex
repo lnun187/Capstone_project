@@ -1,13 +1,30 @@
-\chapter{Phân tích và Kiến trúc hệ thống}
-\label{ch:system_architecture}
+\chapter{Phân tích và \\ Kiến trúc hệ thống}
+\label{ch:architecture}
 
-\textit{Chương này phân tích các ràng buộc thiết kế từ đó đề xuất kiến trúc tổng thể của hệ thống SoC tích hợp AI Accelerator.}
+\textit{Dựa trên cơ sở lý thuyết đã trình bày, chương này đi sâu vào phân tích các yêu cầu kỹ thuật, từ đó đề xuất kiến trúc tổng thể của hệ thống SoC (System-on-Chip). Đồng thời, chương này cũng xác định đặc tả chức năng của từng khối thành phần và quy hoạch không gian địa chỉ bộ nhớ (Memory Map) cho toàn hệ thống.}
 
 \section{Phân tích yêu cầu thiết kế}
-\input{3_phan_tich_va_kien_truc/3.1_yeu_cau_thiet_ke.tex}
+% Phần này liệt kê:
+% 1. Yêu cầu chức năng: Hệ thống phải làm gì? (Thu thập ảnh từ DVP, Xử lý qua CNN, Xuất kết quả UART/HDMI...)
+% 2. Yêu cầu phi chức năng: Tần số hoạt động, tài nguyên FPGA (LUT, BRAM) tối đa cho phép, độ chính xác model AI.
+\input{3_phan_tich_va_kien_truc/3.1_phan_tich_yeu_cau.tex}
 
-\section{Kiến trúc hệ thống tổng quan}
-\input{3_phan_tich_va_kien_truc/3.2_kien_truc_tong_quan.tex}
+\section{Kiến trúc tổng thể SoC}
+% Phần này quan trọng nhất:
+% - Vẽ sơ đồ khối Top-level (Block Diagram).
+% - Mô tả kiến trúc Bus (AXI Interconnect): Ai là Master (CPU, DMA)? Ai là Slave (RAM, Accelerator, Peripherals)?
+\input{3_phan_tich_va_kien_truc/3.2_kien_truc_tong_the.tex}
 
-\section{Đặc tả giao diện kết nối}
-\input{3_phan_tich_va_kien_truc/3.3_giao_dien_ket_noi.tex}
+\section{Đặc tả các khối chức năng chính}
+% Tại đây chốt thông số kỹ thuật (Spec) cho các khối để Chương 4 và 5 cứ thế mà làm:
+% - CPU: Dùng core nào? (VD: PicoRV32, Ibex), tập lệnh gì (RV32I hay RV32IMC)?
+% - Accelerator: Kích thước mảng tính toán (VD: 3x3 PE Array), hỗ trợ lớp nào (Conv, Pool, ReLU)?
+% - DMA: Số kênh truyền (Channels)?
+% - Ngoại vi: Camera độ phân giải bao nhiêu? UART baudrate bao nhiêu?
+\input{3_phan_tich_va_kien_truc/3.3_dac_ta_khoi.tex}
+
+\section{Tổ chức bộ nhớ và Bản đồ địa chỉ (Memory Map)}
+% Bảng quy hoạch địa chỉ (Address Map) là bắt buộc trong thiết kế SoC.
+% VD: RAM từ 0x0000_0000, Accelerator từ 0x4000_0000, UART từ 0x8000_0000...
+% Phần này giúp Software (Firmware) biết địa chỉ nào để điều khiển phần cứng.
+\input{3_phan_tich_va_kien_truc/3.4_memory_map.tex}

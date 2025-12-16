@@ -13,10 +13,11 @@
 \contentsline {section}{\numberline {2.2}Tổng quan về Mạng nơ-ron tích chập (CNN)}{7}{section.2.2}%
 \contentsline {section}{\numberline {2.3}Các chuẩn giao tiếp hệ thống}{7}{section.2.3}%
 \contentsline {section}{\numberline {2.4}Công nghệ FPGA và Quy trình thiết kế}{7}{section.2.4}%
-\contentsline {chapter}{\numberline {3}Phân tích và Kiến trúc hệ thống}{8}{chapter.3}%
+\contentsline {chapter}{\numberline {3}Phân tích và \\ Kiến trúc hệ thống}{8}{chapter.3}%
 \contentsline {section}{\numberline {3.1}Phân tích yêu cầu thiết kế}{8}{section.3.1}%
-\contentsline {section}{\numberline {3.2}Kiến trúc hệ thống tổng quan}{8}{section.3.2}%
-\contentsline {section}{\numberline {3.3}Đặc tả giao diện kết nối}{8}{section.3.3}%
+\contentsline {section}{\numberline {3.2}Kiến trúc tổng thể SoC}{8}{section.3.2}%
+\contentsline {section}{\numberline {3.3}Đặc tả các khối chức năng chính}{8}{section.3.3}%
+\contentsline {section}{\numberline {3.4}Tổ chức bộ nhớ và Bản đồ địa chỉ (Memory Map)}{8}{section.3.4}%
 \contentsline {chapter}{\numberline {4} Thiết kế Bộ tăng tốc AI (AI Accelerator):}{9}{chapter.4}%
 \contentsline {section}{\numberline {4.1}Phân tích toán học của phép tính tích chập}{9}{section.4.1}%
 \contentsline {subsection}{\numberline {4.1.1}Standard Convolution (Tích chập tiêu chuẩn)}{10}{subsection.4.1.1}%
@@ -63,15 +64,16 @@
 \contentsline {subsection}{\numberline {4.4.2}Chiến lược Tìm kiếm và Sinh mã (Search \& Generate)}{38}{subsection.4.4.2}%
 \contentsline {subsection}{\numberline {4.4.3}Cấu trúc Lệnh cấu hình (Layer Descriptor)}{39}{subsection.4.4.3}%
 \contentsline {chapter}{\numberline {5}Hiện thực SoC và Tích hợp hệ thống}{40}{chapter.5}%
-\contentsline {section}{\numberline {5.1}Môi trường và Công cụ hiện thực}{40}{section.5.1}%
-\contentsline {section}{\numberline {5.2}Cấu hình hệ thống xử lý (Processing System)}{40}{section.5.2}%
-\contentsline {section}{\numberline {5.3}Thiết kế hệ thống kết nối (Interconnect Subsystem)}{40}{section.5.3}%
-\contentsline {section}{\numberline {5.4}Tích hợp và Kiểm thử nền tảng cơ sở}{40}{section.5.4}%
-\contentsline {chapter}{\numberline {6}Đánh giá kết quả}{41}{chapter.6}%
-\contentsline {section}{\numberline {6.1}Phương pháp đánh giá: Mô hình Roofline}{41}{section.6.1}%
-\contentsline {section}{\numberline {6.2}Ước lượng độ trễ và Tài nguyên}{41}{section.6.2}%
-\contentsline {section}{\numberline {6.3}So sánh với các nghiên cứu liên quan}{41}{section.6.3}%
-\contentsline {chapter}{\numberline {7}Kết luận và Hướng phát triển}{42}{chapter.7}%
-\contentsline {section}{\numberline {7.1}Đánh giá mức độ hoàn thành Giai đoạn 1}{42}{section.7.1}%
-\contentsline {section}{\numberline {7.2}Kế hoạch thực hiện Giai đoạn 2}{42}{section.7.2}%
-\contentsline {section}{\numberline {7.3}Tiến độ dự kiến}{42}{section.7.3}%
+\contentsline {section}{\numberline {5.1}Môi trường và Công cụ hiện thực}{41}{section.5.1}%
+\contentsline {section}{\numberline {5.2}Tích hợp Lõi RISC-V và Hệ thống Bus}{41}{section.5.2}%
+\contentsline {section}{\numberline {5.3}Thiết kế và Tích hợp các khối Ngoại vi}{41}{section.5.3}%
+\contentsline {section}{\numberline {5.4}Phát triển Firmware và Trình điều khiển (Driver)}{41}{section.5.4}%
+\contentsline {section}{\numberline {5.5}Quy trình Tổng hợp và Triển khai trên FPGA}{41}{section.5.5}%
+\contentsline {chapter}{\numberline {6}Đánh giá kết quả}{42}{chapter.6}%
+\contentsline {section}{\numberline {6.1}Phương pháp đánh giá: Mô hình Roofline}{42}{section.6.1}%
+\contentsline {section}{\numberline {6.2}Ước lượng độ trễ và Tài nguyên}{42}{section.6.2}%
+\contentsline {section}{\numberline {6.3}So sánh với các nghiên cứu liên quan}{42}{section.6.3}%
+\contentsline {chapter}{\numberline {7}Kết luận và Hướng phát triển}{43}{chapter.7}%
+\contentsline {section}{\numberline {7.1}Đánh giá mức độ hoàn thành Giai đoạn 1}{43}{section.7.1}%
+\contentsline {section}{\numberline {7.2}Kế hoạch thực hiện Giai đoạn 2}{43}{section.7.2}%
+\contentsline {section}{\numberline {7.3}Tiến độ dự kiến}{43}{section.7.3}%
