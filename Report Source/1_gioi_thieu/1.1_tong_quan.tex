@@ -1,13 +1,18 @@
 \section{Tổng quan về đề tài}
-\textbf{Tên đề tài:} Thiết kế SoC RISC-V tích hợp EdgeAI cho ứng dụng IoT. \\ 
 
-Đề tài tập trung vào việc thiết kế và phát triển một hệ thống SoC dựa trên vi xử lý RISC-V tích hợp phần tăng tốc EdgeAI, nhằm xử lý các tác vụ trí tuệ nhân tạo tại biên. 
-Hệ thống sẽ được triển khai thử nghiệm trên nền tảng FPGA, với kiến trúc hướng 
-tới khả năng chuyển đổi sang thiết kế ASIC. 
-Đề tài cũng bao gồm thử nghiệm hiệu suất hệ thống 
-với một tập dữ liệu cố định và triển khai một số ứng dụng IoT làm case 
-study nhằm đánh giá tính khả thi và hiệu quả của hệ thống trong môi trường thực tế. \\ 
+\textbf{Tên đề tài:} Thiết kế SoC RISC-V tích hợp EdgeAI cho ứng dụng IoT. \\
 
 
-Hệ thống sẽ bao gồm: Vi xử lý RISC-V, CNN accelerator, Bus giao tiếp nội bộ (AXI-Lite, AXI-Stream), bộ điều khiển
-DMA và giao tiếp I/O với ngoại vi (OSPI, SPI, UART, I2C, DVP, GPIO,...).
+Đề tài tập trung vào việc thiết kế và phát triển một hệ thống trên chip (SoC) dựa trên vi xử lý RISC-V tích hợp phần tăng tốc EdgeAI (Accelerator), nhằm xử lý các tác vụ trí tuệ nhân tạo ngay tại biên. Hệ thống sẽ được triển khai thử nghiệm trên nền tảng FPGA, với kiến trúc được tối ưu hóa nhằm hướng tới khả năng chuyển đổi sang thiết kế ASIC (Application-Specific Integrated Circuit) trong tương lai. \\ 
+
+
+Bên cạnh việc thiết kế phần cứng, đề tài cũng bao gồm quá trình thử nghiệm hiệu suất hệ thống với một tập dữ liệu cố định và triển khai một số ứng dụng IoT thực tế làm "case study" (ví dụ: nhận diện hình ảnh từ camera) nhằm đánh giá tính khả thi và hiệu quả hoạt động của hệ thống trong môi trường thực tế.
+
+Hệ thống hoàn chỉnh sẽ bao gồm các thành phần chính:
+\begin{itemize}
+    \item Lõi vi xử lý RISC-V (CPU Core).
+    \item Bộ tăng tốc mạng nơ-ron tích chập (CNN Accelerator).
+    \item Hệ thống Bus giao tiếp nội bộ (AXI-Lite, AXI-Stream).
+    \item Bộ truy cập bộ nhớ trực tiếp (DMA).
+    \item Các giao tiếp I/O với ngoại vi (OSPI, SPI, UART, I2C, DVP, GPIO, TIMER,...).
+\end{itemize}

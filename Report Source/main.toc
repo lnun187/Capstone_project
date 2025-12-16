@@ -3,72 +3,74 @@
 \contentsline {chapter}{\numberline {1}Giới thiệu đề tài}{1}{chapter.1}%
 \contentsline {section}{\numberline {1.1}Tổng quan về đề tài}{1}{section.1.1}%
 \contentsline {section}{\numberline {1.2}Mục tiêu và Nhiệm vụ nghiên cứu}{2}{section.1.2}%
-\contentsline {section}{\numberline {1.3}Phạm vi đề tài}{2}{section.1.3}%
-\contentsline {section}{\numberline {1.4}Phân chia công việc}{2}{section.1.4}%
-\contentsline {section}{\numberline {1.5}Cấu trúc báo cáo}{2}{section.1.5}%
-\contentsline {chapter}{\numberline {2}Cơ sở lý thuyết}{3}{chapter.2}%
-\contentsline {section}{\numberline {2.1}Tổng quan về Mạng nơ-ron tích chập (CNN)}{3}{section.2.1}%
-\contentsline {section}{\numberline {2.2}Kỹ thuật thiết kế bộ tăng tốc phần cứng (AI Accelerator)}{3}{section.2.2}%
-\contentsline {section}{\numberline {2.3}Kiến trúc System-on-Chip}{3}{section.2.3}%
-\contentsline {chapter}{\numberline {3}Phân tích yêu cầu và Kiến trúc tổng quan}{4}{chapter.3}%
-\contentsline {section}{\numberline {3.1}Phân tích yêu cầu thiết kế}{4}{section.3.1}%
-\contentsline {section}{\numberline {3.2}Kiến trúc hệ thống tổng quan}{4}{section.3.2}%
-\contentsline {section}{\numberline {3.3}Đặc tả giao diện kết nối}{4}{section.3.3}%
-\contentsline {chapter}{\numberline {4}Thiết kế kiến trúc Accelerator và Chiến lược dòng dữ liệu}{5}{chapter.4}%
-\contentsline {section}{\numberline {4.1}Phân tích toán học của phép tính tích chập}{5}{section.4.1}%
-\contentsline {subsection}{\numberline {4.1.1}Standard Convolution (Tích chập tiêu chuẩn)}{6}{subsection.4.1.1}%
-\contentsline {subsubsection}{\numberline {4.1.1.1}Công thức toán học tổng quát}{6}{subsubsection.4.1.1.1}%
-\contentsline {subsubsection}{\numberline {4.1.1.2}Cấu trúc vòng lặp (Loop Nest)}{6}{subsubsection.4.1.1.2}%
-\contentsline {subsection}{\numberline {4.1.2}Depthwise Separable Convolution}{7}{subsection.4.1.2}%
-\contentsline {subsubsection}{\numberline {4.1.2.1}Depthwise Convolution (DW)}{8}{subsubsection.4.1.2.1}%
-\contentsline {subsubsection}{\numberline {4.1.2.2}Pointwise Convolution (PW)}{9}{subsubsection.4.1.2.2}%
-\contentsline {subsection}{\numberline {4.1.3}Yêu cầu đối với Kiến trúc thống nhất (Unified Architecture)}{9}{subsection.4.1.3}%
-\contentsline {subsection}{\numberline {4.1.4}Kỹ thuật Gập Batch Normalization (BN Folding)}{9}{subsection.4.1.4}%
-\contentsline {subsubsection}{\numberline {4.1.4.1}Công thức biến đổi trọng số}{10}{subsubsection.4.1.4.1}%
-\contentsline {section}{\numberline {4.2}Chiến lược phân mảnh và Dòng dữ liệu đề xuất}{11}{section.4.2}%
-\contentsline {subsection}{\numberline {4.2.1}Định nghĩa khái niệm "Tile" (Mảnh dữ liệu)}{11}{subsection.4.2.1}%
-\contentsline {subsection}{\numberline {4.2.2}Phương pháp Phân mảnh không gian dữ liệu (Space Partitioning)}{12}{subsection.4.2.2}%
-\contentsline {subsubsection}{\numberline {4.2.2.1}Công thức chia khối (Block Calculation)}{12}{subsubsection.4.2.2.1}%
-\contentsline {subsection}{\numberline {4.2.3}Mô hình hóa toán học và Tham số thiết kế}{13}{subsection.4.2.3}%
-\contentsline {subsubsection}{\numberline {4.2.3.1}Công thức tính kích thước không gian toàn cục}{13}{subsubsection.4.2.3.1}%
-\contentsline {subsubsection}{\numberline {4.2.3.2}Tính toán kích thước Output Tile theo cơ chế Ping-Pong}{14}{subsubsection.4.2.3.2}%
-\contentsline {subsubsection}{\numberline {4.2.3.3}Phân tích số lượng Pass và Dữ liệu biên}{14}{subsubsection.4.2.3.3}%
-\contentsline {subsubsection}{\numberline {4.2.3.4}Trường hợp Depthwise Convolution}{15}{subsubsection.4.2.3.4}%
-\contentsline {subsection}{\numberline {4.2.4}Thuật toán Điều phối Pass (Pass Scheduling)}{15}{subsection.4.2.4}%
-\contentsline {subsubsection}{\numberline {4.2.4.1}Thuật toán cho Standard Convolution}{16}{subsubsection.4.2.4.1}%
-\contentsline {subsubsection}{\numberline {4.2.4.2}Thuật toán cho Depthwise Convolution}{16}{subsubsection.4.2.4.2}%
-\contentsline {subsection}{\numberline {4.2.5}Phân tích vấn đề tại biên và Dữ liệu dôi ra}{17}{subsection.4.2.5}%
-\contentsline {subsubsection}{\numberline {4.2.5.1}Cơ sở hình thành Dữ liệu dôi ra}{18}{subsubsection.4.2.5.1}%
-\contentsline {subsection}{\numberline {4.2.6}Cơ chế Ping-Pong Buffer và Logic xử lý hàng hợp lệ}{19}{subsection.4.2.6}%
-\contentsline {subsection}{\numberline {4.2.7}Thuật toán Điều phối và Xoay vòng bộ nhớ}{20}{subsection.4.2.7}%
-\contentsline {section}{\numberline {4.3}Thiết kế kiến trúc vi mô (Micro-architecture)}{24}{section.4.3}%
-\contentsline {subsection}{\numberline {4.3.1}Sơ đồ khối tổng quát hệ thống}{24}{subsection.4.3.1}%
-\contentsline {subsection}{\numberline {4.3.2}Tổ chức Mảng tính toán (Processing Hierarchy)}{26}{subsection.4.3.2}%
-\contentsline {subsubsection}{\numberline {4.3.2.1}Mảng xử lý (Process Array - PA)}{26}{subsubsection.4.3.2.1}%
-\contentsline {subsubsection}{\numberline {4.3.2.2}Đơn vị xử lý (Process Unit - PU)}{26}{subsubsection.4.3.2.2}%
-\contentsline {subsubsection}{\numberline {4.3.2.3}Phần tử xử lý (Process Element - PE)}{27}{subsubsection.4.3.2.3}%
-\contentsline {subsection}{\numberline {4.3.3}Đánh giá thời gian thực thi (Performance Estimation)}{28}{subsection.4.3.3}%
-\contentsline {subsubsection}{\numberline {4.3.3.1}Thời gian xử lý một Pass cơ sở ($T_{pass}$)}{28}{subsubsection.4.3.3.1}%
-\contentsline {subsubsection}{\numberline {4.3.3.2}Tổng thời gian thực thi ($T_{total}$)}{29}{subsubsection.4.3.3.2}%
-\contentsline {subsection}{\numberline {4.3.4}Chiến lược Che giấu độ trễ và Mô hình hiệu năng toàn hệ thống}{29}{subsection.4.3.4}%
-\contentsline {subsubsection}{\numberline {4.3.4.1}Cơ chế hoạt động}{30}{subsubsection.4.3.4.1}%
-\contentsline {subsubsection}{\numberline {4.3.4.2}Các kịch bản hiệu năng (Performance Scenarios)}{30}{subsubsection.4.3.4.2}%
-\contentsline {subsubsection}{\numberline {4.3.4.3}Tổng thời gian toàn mạng (Model Latency)}{33}{subsubsection.4.3.4.3}%
-\contentsline {section}{\numberline {4.4}Tối ưu hóa Tham số và Cơ chế Sinh mã cấu hình}{33}{section.4.4}%
-\contentsline {subsection}{\numberline {4.4.1}Bài toán Tối ưu hóa Không gian thiết kế}{33}{subsection.4.4.1}%
-\contentsline {subsubsection}{\numberline {4.4.1.1}Các ràng buộc phần cứng (Hardware Constraints)}{34}{subsubsection.4.4.1.1}%
-\contentsline {subsection}{\numberline {4.4.2}Chiến lược Tìm kiếm và Sinh mã (Search \& Generate)}{34}{subsection.4.4.2}%
-\contentsline {subsection}{\numberline {4.4.3}Cấu trúc Lệnh cấu hình (Layer Descriptor)}{35}{subsection.4.4.3}%
-\contentsline {chapter}{\numberline {5}Hiện thực nền tảng SoC}{36}{chapter.5}%
-\contentsline {section}{\numberline {5.1}Môi trường và Công cụ hiện thực}{36}{section.5.1}%
-\contentsline {section}{\numberline {5.2}Cấu hình hệ thống xử lý (Processing System)}{36}{section.5.2}%
-\contentsline {section}{\numberline {5.3}Thiết kế hệ thống kết nối (Interconnect Subsystem)}{36}{section.5.3}%
-\contentsline {section}{\numberline {5.4}Tích hợp và Kiểm thử nền tảng cơ sở}{36}{section.5.4}%
-\contentsline {chapter}{\numberline {6}Đánh giá hiệu năng lý thuyết}{37}{chapter.6}%
-\contentsline {section}{\numberline {6.1}Phương pháp đánh giá: Mô hình Roofline}{37}{section.6.1}%
-\contentsline {section}{\numberline {6.2}Ước lượng độ trễ và Tài nguyên}{37}{section.6.2}%
-\contentsline {section}{\numberline {6.3}So sánh với các nghiên cứu liên quan}{37}{section.6.3}%
-\contentsline {chapter}{\numberline {7}Kế hoạch phát triển}{38}{chapter.7}%
-\contentsline {section}{\numberline {7.1}Đánh giá mức độ hoàn thành Giai đoạn 1}{38}{section.7.1}%
-\contentsline {section}{\numberline {7.2}Kế hoạch thực hiện Giai đoạn 2}{38}{section.7.2}%
-\contentsline {section}{\numberline {7.3}Tiến độ dự kiến}{38}{section.7.3}%
+\contentsline {section}{\numberline {1.3}Phạm vi đề tài}{3}{section.1.3}%
+\contentsline {subsection}{\numberline {1.3.1}Phạm vi và Giới hạn đề tài}{3}{subsection.1.3.1}%
+\contentsline {subsection}{\numberline {1.3.2}Đối tượng và Công cụ nghiên cứu}{3}{subsection.1.3.2}%
+\contentsline {section}{\numberline {1.4}Phân chia công việc}{4}{section.1.4}%
+\contentsline {section}{\numberline {1.5}Cấu trúc báo cáo}{6}{section.1.5}%
+\contentsline {chapter}{\numberline {2}Cơ sở lý thuyết}{7}{chapter.2}%
+\contentsline {section}{\numberline {2.1}Tổng quan về Mạng nơ-ron tích chập (CNN)}{7}{section.2.1}%
+\contentsline {section}{\numberline {2.2}Kỹ thuật thiết kế bộ tăng tốc phần cứng (AI Accelerator)}{7}{section.2.2}%
+\contentsline {section}{\numberline {2.3}Kiến trúc System-on-Chip}{7}{section.2.3}%
+\contentsline {chapter}{\numberline {3}Phân tích và Kiến trúc hệ thống}{8}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Phân tích yêu cầu thiết kế}{8}{section.3.1}%
+\contentsline {section}{\numberline {3.2}Kiến trúc hệ thống tổng quan}{8}{section.3.2}%
+\contentsline {section}{\numberline {3.3}Đặc tả giao diện kết nối}{8}{section.3.3}%
+\contentsline {chapter}{\numberline {4} Thiết kế Bộ tăng tốc AI (AI Accelerator):}{9}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Phân tích toán học của phép tính tích chập}{9}{section.4.1}%
+\contentsline {subsection}{\numberline {4.1.1}Standard Convolution (Tích chập tiêu chuẩn)}{10}{subsection.4.1.1}%
+\contentsline {subsubsection}{\numberline {4.1.1.1}Công thức toán học tổng quát}{10}{subsubsection.4.1.1.1}%
+\contentsline {subsubsection}{\numberline {4.1.1.2}Cấu trúc vòng lặp (Loop Nest)}{10}{subsubsection.4.1.1.2}%
+\contentsline {subsection}{\numberline {4.1.2}Depthwise Separable Convolution}{11}{subsection.4.1.2}%
+\contentsline {subsubsection}{\numberline {4.1.2.1}Depthwise Convolution (DW)}{12}{subsubsection.4.1.2.1}%
+\contentsline {subsubsection}{\numberline {4.1.2.2}Pointwise Convolution (PW)}{13}{subsubsection.4.1.2.2}%
+\contentsline {subsection}{\numberline {4.1.3}Yêu cầu đối với Kiến trúc thống nhất (Unified Architecture)}{13}{subsection.4.1.3}%
+\contentsline {subsection}{\numberline {4.1.4}Kỹ thuật Gập Batch Normalization (BN Folding)}{13}{subsection.4.1.4}%
+\contentsline {subsubsection}{\numberline {4.1.4.1}Công thức biến đổi trọng số}{14}{subsubsection.4.1.4.1}%
+\contentsline {section}{\numberline {4.2}Chiến lược phân mảnh và Dòng dữ liệu đề xuất}{15}{section.4.2}%
+\contentsline {subsection}{\numberline {4.2.1}Định nghĩa khái niệm "Tile" (Mảnh dữ liệu)}{15}{subsection.4.2.1}%
+\contentsline {subsection}{\numberline {4.2.2}Phương pháp Phân mảnh không gian dữ liệu (Space Partitioning)}{16}{subsection.4.2.2}%
+\contentsline {subsubsection}{\numberline {4.2.2.1}Công thức chia khối (Block Calculation)}{16}{subsubsection.4.2.2.1}%
+\contentsline {subsection}{\numberline {4.2.3}Mô hình hóa toán học và Tham số thiết kế}{17}{subsection.4.2.3}%
+\contentsline {subsubsection}{\numberline {4.2.3.1}Công thức tính kích thước không gian toàn cục}{17}{subsubsection.4.2.3.1}%
+\contentsline {subsubsection}{\numberline {4.2.3.2}Tính toán kích thước Output Tile theo cơ chế Ping-Pong}{18}{subsubsection.4.2.3.2}%
+\contentsline {subsubsection}{\numberline {4.2.3.3}Phân tích số lượng Pass và Dữ liệu biên}{18}{subsubsection.4.2.3.3}%
+\contentsline {subsubsection}{\numberline {4.2.3.4}Trường hợp Depthwise Convolution}{19}{subsubsection.4.2.3.4}%
+\contentsline {subsection}{\numberline {4.2.4}Thuật toán Điều phối Pass (Pass Scheduling)}{19}{subsection.4.2.4}%
+\contentsline {subsubsection}{\numberline {4.2.4.1}Thuật toán cho Standard Convolution}{20}{subsubsection.4.2.4.1}%
+\contentsline {subsubsection}{\numberline {4.2.4.2}Thuật toán cho Depthwise Convolution}{20}{subsubsection.4.2.4.2}%
+\contentsline {subsection}{\numberline {4.2.5}Phân tích vấn đề tại biên và Dữ liệu dôi ra}{21}{subsection.4.2.5}%
+\contentsline {subsubsection}{\numberline {4.2.5.1}Cơ sở hình thành Dữ liệu dôi ra}{22}{subsubsection.4.2.5.1}%
+\contentsline {subsection}{\numberline {4.2.6}Cơ chế Ping-Pong Buffer và Logic xử lý hàng hợp lệ}{23}{subsection.4.2.6}%
+\contentsline {subsection}{\numberline {4.2.7}Thuật toán Điều phối và Xoay vòng bộ nhớ}{24}{subsection.4.2.7}%
+\contentsline {section}{\numberline {4.3}Thiết kế kiến trúc vi mô (Micro-architecture)}{28}{section.4.3}%
+\contentsline {subsection}{\numberline {4.3.1}Sơ đồ khối tổng quát hệ thống}{28}{subsection.4.3.1}%
+\contentsline {subsection}{\numberline {4.3.2}Tổ chức Mảng tính toán (Processing Hierarchy)}{30}{subsection.4.3.2}%
+\contentsline {subsubsection}{\numberline {4.3.2.1}Mảng xử lý (Process Array - PA)}{30}{subsubsection.4.3.2.1}%
+\contentsline {subsubsection}{\numberline {4.3.2.2}Đơn vị xử lý (Process Unit - PU)}{30}{subsubsection.4.3.2.2}%
+\contentsline {subsubsection}{\numberline {4.3.2.3}Phần tử xử lý (Process Element - PE)}{31}{subsubsection.4.3.2.3}%
+\contentsline {subsection}{\numberline {4.3.3}Đánh giá thời gian thực thi (Performance Estimation)}{32}{subsection.4.3.3}%
+\contentsline {subsubsection}{\numberline {4.3.3.1}Thời gian xử lý một Pass cơ sở ($T_{pass}$)}{32}{subsubsection.4.3.3.1}%
+\contentsline {subsubsection}{\numberline {4.3.3.2}Tổng thời gian thực thi ($T_{total}$)}{33}{subsubsection.4.3.3.2}%
+\contentsline {subsection}{\numberline {4.3.4}Chiến lược Che giấu độ trễ và Mô hình hiệu năng toàn hệ thống}{33}{subsection.4.3.4}%
+\contentsline {subsubsection}{\numberline {4.3.4.1}Cơ chế hoạt động}{34}{subsubsection.4.3.4.1}%
+\contentsline {subsubsection}{\numberline {4.3.4.2}Các kịch bản hiệu năng (Performance Scenarios)}{34}{subsubsection.4.3.4.2}%
+\contentsline {subsubsection}{\numberline {4.3.4.3}Tổng thời gian toàn mạng (Model Latency)}{37}{subsubsection.4.3.4.3}%
+\contentsline {section}{\numberline {4.4}Tối ưu hóa Tham số và Cơ chế Sinh mã cấu hình}{37}{section.4.4}%
+\contentsline {subsection}{\numberline {4.4.1}Bài toán Tối ưu hóa Không gian thiết kế}{37}{subsection.4.4.1}%
+\contentsline {subsubsection}{\numberline {4.4.1.1}Các ràng buộc phần cứng (Hardware Constraints)}{38}{subsubsection.4.4.1.1}%
+\contentsline {subsection}{\numberline {4.4.2}Chiến lược Tìm kiếm và Sinh mã (Search \& Generate)}{38}{subsection.4.4.2}%
+\contentsline {subsection}{\numberline {4.4.3}Cấu trúc Lệnh cấu hình (Layer Descriptor)}{39}{subsection.4.4.3}%
+\contentsline {chapter}{\numberline {5}Hiện thực SoC và Tích hợp hệ thống}{40}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Môi trường và Công cụ hiện thực}{40}{section.5.1}%
+\contentsline {section}{\numberline {5.2}Cấu hình hệ thống xử lý (Processing System)}{40}{section.5.2}%
+\contentsline {section}{\numberline {5.3}Thiết kế hệ thống kết nối (Interconnect Subsystem)}{40}{section.5.3}%
+\contentsline {section}{\numberline {5.4}Tích hợp và Kiểm thử nền tảng cơ sở}{40}{section.5.4}%
+\contentsline {chapter}{\numberline {6}Đánh giá kết quả}{41}{chapter.6}%
+\contentsline {section}{\numberline {6.1}Phương pháp đánh giá: Mô hình Roofline}{41}{section.6.1}%
+\contentsline {section}{\numberline {6.2}Ước lượng độ trễ và Tài nguyên}{41}{section.6.2}%
+\contentsline {section}{\numberline {6.3}So sánh với các nghiên cứu liên quan}{41}{section.6.3}%
+\contentsline {chapter}{\numberline {7}Kết luận và Hướng phát triển}{42}{chapter.7}%
+\contentsline {section}{\numberline {7.1}Đánh giá mức độ hoàn thành Giai đoạn 1}{42}{section.7.1}%
+\contentsline {section}{\numberline {7.2}Kế hoạch thực hiện Giai đoạn 2}{42}{section.7.2}%
+\contentsline {section}{\numberline {7.3}Tiến độ dự kiến}{42}{section.7.3}%
