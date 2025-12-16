@@ -1,0 +1,63 @@
+
+Sau khi xây dựng mô hình ước lượng hiệu năng, bước tiếp theo là xác định bộ tham số cấu hình tối ưu cho từng lớp mạng và chuyển đổi chúng thành chuỗi lệnh điều khiển (Instruction Stream) mà Controller có thể thực thi.
+
+\subsection{Bài toán Tối ưu hóa Không gian thiết kế}
+
+Với mỗi lớp tích chập thứ $i$, mục tiêu là tìm ra bộ ba tham số phân mảnh $\mathbf{S}_i = \{T_{h,i}, T_{c,i}, T_{m,i}\}$ sao cho thời gian thực thi tổng thể ($T_{total}$) là nhỏ nhất.
+
+\subsubsection{Các ràng buộc phần cứng (Hardware Constraints)}
+Bộ tham số được chọn bắt buộc phải thỏa mãn các giới hạn vật lý của FPGA. Các ràng buộc chính bao gồm:
+
+\begin{enumerate}
+    \item \textbf{Dung lượng bộ nhớ on-chip (BRAM):} Tổng kích thước của các Tile (bao gồm cả cơ chế Ping-Pong nhân hệ số 2) không được vượt quá dung lượng BRAM dành riêng cho từng loại dữ liệu.
+    \begin{equation}
+        2 \times (T_{c} \times T_{h} \times W) \times DW \le BRAM_{IFM\_MAX}
+    \end{equation}
+    \begin{equation}
+        2 \times (T_{m} \times T_{c} \times R \times S) \times DW \le BRAM_{WGT\_MAX}
+    \end{equation}
+    
+    \item \textbf{Tài nguyên tính toán:} Số lượng bộ lọc tính toán song song ($T_m$) không được vượt quá số lượng mảng xử lý (PA) vật lý có trên chip.
+    \begin{equation}
+        1 \le T_{m} \le N_{PA\_MAX}
+    \end{equation}
+    
+    \item \textbf{Tính hợp lệ:} Kích thước Tile không được lớn hơn kích thước gốc của Feature Map.
+    \begin{equation}
+        1 \le T_{h} \le H; \quad 1 \le T_{c} \le C
+    \end{equation}
+\end{enumerate}
+
+\subsection{Chiến lược Tìm kiếm và Sinh mã (Search \& Generate)}
+
+Do không gian tìm kiếm tham số cho một lớp là hữu hạn, chúng tôi phát triển một công cụ phần mềm (Software Tool) chạy trên máy tính chủ (Host PC) để thực hiện quy trình sau:
+
+\begin{itemize}
+    \item \textbf{Bước 1 - Quét tham số (Exhaustive Search):} Thuật toán duyệt qua toàn bộ các tổ hợp $(T_h, T_c, T_m)$ khả dĩ.
+    \item \textbf{Bước 2 - Kiểm tra ràng buộc:} Loại bỏ ngay các tổ hợp vi phạm ràng buộc BRAM hoặc tài nguyên tính toán nêu trên.
+    \item \textbf{Bước 3 - Đánh giá hiệu năng:} Với các tổ hợp hợp lệ, phần mềm áp dụng các công thức mô hình hiệu năng (Mục \ref{subsec:latency_hiding}) để tính $T_{total}$ dự kiến. Cấu hình cho $T_{total}$ nhỏ nhất sẽ được chọn.
+    \item \textbf{Bước 4 - Đóng gói (Packing):} Các tham số tối ưu được đóng gói thành một chuỗi bit nhị phân (Binary Descriptor) để gửi xuống phần cứng.
+\end{itemize}
+
+\subsection{Cấu trúc Lệnh cấu hình (Layer Descriptor)}
+
+Để Controller phần cứng hiểu và vận hành theo tham số đã tìm được, chúng tôi định nghĩa một cấu trúc dữ liệu điều khiển (Descriptor). Mỗi lớp mạng tương ứng với một Descriptor được lưu trong bộ nhớ lệnh.
+
+\begin{table}[H]
+\centering
+\caption{Cấu trúc dữ liệu cấu hình cho một Layer}
+\label{tab:instr_format}
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Offset} & \textbf{Trường thông tin} & \textbf{Mô tả chức năng} \\ \hline
+0x00 & Layer Info & Chứa $H, W, C, N_f$ (Kích thước gốc) \\ \hline
+0x04 & Kernel Info & Chứa $R, S, P, Str$ (Bộ lọc, Padding, Stride) \\ \hline
+\textbf{0x08} & \textbf{Tiling Config} & \textbf{Chứa $T_h, T_c, T_m$ (Tham số tối ưu)} \\ \hline
+0x0C & IFM Base Addr & Địa chỉ bắt đầu của Input Feature Map \\ \hline
+0x10 & WGT Base Addr & Địa chỉ bắt đầu của Weights \\ \hline
+0x14 & OFM Base Addr & Địa chỉ bắt đầu của Output Feature Map \\ \hline
+0x18 & Control Flags & Loại lớp (Std/Depthwise), Activation (ReLU)... \\ \hline
+\end{tabular}
+\end{table}
+
+Khối \textbf{Control Data} (Mục 4.3) sẽ đọc Descriptor này, giải mã và cài đặt các giá trị $T_h, T_c, T_m$ vào các thanh ghi đếm của máy trạng thái (FSM). Nhờ đó, phần cứng có thể linh hoạt xử lý nhiều kích thước mạng khác nhau mà không cần thiết kế lại mạch RTL.
