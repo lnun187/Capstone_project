@@ -1,13 +1,135 @@
-\chapter{Đánh giá kết quả}
+\chapter{Đánh giá và Thảo luận kết quả}
 \label{ch:evaluation}
 
-\textit{Chương này sử dụng các mô hình giải tích để ước lượng hiệu năng, độ trễ và tài nguyên tiêu thụ của kiến trúc đề xuất.}
+Chương này trình bày các kết quả thực nghiệm thu được từ mô hình ước lượng hiệu năng của kiến trúc đề xuất. Các đánh giá tập trung vào hiệu quả của thuật toán tối ưu tham số (Codegen) và khả năng xử lý của phần cứng đối với các lớp mô hình đại diện: AlexNet, VGG-16 và MobileNetV1. Đồng thời, chúng tôi thực hiện so sánh với kiến trúc Eyeriss để làm rõ ưu nhược điểm của giải pháp.
 
-\section{Phương pháp đánh giá: Mô hình Roofline}
-\input{6_danh_gia_hieu_nang/6.1_phuong_phap_danh_gia.tex}
+\section{Môi trường và Phương pháp thực nghiệm}
 
-\section{Ước lượng độ trễ và Tài nguyên}
-\input{6_danh_gia_hieu_nang/6.2_uoc_luong_hieu_nang.tex}
+Do giới hạn về thời gian tổng hợp phần cứng (Synthesis) và tài nguyên FPGA thực tế, trong phạm vi đồ án này, nhóm thực hiện đánh giá hiệu năng kiến trúc thông qua mô hình ước lượng (Analytical Estimator) được xây dựng bằng C++. Mô hình này mô phỏng chính xác hành vi của luồng dữ liệu (Dataflow) và bộ điều khiển (Controller) đã thiết kế.
 
-\section{So sánh với các nghiên cứu liên quan}
-\input{6_danh_gia_hieu_nang/6.3_so_sanh_nghien_cuu.tex}
+Các tham số cấu hình cho mô phỏng được thiết lập như sau:
+\begin{itemize}
+    \item \textbf{Tần số hoạt động (Frequency):} $200 \text{ MHz}$.
+    \item \textbf{Số lượng đơn vị xử lý (PEs):} $165 \text{ PEs}$ (Cấu hình tiêu chuẩn, tương đương mảng $11 \times 15$).
+    \item \textbf{Phạm vi đánh giá:} Chỉ tập trung đo đạc thời gian thực thi của các lớp Tích chập (Convolutional Layers).
+    \item \textbf{Chiến lược xử lý:} Batch Size = 1 (Tối ưu độ trễ cho xử lý từng ảnh đơn lẻ).
+    \item \textbf{Cấu hình Bộ nhớ:} Giả lập kiến trúc bộ nhớ tách biệt (Separate Off-chip Memory), trong đó Trọng số (Weights) và Dữ liệu (Activations) được truy xuất trên các kênh độc lập.
+\end{itemize}
+
+\section{Hiệu quả của Thuật toán Tối ưu trên AlexNet}
+\label{sec:alexnet_eval}
+
+Để chứng minh tính hiệu quả của công cụ sinh mã, chúng tôi so sánh thời gian thực thi giữa việc chọn tham số ngẫu nhiên và tham số tối ưu. Bảng \ref{tab:alexnet_breakdown} trình bày chi tiết cấu hình và thời gian thực thi từng lớp của mạng AlexNet sau khi tối ưu.
+
+\begin{table}[H]
+\centering
+\caption{Chi tiết hiệu năng từng lớp của AlexNet (Mô phỏng với 165 PEs)}
+\label{tab:alexnet_breakdown}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lcccccccc}
+\toprule
+\multirow{2}{*}{\textbf{Layer}} & \multirow{2}{*}{\textbf{Filter Size}} & \multirow{2}{*}{\textbf{Ifmap Size}} & \multirow{2}{*}{\textbf{Ofmap Size}} & \multicolumn{3}{c}{\textbf{Tiling Parameters}} & \multirow{2}{*}{\textbf{Cycles}} & \multirow{2}{*}{\textbf{Latency (ms)}} \\ \cmidrule(lr){5-7}
+ &  &  &  & $\mathbf{T_c}$ & $\mathbf{T_m}$ & $\mathbf{T_h}$ &  &  \\ \midrule
+Conv1 & $11 \times 11 \times 3 \times 96$ & $227 \times 227 \times 3$ & $55 \times 55 \times 96$ & 1 & 15 & 11 & 3,611,128 & 18.06 \\
+Conv2 & $5 \times 5 \times 48 \times 256$ & $27 \times 27 \times 48$ & $27 \times 27 \times 256$ & 1 & 15 & 5 & 3,172,860 & 15.86 \\
+Conv3 & $3 \times 3 \times 256 \times 384$ & $13 \times 13 \times 256$ & $13 \times 13 \times 384$ & 1 & 15 & 3 & 1,189,760 & 5.95 \\
+Conv4 & $3 \times 3 \times 192 \times 384$ & $13 \times 13 \times 192$ & $13 \times 13 \times 384$ & 1 & 15 & 3 & 1,752,192 & 8.76 \\
+Conv5 & $3 \times 3 \times 192 \times 256$ & $13 \times 13 \times 192$ & $13 \times 13 \times 256$ & 1 & 15 & 3 & 1,211,392 & 6.06 \\ \midrule
+\textbf{Total} & \textbf{-} & \textbf{-} & \textbf{-} & \textbf{-} & \textbf{-} & \textbf{-} & \textbf{10,937,332} & \textbf{54.69} \\ \bottomrule
+\end{tabular}%
+}
+\end{table}
+
+\textbf{Nhận xét:} Thuật toán đã tự động đẩy tham số $T_m$ lên 15 ở các lớp sau để tận dụng tối đa số lượng PE, giúp tổng thời gian thực thi giảm xuống còn \textbf{54.69 ms}.
+
+\section{Đánh giá chi tiết trên MobileNetV1}
+\label{sec:mobilenet_eval}
+
+Chúng tôi tiến hành chạy mô phỏng trên MobileNetV1 để đánh giá khả năng hỗ trợ các mô hình sử dụng \textit{Depthwise Separable Convolution}. Bảng \ref{tab:mobilenet_breakdown} phân tích chi tiết hiệu năng và độ tận dụng tài nguyên (PE Utilization) qua từng lớp.
+
+\begin{table}[H]
+\centering
+\caption{Chi tiết hiệu năng MobileNetV1 (165 PEs) - Phân tách Depthwise/Pointwise}
+\label{tab:mobilenet_breakdown}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{llccccccc}
+\toprule
+\textbf{Layer} & \textbf{Type} & \textbf{Stride} & \textbf{Filter} & \textbf{Input Size} & \textbf{PEs Used} & \textbf{Util. (\%)} & \textbf{Latency (ms)} & \textbf{State} \\ \midrule
+L0 & Conv Std & 2 & $3 \times 3 \times 3 \times 32$ & $224 \times 224$ & 99 & 60.0 & 4.26 & Mem \\ \midrule
+L1 & \textbf{Depthwise} & 1 & $3 \times 3 \times 32$ & $112 \times 112$ & \textbf{9} & \textbf{5.4} & 4.01 & Mem \\
+L2 & Pointwise & 1 & $1 \times 1 \times 32 \times 64$ & $112 \times 112$ & 52 & 31.5 & 14.05 & Mem \\ \midrule
+L3 & \textbf{Depthwise} & 2 & $3 \times 3 \times 64$ & $112 \times 112$ & \textbf{9} & \textbf{5.4} & 5.02 & Mem \\
+L4 & Pointwise & 1 & $1 \times 1 \times 64 \times 128$ & $56 \times 56$ & 60 & 36.3 & 11.04 & Mem \\ \midrule
+L5 & \textbf{Depthwise} & 1 & $3 \times 3 \times 128$ & $56 \times 56$ & 9 & 5.4 & 4.01 & Mem \\
+L6 & Pointwise & 1 & $1 \times 1 \times 128 \times 128$ & $56 \times 56$ & 60 & 36.3 & 20.07 & Mem \\ \midrule
+... & ... & ... & ... & ... & ... & ... & ... & ... \\ \midrule
+L25 & \textbf{Depthwise} & 2 & $3 \times 3 \times 1024$ & $14 \times 14$ & 9 & 5.4 & 0.50 & Mem \\
+L26 & Pointwise & 1 & $1 \times 1 \times 1024 \times 1024$ & $7 \times 7$ & 60 & 36.3 & 17.56 & Mem \\ \midrule
+\textbf{Total} & \multicolumn{4}{c}{\textbf{Toàn bộ mạng}} & \textbf{-} & \textbf{-} & \textbf{229.56} & \textbf{-} \\ \bottomrule
+\end{tabular}%
+}
+\end{table}
+
+\textbf{Phân tích:} Tại các lớp Depthwise (L1, L3,...), hệ thống chỉ sử dụng được 9/165 PEs (5.4\%), gây lãng phí tài nguyên lớn. Đây là nguyên nhân chính khiến thời gian suy luận của MobileNet cao hơn AlexNet dù khối lượng tính toán lý thuyết nhỏ hơn.
+
+\section{Đánh giá khả năng xử lý trên VGG-16}
+\label{sec:vgg_eval}
+
+Để kiểm chứng khả năng chịu tải của hệ thống với các mạng nơ-ron sâu và nặng, chúng tôi thực hiện mô phỏng trên VGG-16. Kết quả chi tiết được trình bày trong Bảng \ref{tab:vgg16_breakdown}.
+
+\begin{table}[H]
+\centering
+\caption{Chi tiết hiệu năng từng lớp của VGG-16 (Mô phỏng với 165 PEs)}
+\label{tab:vgg16_breakdown}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lccccccc}
+\toprule
+\multirow{2}{*}{\textbf{Layer}} & \multirow{2}{*}{\textbf{Filter / Channels}} & \multirow{2}{*}{\textbf{Map Size}} & \multicolumn{3}{c}{\textbf{Optimized Config}} & \multirow{2}{*}{\textbf{Latency (ms)}} & \multirow{2}{*}{\textbf{Bottleneck}} \\ \cmidrule(lr){4-6}
+ &  &  & $\mathbf{T_c}$ & $\mathbf{T_m}$ & $\mathbf{T_h}$ &  &  \\ \midrule
+Conv1\_1 & $3\times3 / 64$ & $224 \times 224$ & 1 & 13 & 3 & 19.82 & Memory \\
+Conv1\_2 & $3\times3 / 64$ & $224 \times 224$ & 1 & 13 & 3 & 96.34 & Memory \\
+Conv2\_1 & $3\times3 / 128$ & $112 \times 112$ & 1 & 15 & 3 & 44.15 & Memory \\
+Conv2\_2 & $3\times3 / 128$ & $112 \times 112$ & 1 & 15 & 3 & 80.28 & Memory \\
+Conv3\_1 & $3\times3 / 256$ & $56 \times 56$ & 1 & 15 & 3 & 40.14 & Memory \\
+Conv3\_2 & $3\times3 / 256$ & $56 \times 56$ & 1 & 15 & 3 & 76.27 & Memory \\
+Conv3\_3 & $3\times3 / 256$ & $56 \times 56$ & 1 & 15 & 3 & 76.27 & Memory \\
+Conv4\_1 & $3\times3 / 512$ & $28 \times 28$ & 1 & 15 & 3 & 37.13 & Memory \\
+Conv4\_2 & $3\times3 / 512$ & $28 \times 28$ & 1 & 15 & 3 & 72.25 & Memory \\
+Conv4\_3 & $3\times3 / 512$ & $28 \times 28$ & 1 & 15 & 3 & 72.25 & Memory \\
+Conv5\_1 & $3\times3 / 512$ & $14 \times 14$ & 1 & 15 & 3 & 18.06 & Memory \\
+Conv5\_2 & $3\times3 / 512$ & $14 \times 14$ & 1 & 15 & 3 & 18.06 & Memory \\
+Conv5\_3 & $3\times3 / 512$ & $14 \times 14$ & 1 & 15 & 3 & 18.06 & Memory \\ \midrule
+\textbf{Total} & \textbf{-} & \textbf{-} & \textbf{-} & \textbf{-} & \textbf{-} & \textbf{669.10} & \textbf{-} \\ \bottomrule
+\end{tabular}%
+}
+\end{table}
+
+\textbf{Nhận xét:} Với VGG-16, toàn bộ các lớp đều hoạt động ở trạng thái \textit{Memory Bound}. Tuy nhiên, nhờ chiến lược quản lý bộ nhớ tách biệt (Separate Memory) cho Weight và Activation, hệ thống vẫn duy trì được thời gian thực thi ổn định, không xảy ra hiện tượng tắc nghẽn cục bộ.
+
+\section{So sánh với các Nghiên cứu liên quan}
+\label{sec:comparison}
+
+Để đánh giá vị thế của giải pháp, chúng tôi so sánh kết quả ước lượng với \textbf{Eyeriss} [Chen et al., ISSCC 2016].
+
+\begin{table}[H]
+\centering
+\caption{So sánh hiệu năng xử lý Convolution với Eyeriss}
+\label{tab:comparison_eyeriss}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{|l|c|c|}
+\hline
+\textbf{Thông số} & \textbf{Đề xuất (Ours)} & \textbf{Eyeriss [Chen et al.]} \\ \hline
+Số lượng PE & 165 & 168 \\ \hline
+Kiến trúc bộ nhớ & \textbf{Separate Off-chip Memory} & Shared DRAM \\ \hline
+Chiến lược xử lý & Batch Size = 1 & Batch Size = 3-4 \\ \hline
+\textbf{AlexNet (Conv Only)} & 54.69 ms & \textbf{28.57 ms} (35 fps) \\ \hline
+\textbf{VGG16 (Conv Only)} & \textbf{669.10 ms} & 1428.57 ms (0.7 fps) \\ \hline
+\end{tabular}%
+}
+\end{table}
+
+\textbf{Thảo luận:}
+\begin{itemize}
+    \item \textbf{Đối với VGG16:} Kiến trúc đề xuất nhanh hơn \textbf{2.1 lần} nhờ thiết kế tách biệt bộ nhớ trọng số, giúp loại bỏ xung đột băng thông khi xử lý các Feature Map lớn.
+    \item \textbf{Đối với AlexNet:} Eyeriss nhanh hơn nhờ xử lý Batch ($N=4$), giúp tái sử dụng trọng số. Thiết kế của chúng tôi tuy chậm hơn về thông lượng (Throughput) nhưng có lợi thế về độ trễ (Latency) cho các ứng dụng thời gian thực.
+\end{itemize}

@@ -1,31 +1,35 @@
-Dựa trên chiến lược dòng dữ liệu đã phân tích, nhóm đề xuất kiến trúc phần cứng chuyên dụng mang tên \textbf{Beta Accelerator}. Kiến trúc này được thiết kế để tối ưu hóa khả năng tính toán song song ở mức bộ lọc (Filter parallelism) và mức kênh (Channel parallelism), đồng thời hỗ trợ cơ chế quản lý bộ nhớ Ping-Pong để che giấu độ trễ truy cập.
+Dựa trên chiến lược dòng dữ liệu đã phân tích, nhóm đề xuất kiến trúc phần cứng chuyên dụng mang tên \textbf{Beta Accelerator}. Kiến trúc này được thiết kế để tối ưu hóa khả năng tính toán song song ở mức bộ lọc (Filter parallelism) và mức kênh (Channel parallelism). Đặc biệt, hệ thống sử dụng kiến trúc bộ nhớ tách biệt (Separate Memory Architecture) cho Trọng số và Dữ liệu để tối đa hóa băng thông, đồng thời hỗ trợ cơ chế quản lý bộ nhớ Ping-Pong để che giấu độ trễ truy cập.
 
 \subsection{Sơ đồ khối tổng quát hệ thống}
 Sơ đồ tổng thể của Beta Accelerator được trình bày trong Hình \ref{fig:system_arch}. Hệ thống bao gồm các khối chức năng chính sau:
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\linewidth]{image/4/system_arch.png} % Thay tên file ảnh tổng quan hệ thống của bạn
-    \caption{Sơ đồ khối tổng quát kiến trúc Beta Accelerator}
+    \includegraphics[width=0.8\linewidth]{image/4/system_arch.png} 
+    \caption{Sơ đồ khối tổng quát kiến trúc Beta Accelerator với bus dữ liệu tách biệt}
     \label{fig:system_arch}
 \end{figure}
 
 \begin{itemize}
-    \item \textbf{Khối Control Data (Controller):} Đóng vai trò bộ điều khiển trung tâm và quản lý giao tiếp với bộ nhớ ngoài. Do hệ thống chỉ sử dụng một bus dữ liệu chung (shared data bus) cho cả luồng vào và luồng ra, khối này chịu trách nhiệm điều phối (arbitration) tài nguyên bus, quyết định thời điểm thực hiện nạp dữ liệu đầu vào (Load IFM) hoặc ghi kết quả đầu ra (Store OFM) để tránh xung đột dữ liệu.
+    \item \textbf{Khối Control Data (Controller):} Đóng vai trò bộ điều khiển trung tâm và quản lý giao tiếp với bộ nhớ ngoài. 
+    \begin{itemize}
+        \item Hệ thống được thiết kế với hai giao tiếp bộ nhớ độc lập: \textbf{Weight Memory Interface} (dành cho trọng số) và \textbf{Activation Memory Interface} (dành cho IFM và OFM).
+        \item Do IFM (Input) và OFM (Output) được lưu trữ trên cùng một không gian bộ nhớ Dữ liệu (Activation Memory), khối này chịu trách nhiệm điều phối (arbitration) tài nguyên bus dữ liệu này, quyết định thời điểm thực hiện nạp dữ liệu đầu vào (Load IFM) hoặc ghi kết quả đầu ra (Store OFM) để tránh xung đột. Trong khi đó, luồng nạp Weight có thể diễn ra song song nhờ đường bus riêng.
+    \end{itemize}
     
-    \item \textbf{Khối Mapping (Dispatcher):} Chịu trách nhiệm phân phối dữ liệu IFM và trọng số (Weights) từ các bus dữ liệu chính tới các bộ nhớ đệm cục bộ của từng đơn vị tính toán, đảm bảo băng thông và tính đồng bộ.
+    \item \textbf{Khối Mapping (Dispatcher):} Chịu trách nhiệm phân phối dữ liệu từ hai nguồn bus riêng biệt (Weight Bus và Activation Bus) tới các bộ nhớ đệm cục bộ của từng đơn vị tính toán, đảm bảo tính đồng bộ giữa dữ liệu và trọng số.
     
     \item \textbf{Hệ thống Bộ đệm (Filter + Ifmap Buffer):} Được tổ chức theo cơ chế \textbf{Ping-Pong Buffer} (Double Buffering) để cho phép nạp dữ liệu cho Pass $k+1$ trong khi Pass $k$ đang được tính toán. 
     \begin{itemize}
-        \item Mỗi khối buffer lưu trữ một tile IFM kích thước $T_h \times W$ của 1 kênh.
-        \item Đồng thời lưu trữ bộ trọng số kích thước $S \times R \times T_m$ (trong đó $S, R$ là kích thước filter, $T_m$ là số filter tính song song).
+        \item \textbf{IFM Buffer:} Lưu trữ một tile IFM kích thước $T_h \times W$ của 1 kênh, được nạp từ Activation Memory.
+        \item \textbf{Weight Buffer:} Lưu trữ bộ trọng số kích thước $S \times R \times T_m$, được nạp từ Weight Memory riêng biệt.
     \end{itemize}
     
     \item \textbf{Mảng xử lý (Process Array - PA):} Là trái tim tính toán của hệ thống, bao gồm $T_c$ khối PA hoạt động song song. Mỗi khối PA phụ trách xử lý 1 kênh đầu vào (Input Channel) và $T_m$ bộ lọc tương ứng.
     
     \item \textbf{Khối Tổng hợp (Reduction Unit - Mapping + Summary):} Thực hiện chức năng cộng dồn (Reduction) kết quả từ $T_c$ khối PA. Do tích chập là phép tổng trọng số qua các kênh, khối này sẽ cộng giá trị Partial Sum từ các kênh IFM khác nhau để tạo ra $T_m$ giá trị OFM bán hoàn chỉnh.
     
-    \item \textbf{Khối Tích lũy (Accumulator):} Sử dụng bộ nhớ Ping-Pong để lưu trữ và cộng dồn kết quả qua các Pass (theo chiều sâu kênh $C$). Khi một điểm ảnh OFM đã được tích lũy đủ số kênh cần thiết, nó sẽ được gửi đi thông qua bus dữ liệu chung và vị trí nhớ đó sẽ được reset về 0 để chuẩn bị cho lượt tính mới.
+    \item \textbf{Khối Tích lũy (Accumulator):} Sử dụng bộ nhớ Ping-Pong để lưu trữ và cộng dồn kết quả qua các Pass (theo chiều sâu kênh $C$). Khi một điểm ảnh OFM đã được tích lũy đủ số kênh cần thiết, nó sẽ được gửi đi thông qua Activation Bus để ghi vào vùng nhớ Output (OFM) và vị trí nhớ đó sẽ được reset về 0.
 \end{itemize}
 
 \subsection{Tổ chức Mảng tính toán (Processing Hierarchy)}
@@ -35,12 +39,12 @@ Kiến trúc tính toán được tổ chức theo mô hình phân cấp gồm 3
 Khối PA (Hình \ref{fig:pa_arch}) được thiết kế để khai thác tính song song mức kênh đầu ra (Output Channel Parallelism).
 \begin{itemize}
     \item Mỗi PA chịu trách nhiệm tính toán cho 1 kênh đầu vào (Input Channel) duy nhất nhưng tạo ra kết quả cho $T_m$ bộ lọc (Filters) khác nhau.
-    \item \textbf{Luồng dữ liệu:} Trọng số đầu vào (Input Filter Weights) được rẽ nhánh (demultiplex) tới các PU cụ thể (ví dụ: $PU_0$ nhận trọng số của Filter 0). Ngược lại, dữ liệu IFM được quảng bá (broadcast) dùng chung cho tất cả các PU trong cùng một PA, giúp tiết kiệm băng thông đọc IFM.
+    \item \textbf{Luồng dữ liệu:} Trọng số đầu vào (Input Filter Weights) từ Weight Memory được rẽ nhánh (demultiplex) tới các PU cụ thể. Ngược lại, dữ liệu IFM từ Activation Memory được quảng bá (broadcast) dùng chung cho tất cả các PU trong cùng một PA, giúp tối ưu hóa việc tái sử dụng dữ liệu IFM.
 \end{itemize}
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.6\linewidth]{image/4/pa_arch.png} % Thay ảnh PA
+    \includegraphics[width=0.6\linewidth]{image/4/pa_arch.png} 
     \caption{Kiến trúc bên trong khối Process Array (PA)}
     \label{fig:pa_arch}
 \end{figure}
@@ -54,7 +58,7 @@ Mỗi PU (Hình \ref{fig:pu_arch}) bao gồm 11 phần tử xử lý (PE) hoạt
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.6\linewidth]{image/4/pu_arch.png} % Thay ảnh PU
+    \includegraphics[width=0.6\linewidth]{image/4/pu_arch.png} 
     \caption{Kiến trúc khối Process Unit (PU) với các PE hoạt động song song}
     \label{fig:pu_arch}
 \end{figure}
@@ -69,7 +73,7 @@ PE là đơn vị tính toán cơ sở nhỏ nhất (Hình \ref{fig:pe_arch}), t
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.5\linewidth]{image/4/pe_arch.png} % Thay ảnh PE
+    \includegraphics[width=0.5\linewidth]{image/4/pe_arch.png} 
     \caption{Cấu trúc bên trong một Process Element (PE)}
     \label{fig:pe_arch}
 \end{figure}
@@ -112,89 +116,67 @@ Với tích chập chiều sâu, các kênh hoạt động độc lập ($N_f = 
 \end{equation}
 
 \textbf{Nhận xét:} So với Standard Convolution, Depthwise Convolution giảm được hệ số $\lceil C/T_c \rceil$ lần số lượng tính toán, giúp tăng tốc độ xử lý đáng kể đối với các mạng nhẹ (Lightweight CNNs) như MobileNet.
+
 \subsection{Chiến lược Che giấu độ trễ và Mô hình hiệu năng toàn hệ thống}
 \label{subsec:latency_hiding}
 
-Để tối ưu hóa hiệu năng, Beta Accelerator áp dụng kỹ thuật \textbf{Che giấu độ trễ (Latency Hiding)} thông qua cơ chế Ping-Pong Buffer. Mục tiêu là thực hiện song song quá trình tính toán (Computation) và quá trình truyền tải dữ liệu (Data Transfer) để ẩn đi thời gian giao tiếp với bộ nhớ ngoài.
+Để tối ưu hóa hiệu năng, Beta Accelerator áp dụng kỹ thuật \textbf{Che giấu độ trễ (Latency Hiding)} thông qua cơ chế Ping-Pong Buffer. Mục tiêu là thực hiện song song quá trình tính toán (Computation) và quá trình truyền tải dữ liệu (Data Transfer).
 
-\subsubsection{Cơ chế hoạt động}
-Trước khi bắt đầu tính toán Pass đầu tiên, hệ thống cần nạp đầy đủ dữ liệu (IFM, Weights) vào buffer. Sau giai đoạn khởi tạo này, quy trình hoạt động theo nguyên lý "gối đầu":
+\subsubsection{Cơ chế hoạt động với Bộ nhớ tách biệt}
+Nhờ việc tách biệt bộ nhớ Weight và bộ nhớ Activation (IFM/OFM), hệ thống có lợi thế lớn về băng thông:
 \begin{itemize}
-    \item Trong khi lõi tính toán đang xử lý Pass $i$, bộ điều khiển DMA đồng thời nạp dữ liệu cho Pass $i+1$ vào nửa còn lại của Buffer.
-    \item Đồng thời, kết quả của Pass $i-1$ (nếu đã hoàn tất) được ghi trả về bộ nhớ ngoài.
+    \item \textbf{Weight Loading:} Quá trình nạp Weight diễn ra trên bus riêng, do đó hoàn toàn không xung đột với việc nạp IFM hay ghi OFM. Việc nạp Weight cho Pass $i+1$ luôn được thực hiện song song và che giấu bởi thời gian tính toán Pass $i$.
+    \item \textbf{Activation Loading/Storing:} IFM và OFM chia sẻ băng thông của Activation Memory. Do đó, vẫn tồn tại sự tranh chấp tài nguyên giữa việc nạp IFM cho Pass tiếp theo và ghi OFM của Pass trước đó.
 \end{itemize}
 
-Do hệ thống sử dụng bus dữ liệu dùng chung (Shared Data Bus) cho cả luồng nạp (Load) và ghi (Store), băng thông bộ nhớ phải được chia sẻ thời gian. Bộ điều khiển sẽ ưu tiên nạp Pass tiếp theo, sau đó mới đến ghi Pass trước đó (hoặc xen kẽ tùy theo chính sách trọng tài).
+Quy trình hoạt động theo nguyên lý "gối đầu":
+\begin{itemize}
+    \item Trong khi lõi tính toán đang xử lý Pass $i$, bộ điều khiển DMA đồng thời nạp IFM và Weight cho Pass $i+1$ vào nửa còn lại của Buffer.
+    \item Đồng thời, kết quả OFM của Pass $i-1$ (nếu đã hoàn tất) được ghi trả về Activation Memory.
+\end{itemize}
 
 \subsubsection{Các kịch bản hiệu năng (Performance Scenarios)}
-Gọi $T_{load}$ là thời gian nạp 1 Input Pass, $T_{store}$ là thời gian ghi 1 Output Pass, và $T_{comp}$ là thời gian tính toán 1 Pass ($T_{pass}$ đã tính ở mục 4.3.3). Ta định nghĩa tham số $b$ là \textbf{số chu kỳ đồng hồ cần thiết để truyền 1 giá trị dữ liệu} (Cycles per Data Transfer).
+Do Weight Bus tách biệt, độ trễ nạp Weight thường được che giấu hoàn toàn. Điểm nghẽn (bottleneck) chủ yếu nằm ở sự cân bằng giữa tính toán và truy cập Activation Memory (IFM/OFM).
 
-Mô hình thời gian hoàn thành 1 layer được phân tích dựa trên sự chênh lệch giữa năng lực tính toán và băng thông bộ nhớ, được minh họa trong Hình \ref{fig:timing_diagrams}.
+Gọi $T_{load\_act}$ là thời gian nạp IFM, $T_{store\_act}$ là thời gian ghi OFM, và $T_{comp}$ là thời gian tính toán 1 Pass.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=1.0\linewidth]{image/4/image_f8eee0.png} 
-    \caption{Biểu đồ thời gian thực thi trong 3 trường hợp: (Trên cùng) Memory Bound 1, (Giữa) Memory Bound 2, (Dưới cùng) Compute Bound.}
+    \caption{Biểu đồ thời gian thực thi trong 3 trường hợp cân bằng tải}
     \label{fig:timing_diagrams}
 \end{figure}
 
-\textbf{Trường hợp 1: Memory Bound 1 (Nghẽn băng thông nghiêm trọng)} \\
-Xảy ra khi thời gian nạp dữ liệu lớn hơn thời gian tính toán ($T_{load} \ge T_{comp}$). Lõi tính toán phải chờ dữ liệu nạp xong mới có thể chạy. Tổng thời gian hoàn thành layer được quyết định chủ yếu bởi tổng lượng dữ liệu cần truyền tải (Input + Output).
+\textbf{Trường hợp 1: Activation Memory Bound (Nghẽn băng thông dữ liệu)} \\
+Xảy ra khi tổng thời gian truy cập Activation Memory lớn hơn thời gian tính toán ($T_{load\_act} + T_{store\_act} \ge T_{comp}$). Lõi tính toán phải chờ bus dữ liệu hoàn thành tác vụ.
 
 \begin{itemize}
     \item \textbf{Đối với Standard Convolution:}
-    Do phải nạp lại Input Feature Map cho mỗi nhóm Filter khác nhau (nếu không đủ bộ nhớ on-chip), tổng thời gian là:
+    Cần nạp lại IFM nhiều lần cho các nhóm Filter khác nhau:
     \begin{equation}
-        T_{total} \approx \left[ \left( H \times W \times C \times \left\lceil \frac{N_f}{T_m} \right\rceil \right) + \left( H_{out} \times W_{out} \times N_f \right) \right] \times b
+        T_{total} \approx \left[ \left( H \times W \times C \times \left\lceil \frac{N_f}{T_m} \right\rceil \right) + \left( H_{out} \times W_{out} \times N_f \right) \right] \times b_{act}
     \end{equation}
+    Trong đó $b_{act}$ là số chu kỳ để truyền 1 đơn vị dữ liệu trên Activation Bus.
     
     \item \textbf{Đối với Depthwise Convolution:}
-    Mỗi kênh Input chỉ tương tác với 1 kênh Filter tương ứng ($N_f = C$), nên Input Feature Map chỉ cần nạp 1 lần duy nhất:
+    IFM chỉ cần nạp 1 lần duy nhất do ánh xạ 1-1 giữa kênh Input và Filter:
     \begin{equation}
-        T_{total} \approx \left[ \left( H \times W \times C \right) + \left( H_{out} \times W_{out} \times C \right) \right] \times b
+        T_{total} \approx \left[ \left( H \times W \times C \right) + \left( H_{out} \times W_{out} \times C \right) \right] \times b_{act}
     \end{equation}
 \end{itemize}
 
-\textbf{Trường hợp 2: Memory Bound 2 (Nghẽn băng thông trung bình)} \\
-Xảy ra khi thời gian tính toán nhanh hơn tổng thời gian nạp và ghi, nhưng chậm hơn thời gian nạp ($T_{load} < T_{comp} < T_{load} + T_{store}$). Lúc này, thời gian thực thi bao gồm thời gian nạp, ghi và một phần chênh lệch thời gian tính toán.
-\begin{equation}
-    T_{total} \approx T_{total\_IO} + (T_{comp} - T_{load})
-\end{equation}
-Trong đó $T_{total\_IO}$ được tính theo công thức tại Trường hợp 1 tùy thuộc loại Convolution.
-
-\textbf{Trường hợp 3: Compute Bound (Nghẽn tính toán)} \\
-Xảy ra khi thời gian tính toán lớn hơn tổng thời gian nạp và ghi ($T_{comp} > T_{load} + T_{store}$). Lúc này, toàn bộ thời gian truyền tải dữ liệu (trừ pass đầu và cuối) được che giấu hoàn toàn bên dưới thời gian tính toán.
+\textbf{Trường hợp 2: Compute Bound (Nghẽn tính toán)} \\
+Xảy ra khi thời gian tính toán lớn hơn tổng thời gian nạp và ghi dữ liệu ($T_{comp} > T_{load\_act} + T_{store\_act}$). Lúc này, toàn bộ thời gian truyền tải dữ liệu (Activation và Weight) được che giấu hoàn toàn.
 
 Công thức tổng quát:
 \begin{equation}
     T_{total} = T_{load\_first\_pass} + \sum_{all\_passes} T_{comp} + T_{store\_residual}
 \end{equation}
 
-\begin{itemize}
-    \item \textbf{Đối với Standard Convolution:}
-    \begin{equation}
-        T_{total} \approx (T_h W T_c b) + \left( \left\lceil \frac{H}{T_h} \right\rceil \left\lceil \frac{C}{T_c} \right\rceil \left\lceil \frac{N_f}{T_m} \right\rceil \times T_{comp} \right) + T_{res\_std}
-    \end{equation}
-    Với $T_{res\_std}$ là thời gian ghi phần dư cuối cùng phụ thuộc số filter dư ($N_f \% T_m$):
-    \begin{equation}
-        T_{res\_std} = \left( \left\lfloor \frac{H \% T_h}{Str} \right\rfloor + 1 \right) \times W_{out} \times (N_f \% T_m) \times b
-    \end{equation}
-
-    \item \textbf{Đối với Depthwise Convolution:}
-    Do không có vòng lặp tích lũy kênh đầu vào ($C/T_c$), tổng số pass giảm đi đáng kể:
-    \begin{equation}
-        T_{total} \approx (T_h W T_c b) + \left( \left\lceil \frac{H}{T_h} \right\rceil \left\lceil \frac{C}{T_m} \right\rceil \times T_{comp} \right) + T_{res\_dw}
-    \end{equation}
-    Với $T_{res\_dw}$ là thời gian ghi phần dư cuối cùng phụ thuộc số kênh dư ($C \% T_m$):
-    \begin{equation}
-        T_{res\_dw} = \left( \left\lfloor \frac{H \% T_h}{Str} \right\rfloor + 1 \right) \times W_{out} \times (C \% T_m) \times b
-    \end{equation}
-\end{itemize}
+Việc tách biệt bộ nhớ Weight giúp giảm đáng kể khả năng rơi vào trạng thái Memory Bound so với kiến trúc Bus chung, đặc biệt là ở các lớp Fully Connected hoặc Convolution có số lượng tham số lớn.
 
 \subsubsection{Tổng thời gian toàn mạng (Model Latency)}
-Thời gian thực thi của toàn bộ mô hình (Model) bao gồm $N$ lớp tích chập là tổng thời gian của từng lớp, do sự phụ thuộc dữ liệu tuần tự giữa các lớp (Layer $i+1$ cần OFM của Layer $i$ làm IFM):
+Thời gian thực thi của toàn bộ mô hình (Model) bao gồm $N$ lớp tích chập là tổng thời gian của từng lớp:
 \begin{equation}
     T_{model} = \sum_{i=1}^{N} T_{total}^{(i)}
 \end{equation}
-
-Mục tiêu của bài toán tối ưu hóa thiết kế là tìm bộ tham số cấu hình ($T_h, T_m, T_c$) cho từng layer sao cho $T_{total}^{(i)}$ là nhỏ nhất, cân bằng giữa tài nguyên tính toán và băng thông bộ nhớ.
