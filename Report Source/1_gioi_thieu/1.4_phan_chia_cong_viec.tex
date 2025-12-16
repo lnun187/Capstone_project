@@ -1,1 +1,33 @@
 \section{Phân chia công việc}
+
+\label{sec:phan_cong}
+
+Đồ án được thực hiện bởi hai thành viên với sự phân chia công việc cụ thể dựa trên kiến trúc hệ thống như sau:
+
+\begin{table}[H]
+    \centering
+    \caption{Bảng phân chia công việc của các thành viên}
+    \label{tab:phan_chia_cong_viec}
+    \begin{tabular}{|c|p{5cm}|p{8cm}|}
+        \hline
+        \textbf{STT} & \textbf{Thành viên} & \textbf{Nội dung thực hiện} \\
+        \hline
+        1 & \textbf{Lâm Nữ Uyển Nhi} \newline (Chịu trách nhiệm về Accelerator) & 
+        \begin{itemize}
+            \item Nghiên cứu lý thuyết về mạng CNN và các kỹ thuật tối ưu phần cứng.
+            \item Thiết kế kiến trúc khối CNN Accelerator (PE Array, Buffer Controller).
+            \item Hiện thực các khối tính toán: Convolution, Pooling, ReLU.
+            \item Viết Testbench kiểm tra chức năng khối Accelerator.
+        \end{itemize} \\
+        \hline
+        2 & \textbf{Vũ Đức Lâm} \newline (Chịu trách nhiệm về SoC \& System) & 
+        \begin{itemize}
+            \item Nghiên cứu kiến trúc RISC-V và chuẩn bus AMBA AXI.
+            \item Thiết kế hệ thống SoC: Tích hợp CPU, Interconnect, Memory Controller.
+            \item Thiết kế các giao tiếp ngoại vi: UART, SPI, OSPI, I2C, GPIO, TIMER, DVP (Camera/HDMI).
+            \item Phát triển Firmware/Driver để điều khiển hệ thống.
+            \item Tổng hợp hệ thống lên FPGA và đo đạc hiệu năng.
+        \end{itemize} \\
+        \hline
+    \end{tabular}
+\end{table}

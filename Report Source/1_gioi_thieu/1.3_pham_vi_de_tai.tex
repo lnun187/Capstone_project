@@ -1,1 +1,18 @@
 \section{Phạm vi đề tài}
+\label{sec:pham_vi}
+
+Để đảm bảo tính khả thi trong khuôn khổ thời gian của đồ án, nhóm thực hiện xác định phạm vi nghiên cứu như sau:
+
+\subsection{Phạm vi và Giới hạn đề tài}
+\begin{itemize}
+    \item \textbf{Vi xử lý:} Sử dụng lõi PicoRV32 (RISC-V 32-bit - RV32I) mã nguồn mở, tập trung vào việc tích hợp và xây dựng hệ thống bus (System Interconnect) thay vì thiết kế lại kiến trúc nhân CPU.
+    \item \textbf{Mô hình AI:} Tập trung hỗ trợ các mạng CNN cơ bản (như LeNet-5, MobileNet dạng rút gọn) đã được lượng tử hóa (Quantization) xuống 8-bit integer để phù hợp với tài nguyên phần cứng, không đi sâu vào việc huấn luyện (training) các mô hình lớn.
+    \item \textbf{Nền tảng phần cứng:} Hệ thống được thiết kế bằng ngôn ngữ Verilog và kiểm chứng trên Kit FPGA (AMD Virtex™ 7 FPGA VC707, Arty A7-100T Artix-7 FPGA). Chưa bao gồm các bước thiết kế vật lý (Physical Design) để ra chip ASIC thực tế (Layout, GDSII).
+\end{itemize}
+
+\subsection{Đối tượng và Công cụ nghiên cứu}
+\begin{itemize}
+    \item Ngôn ngữ thiết kế: Verilog, C/C++.
+    \item Công cụ mô phỏng và tổng hợp: Vivado Design Suite.
+    \item Framework AI hỗ trợ: PyTorch/TensorFlow (để trích xuất trọng số mô hình).
+\end{itemize}
