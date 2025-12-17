@@ -372,14 +372,91 @@ Các Slave được nối tiếp nhau (MISO của Slave này nối vào MOSI c�
     \label{fig:spi_modes}
 \end{figure}
 
-% --- VỊ TRÍ CHÈN ẢNH 4: Cấu hình Daisy Chain vs Independent ---
-% \begin{figure}[H]
-%     \centering
-%     % Bạn thay tên file ảnh vào dòng dưới
-%     \includegraphics[width=0.8\linewidth]{2_co_so_ly_thuyet/image/spi_configs.png} 
-%     \caption{Hai mô hình kết nối đa thiết bị trong SPI: Độc lập và Chuỗi}
-%     \label{fig:spi_configs}
-% \end{figure}
+
 
 
     SPI có tốc độ truyền cao nhất so với UART và I2C, phần cứng đơn giản, hỗ trợ Full-duplex. Nhưng tốn nhiều dây tín hiệu, khoảng cách truyền ngắn, không có cơ chế xác nhận lỗi (ACK) như I2C.
+
+
+    \subsection{Giao thức giao tiếp OSPI (Octal SPI)}
+
+    Mặc dù giao thức SPI truyền thống có ưu điểm về sự đơn giản, nhưng giới hạn về độ rộng băng thông (chỉ truyền 1 bit mỗi chu kỳ) trở thành nút thắt cổ chai đối với các ứng dụng hiện đại yêu cầu truy xuất dữ liệu lớn như EdgeAI. Để giải quyết vấn đề này, các biến thể mở rộng độ rộng bus dữ liệu đã lần lượt ra đời: từ Dual-SPI (2 đường dữ liệu), Quad-SPI (4 đường dữ liệu - QSPI) và bước tiến mới nhất là \textbf{OSPI (Octal SPI)}.
+
+    OSPI (còn được gọi là xSPI theo chuẩn JEDEC JESD251) mở rộng giao tiếp lên \textbf{8 đường dữ liệu song song}, đồng thời tích hợp công nghệ \textbf{DDR (Double Data Rate)}. Đây là giải pháp tối ưu được lựa chọn trong đề tài để kết nối SoC RISC-V với các bộ nhớ ngoài tốc độ cao (như Octal Flash hoặc HyperRAM), đảm bảo khả năng nạp trọng số mạng nơ-ron (Weights) và dữ liệu hình ảnh với độ trễ thấp nhất.
+
+    \subsubsection{Cấu hình tín hiệu vật lý}
+    Để hỗ trợ truyền tải 8 bit song song, giao diện OSPI yêu cầu số lượng chân tín hiệu nhiều hơn so với chuẩn SPI 4 dây truyền thống. Các tín hiệu chính bao gồm:
+
+    \begin{figure}[H]
+        \centering
+        % Bạn có thể chèn hình pinout của OSPI/HyperRAM vào đây
+        \includegraphics[width=0.9\linewidth]{2_co_so_ly_thuyet/image/ospipinout.png} 
+        \caption{Sơ đồ chân tín hiệu của giao diện OSPI/HyperBus}
+        \label{fig:ospi_pinout}
+    \end{figure}
+
+    \begin{itemize}
+        \item \textbf{CLK (Serial Clock):} Tín hiệu xung nhịp đồng bộ do Master cấp.
+        \item \textbf{CS/SS (Chip Select):} Tín hiệu chọn chip (Active Low).
+        \item \textbf{IO0 - IO7 (Data Lines):} 8 đường dữ liệu hai chiều (Bi-directional). Trong một chu kỳ xung nhịp, 8 bit có thể được truyền đi đồng thời (1 Byte).
+        \item \textbf{DQS / DS (Data Strobe):} Đây là tín hiệu đặc biệt chỉ xuất hiện trên các chuẩn tốc độ cao (như OSPI và bộ nhớ DDR DRAM).
+        \begin{itemize}
+            \item DQS là tín hiệu hai chiều, được tạo ra bởi thiết bị đang \textit{phát} dữ liệu (Source Synchronous).
+            \item Nó đóng vai trò như một xung nhịp tham chiếu đi kèm với dữ liệu, giúp bên thu xác định chính xác thời điểm lấy mẫu dữ liệu hợp lệ mà không bị ảnh hưởng bởi độ trễ đường truyền ở tần số cao.
+        \end{itemize}
+        \item \textbf{RWDS (Read Write Data Strobe):} Trong giao diện HyperRAM (một biến thể tương tự OSPI), chân này vừa đóng vai trò là DQS, vừa dùng để chỉ thị mặt nạ dữ liệu (Data Mask) khi ghi.
+    \end{itemize}
+
+    \subsubsection{Cơ chế truyền tải DDR (Double Data Rate)}
+    Điểm đột phá về hiệu năng của OSPI so với các thế hệ trước (SPI/QSPI) nằm ở khả năng hỗ trợ chế độ \textbf{DDR} (còn gọi là DTR - Double Transfer Rate).
+
+    \textbf{1. So sánh SDR và DDR:}
+    \begin{itemize}
+        \item \textbf{SDR (Single Data Rate):} Dữ liệu chỉ được truyền ở một \textbf{cạnh} của xung nhịp (thường là \textbf{cạnh lên}). Đây là cách hoạt động của SPI và QSPI truyền thống.
+        \item \textbf{DDR (Double Data Rate):} Dữ liệu được truyền ở \textbf{cả cạnh lên và cạnh xuống} của xung nhịp.
+    \end{itemize}
+    
+    \begin{figure}[H]
+        \centering
+        % Chèn hình giản đồ sóng DDR từ datasheet Winbond vào đây
+        \includegraphics[width=0.9\linewidth]{2_co_so_ly_thuyet/image/ddrsdr.png} 
+        \caption{Giản đồ thời gian truyền tải SDR: Dữ liệu thay đổi ở cạnh lênh, DDR: Dữ liệu thay đổi ở cả hai cạnh của xung nhịp}
+        \label{fig:ospi_ddr_timing}
+    \end{figure}
+    
+    \textbf{2. Hiệu năng tính toán:}
+    Với giao diện 8 đường dữ liệu (IO0-IO7) hoạt động ở chế độ DDR:
+    \begin{itemize}
+        \item Tại \textbf{cạnh lên (Rising Edge)}: Truyền 8 bit.
+        \item Tại \textbf{cạnh xuống (Falling Edge)}: Truyền 8 bit.
+        \item \textbf{Tổng cộng:} 16 bit (2 Bytes) được truyền trong một chu kỳ xung nhịp (Clock Cycle).
+    \end{itemize}
+
+    Ví dụ: Với xung nhịp 200MHz, băng thông lý thuyết của OSPI DDR đạt: $200 \text{ MHz} \times 2 \text{ Bytes} = 400 \text{ MB/s}$. Tốc độ này nhanh gấp 8 lần so với QSPI thông thường (chạy SDR) và tiệm cận với các giao tiếp DRAM, đủ đáp ứng nhu cầu xử lý thời gian thực.
+
+   
+
+    \subsubsection{Cấu trúc giao dịch Octal-DDR}
+    Một giao dịch OSPI điển hình (ví dụ đọc bộ nhớ Flash W35T51NW) diễn ra theo các pha, trong đó toàn bộ Command, Address và Data đều có thể được truyền trên 8 dây (Mode \textbf{8-8-8}, nghĩa là sử dụng toàn bộ 8 đường dữ liệu cho cả ba giai đoạn Command Phase, Address Phase và Data Phase):
+
+    \begin{enumerate}
+        \item \textbf{Command Phase:} Master gửi mã lệnh (8-bit hoặc 16-bit) trên 8 dây IO.
+        \item \textbf{Address Phase:} Master gửi địa chỉ truy cập (32-bit hoặc 64-bit) trên 8 dây IO theo chế độ DDR.
+        \item \textbf{Dummy Cycles:} Các chu kỳ chờ để bộ nhớ chuẩn bị dữ liệu. Số lượng chu kỳ này có thể cấu hình được để phù hợp với tần số hoạt động.
+        \item \textbf{Data Phase:} Dữ liệu được truyền đi (Write) hoặc nhận về (Read) trên cả 8 dây IO tại cả hai \textbf{cạnh} xung nhịp, đồng bộ với tín hiệu DQS.
+    \end{enumerate}
+
+
+    \begin{figure}[H]
+        \centering
+        % Chèn hình giản đồ sóng DDR từ datasheet Winbond vào đây
+        \includegraphics[width=0.9\linewidth]{2_co_so_ly_thuyet/image/ospitransaction.png} 
+        \caption{Giản đồ thời gian giao dịch OSPI DDR: Command, Address và Data truyền trên 8 dây IO}
+        \label{fig:ospi_ddr_timing}
+    \end{figure}
+
+    \subsubsection{Ưu điểm trong ứng dụng SoC IoT}
+    \begin{itemize}
+        \item \textbf{Tốc độ cao:} Băng thông lớn giúp giảm thời gian nạp Bootloader và nạp trọng số mạng nơ-ron (Weights) vào Accelerator.
+        \item \textbf{Số lượng chân ít:} So với các giao tiếp bộ nhớ song song truyền thống (Parallel Flash/SRAM) cần 30-40 chân, OSPI chỉ cần khoảng 12 chân, giúp tiết kiệm diện tích FPGA.
+    \end{itemize}
