@@ -108,8 +108,8 @@ RISC-V khác biệt so với các kiến trúc cũ ở chỗ lệnh rẽ nhánh 
     \item \textbf{Rẽ nhánh có điều kiện (Branch):} \texttt{BEQ} (Bằng), \texttt{BNE} (Không bằng), \texttt{BLT/BGE} (So sánh có dấu), \texttt{BLTU/BGEU} (So sánh không dấu). Việc tách biệt so sánh có dấu và không dấu giúp lập trình viên kiểm soát chính xác các cấu trúc điều khiển.
     \item \textbf{Nhảy vô điều kiện (Jump):} 
     \begin{itemize}
-        \item \texttt{JAL} (Jump and Link): Nhảy đến địa chỉ tương đối so với PC, đồng thời lưu địa chỉ lệnh kế tiếp (PC+4) vào thanh ghi \texttt{rd} (thường là \texttt{ra}).
-        \item \texttt{JALR} (Jump and Link Register): Nhảy đến địa chỉ tuyệt đối được tính từ thanh ghi cơ sở + offset. Lệnh này hỗ trợ việc gọi hàm qua con trỏ hoặc quay về từ hàm (Return).
+        \item[] \texttt{JAL} (Jump and Link): Nhảy đến địa chỉ tương đối so với PC, đồng thời lưu địa chỉ lệnh kế tiếp (PC+4) vào thanh ghi \texttt{rd} (thường là \texttt{ra}).
+        \item[] \texttt{JALR} (Jump and Link Register): Nhảy đến địa chỉ tuyệt đối được tính từ thanh ghi cơ sở + offset. Lệnh này hỗ trợ việc gọi hàm qua con trỏ hoặc quay về từ hàm (Return).
     \end{itemize}
 \end{itemize}
 

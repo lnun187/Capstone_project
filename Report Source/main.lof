@@ -24,16 +24,25 @@
 \contentsline {figure}{\numberline {2.21}{\ignorespaces Sơ đồ chân tín hiệu của giao diện OSPI/HyperBus}}{32}{figure.caption.24}%
 \contentsline {figure}{\numberline {2.22}{\ignorespaces Giản đồ thời gian truyền tải SDR: Dữ liệu thay đổi ở cạnh lênh, DDR: Dữ liệu thay đổi ở cả hai cạnh của xung nhịp}}{34}{figure.caption.25}%
 \contentsline {figure}{\numberline {2.23}{\ignorespaces Giản đồ thời gian giao dịch OSPI DDR: Command, Address và Data truyền trên 8 dây IO}}{35}{figure.caption.26}%
+\contentsline {figure}{\numberline {2.24}{\ignorespaces Sơ đồ kết nối vật lý I2C}}{36}{figure.caption.27}%
+\contentsline {figure}{\numberline {2.25}{\ignorespaces a. Điện trở kéo lên (Pull-up Resistors)}}{37}{figure.caption.28}%
+\contentsline {figure}{\numberline {2.26}{\ignorespaces b. Điện trở kéo lên (Pull-up Resistors)}}{37}{figure.caption.29}%
+\contentsline {figure}{\numberline {2.27}{\ignorespaces Cấu trúc khung truyền dữ liệu I2C}}{38}{figure.caption.30}%
+\contentsline {figure}{\numberline {2.28}{\ignorespaces Giản đồ thời gian của điều kiện Start và Stop trong I2C}}{38}{figure.caption.31}%
+\contentsline {figure}{\numberline {2.29}{\ignorespaces Cấu trúc một khung truyền dữ liệu I2C cơ bản}}{39}{figure.caption.32}%
+\contentsline {figure}{\numberline {2.30}{\ignorespaces Sơ đồ kết nối tín hiệu vật lý giữa Camera DVP và FPGA }}{41}{figure.caption.33}%
+\contentsline {figure}{\numberline {2.31}{\ignorespaces Giản đồ thời gian và trạng thái thu thập khung ảnh}}{42}{figure.caption.35}%
+\contentsline {figure}{\numberline {2.32}{\ignorespaces Sơ đồ kết nối tín hiệu giữa FPGA và ADV7513}}{44}{figure.caption.36}%
 \addvspace {10\p@ }
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {4.1}{\ignorespaces Minh họa chiến lược phân chia Pass cho hai loại tích chập với $T_h=11$. (a) Standard Convolution chia thành 2 phần theo chiều dọc và tích lũy theo chiều sâu. (b) Depthwise Convolution xử lý độc lập từng nhóm kênh và chia 2 phần theo chiều dọc.}}{49}{figure.caption.28}%
-\contentsline {figure}{\numberline {4.2}{\ignorespaces Sơ đồ minh họa quá trình tính toán tích chập và sự hình thành dữ liệu dôi ra (Residual Data) trong một pass với tile đầu vào $T_h=4$ và bộ lọc kích thước $3 \times 3$ trong trường hợp số kênh của ifmap feature là 1.}}{50}{figure.caption.29}%
-\contentsline {figure}{\numberline {4.3}{\ignorespaces Sơ đồ luồng dữ liệu minh họa cơ chế Ping-Pong Buffer dùng để quản lý vùng dữ liệu dôi ra (Residual Data). Hệ thống luân phiên vai trò của Buffer A và B để đảm bảo tính liên tục của phép tính biên mà không cần nạp lại dữ liệu đầu vào.}}{55}{figure.caption.30}%
-\contentsline {figure}{\numberline {4.4}{\ignorespaces Sơ đồ khối tổng quát kiến trúc Beta Accelerator với bus dữ liệu tách biệt}}{56}{figure.caption.31}%
-\contentsline {figure}{\numberline {4.5}{\ignorespaces Kiến trúc bên trong khối Process Array (PA)}}{59}{figure.caption.32}%
-\contentsline {figure}{\numberline {4.6}{\ignorespaces Kiến trúc khối Process Unit (PU) với các PE hoạt động song song}}{59}{figure.caption.33}%
-\contentsline {figure}{\numberline {4.7}{\ignorespaces Cấu trúc bên trong một Process Element (PE)}}{60}{figure.caption.34}%
-\contentsline {figure}{\numberline {4.8}{\ignorespaces Biểu đồ thời gian thực thi trong 3 trường hợp cân bằng tải}}{63}{figure.caption.35}%
+\contentsline {figure}{\numberline {4.1}{\ignorespaces Minh họa chiến lược phân chia Pass cho hai loại tích chập với $T_h=11$. (a) Standard Convolution chia thành 2 phần theo chiều dọc và tích lũy theo chiều sâu. (b) Depthwise Convolution xử lý độc lập từng nhóm kênh và chia 2 phần theo chiều dọc.}}{60}{figure.caption.38}%
+\contentsline {figure}{\numberline {4.2}{\ignorespaces Sơ đồ minh họa quá trình tính toán tích chập và sự hình thành dữ liệu dôi ra (Residual Data) trong một pass với tile đầu vào $T_h=4$ và bộ lọc kích thước $3 \times 3$ trong trường hợp số kênh của ifmap feature là 1.}}{61}{figure.caption.39}%
+\contentsline {figure}{\numberline {4.3}{\ignorespaces Sơ đồ luồng dữ liệu minh họa cơ chế Ping-Pong Buffer dùng để quản lý vùng dữ liệu dôi ra (Residual Data). Hệ thống luân phiên vai trò của Buffer A và B để đảm bảo tính liên tục của phép tính biên mà không cần nạp lại dữ liệu đầu vào.}}{66}{figure.caption.40}%
+\contentsline {figure}{\numberline {4.4}{\ignorespaces Sơ đồ khối tổng quát kiến trúc Beta Accelerator với bus dữ liệu tách biệt}}{67}{figure.caption.41}%
+\contentsline {figure}{\numberline {4.5}{\ignorespaces Kiến trúc bên trong khối Process Array (PA)}}{70}{figure.caption.42}%
+\contentsline {figure}{\numberline {4.6}{\ignorespaces Kiến trúc khối Process Unit (PU) với các PE hoạt động song song}}{70}{figure.caption.43}%
+\contentsline {figure}{\numberline {4.7}{\ignorespaces Cấu trúc bên trong một Process Element (PE)}}{71}{figure.caption.44}%
+\contentsline {figure}{\numberline {4.8}{\ignorespaces Biểu đồ thời gian thực thi trong 3 trường hợp cân bằng tải}}{74}{figure.caption.45}%
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }
