@@ -21,8 +21,24 @@ Quá trình hiện thực hệ thống SoC được tiến hành qua hai giai đ
 \subsubsection{Giai đoạn 1: Thử nghiệm trên Digilent Arty A7 (Artix-7)}
 Ở giai đoạn đầu, nhóm nghiên cứu lựa chọn bo mạch \textbf{Arty A7-100T} (sử dụng chip XC7A100T) làm nền tảng mục tiêu. Tuy nhiên, trong quá trình thiết kế SoC, giới hạn về tài nguyên phần cứng của chip Artix-7 đã trở thành nút thắt cổ chai và giới hạn việc mở rộng. Cụ thể, số dung lượng bộ nhớ BRAM yêu cầu đã vượt quá khả năng cung cấp của chip, dẫn đến việc không thể tổng hợp (Synthesis) thành công thiết kế tối ưu hoặc phải cắt giảm quá nhiều tính năng quan trọng.
 
+\begin{figure}[H]
+    \centering
+    % Placeholder cho hình quy trình thiết kế
+    \includegraphics[width=0.8\linewidth]{2_co_so_ly_thuyet/image/a7.png} 
+    \caption{FPGA Arty A7-100T}
+    \label{fig:design_flow}
+\end{figure}
+
 \subsubsection{Giai đoạn 2: Triển khai trên Xilinx VC707 (Virtex-7)}
 Để giải quyết bài toán thiếu hụt tài nguyên và tập trung vào việc kiểm chứng kiến trúc hệ thống (Proof of Concept), đề tài đã chuyển sang sử dụng bo mạch \textbf{Xilinx VC707 Evaluation Kit} (sử dụng chip Virtex-7 XC7VX485T). Đây là dòng FPGA hiệu năng cao với tài nguyên logic và bộ nhớ vượt trội. Việc chuyển đổi sang VC707 cho phép nhóm hiện thực trọn vẹn kiến trúc SoC, tích hợp vi xử lý PicoRV32 và các ngoại vi tốc độ cao mà không bị giới hạn bởi phần cứng.
+
+\begin{figure}[H]
+    \centering
+    % Placeholder cho hình quy trình thiết kế
+    \includegraphics[width=0.9\linewidth]{2_co_so_ly_thuyet/image/vc707.png} 
+    \caption{FPGA Xilinx VC707}
+    \label{fig:design_flow}
+\end{figure}
 
 \begin{table}[H]
     \centering
