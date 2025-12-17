@@ -17,11 +17,13 @@ Bộ tham số được chọn bắt buộc phải thỏa mãn các giới hạn
         \left \lceil (T_{m} \times T_{c} \times R \times S / 2048) \right \rceil \le BRAM_{WGT\_MAX}
     \end{equation}
     
-    \item \textbf{Tài nguyên tính toán:} Số lượng bộ lọc tính toán song song ($T_m$) không được vượt quá số lượng mảng xử lý (PA) vật lý có trên chip.
+    \item \textbf{Tài nguyên tính toán:} Số lượng channel IFMAP và channel OFMAP được tính toán song song ($T_k$) không được vượt quá số lượng mảng xử lý (PA) và số lượng đơn vị xử lý(PU) có trong một mảng xử lý (PA) vật lý có trên chip.
     \begin{equation}
-        1 \le T_{m} \le N_{PA\_MAX}
+        1 \le T_{k} \le N_{PA\_MAX}
     \end{equation}
-    
+    \begin{equation}
+        1 \le T_{m} \le N_{PU\_MAX(PA)}
+    \end{equation}
     \item \textbf{Tính hợp lệ:} Kích thước Tile không được lớn hơn kích thước gốc của Feature Map.
     \begin{equation}
         1 \le T_{h} \le H; \quad 1 \le T_{c} \le C
