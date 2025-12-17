@@ -1,35 +1,50 @@
-# LaTeX Build Artifacts
 *.aux
 *.bbl
-*.bcf
 *.blg
+*.brf
 *.log
 *.out
 *.toc
 *.lof
 *.lot
-*.run.xml
-*.synctex.gz
+*.fls
 *.fdb_latexmk
-*.fls
-*.dvi
-*.ps
-*.fls
-
-
-
-# Bibliography auxiliary files
-*-blx.bib
-
-# Python/Code execution artifacts (if you use minted or pythontex)
-_minted-*/
-*.pyg
-
-# Editor/IDE specific files
-.vscode/
-*.swp
-*~
-.DS_Store
-
-# PDF Output (Optional: Uncomment the line below if you do not want to track the generated PDF)
-# *.pdf
+*.synctex.gz
+*.nav
+*.snm
+*.vrb
+*.bbl-SAVE-ERROR
+*.bcf-SAVE-ERROR
+*.run.xml-SAVE-ERROR
+*.blg-SAVE-ERROR
+*.bcf
+*.run.xml
+Report Source/main.blg
+Report Source/main.fdb_latexmk
+Report Source/main.fls
+Report Source/main.lof
+Report Source/main.log
+Report Source/main.lot
+Report Source/main.out
+Report Source/main.pdf
+Report Source/main.synctex.gz
+Report Source/main.toc
+Report Source/tom_tat/danh_muc_ky_hieu.aux
+Report Source/2_co_so_ly_thuyet/main.aux
+Report Source/3_phan_tich_va_kien_truc/main.aux
+Report Source/4_thiet_ke_accelerator/main.aux
+Report Source/5_hien_thuc_soc/main.aux
+Report Source/6_danh_gia_hieu_nang/main.aux
+Report Source/7_ke_hoach_phat_trien/main.aux
+Report Source/appendix/main.aux
+Report Source/main.aux
+Report Source/main.fdb_latexmk
+Report Source/main.fls
+Report Source/main.lof
+Report Source/main.log
+Report Source/main.lot
+Report Source/main.out
+Report Source/main.pdf
+Report Source/main.synctex.gz
+Report Source/main.toc
+Report Source/tom_tat/danh_muc_ky_hieu.aux
