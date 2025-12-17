@@ -5,9 +5,9 @@ Chương này trình bày các kết quả thực nghiệm thu được từ mô
 
 \section{Môi trường và Phương pháp thực nghiệm}
 
-Do các hạn chế về thời gian tổng hợp phần cứng (Synthesis) và tài nguyên FPGA thực tế, trong phạm vi đồ án này, hiệu năng của kiến trúc được đánh giá thông qua một mô hình ước lượng (Analytical Estimator) xây dựng bằng ngôn ngữ C++. Mô hình này hiện thực hóa các công thức toán học đã được thiết lập tại Chương 4 nhằm dự báo độ trễ và tài nguyên tiêu thụ.
+Nhằm đánh giá để tiên liệu trước về hiệu năng của đồ án này, kiến trúc được đánh giá thông qua một mô hình ước lượng (Analytical Estimator) xây dựng bằng ngôn ngữ C++. Mô hình này hiện thực hóa các công thức toán học đã được thiết lập tại Chương 4 nhằm dự báo độ trễ và tài nguyên tiêu thụ.
 
-Các tham số cấu hình cho quá trình mô phỏng được thiết lập dựa trên các ràng buộc phần cứng dự kiến. Cụ thể, hệ thống hoạt động ở tần số $200 \text{ MHz}$ với số lượng đơn vị xử lý (PEs) tiêu chuẩn là 165. Phạm vi đánh giá chỉ tập trung đo đạc thời gian thực thi của các lớp tích chập (Convolutional Layers), vốn là thành phần chiếm tỷ trọng tính toán lớn nhất trong mạng CNN. Chiến lược xử lý được lựa chọn là Batch Size = 1 nhằm tối ưu hóa độ trễ cho tác vụ xử lý từng ảnh đơn lẻ. Về cấu hình bộ nhớ, đồ án giả lập kiến trúc bộ nhớ tách biệt (Separate Off-chip Memory), trong đó Trọng số (Weights) và Dữ liệu (Activations) được truy xuất trên các kênh độc lập để tối ưu băng thông.
+Các tham số cấu hình cho quá trình mô phỏng được thiết lập dựa trên các ràng buộc phần cứng dự kiến. Cụ thể, hệ thống hoạt động ở tần số $200 \text{ MHz}$ với số lượng đơn vị xử lý (PEs) tiêu chuẩn là 168. Phạm vi đánh giá chỉ tập trung đo đạc thời gian thực thi của các lớp tích chập (Convolutional Layers), vốn là thành phần chiếm tỷ trọng tính toán lớn nhất trong mạng CNN. Chiến lược xử lý được lựa chọn là Batch Size = 1 nhằm tối ưu hóa độ trễ cho tác vụ xử lý từng ảnh đơn lẻ. Về cấu hình bộ nhớ, đồ án giả lập kiến trúc bộ nhớ tách biệt (Separate Off-chip Memory), trong đó Trọng số (Weights) và Dữ liệu (Activations) được truy xuất trên các kênh độc lập để tối ưu băng thông.
 
 \section{Đánh giá khả năng xử lý trên AlexNet}
 \label{sec:alexnet_eval}
@@ -40,7 +40,7 @@ Tuy nhiên, khi chuyển sang các lớp sử dụng bộ lọc chuẩn $3 \time
 \section{Đánh giá khả năng xử lý trên VGG-16}
 \label{sec:vgg_eval}
 
-Để kiểm chứng khả năng chịu tải của hệ thống đối với các mạng nơ-ron tích chập sâu, đồ án thực hiện mô phỏng trên VGG-16. Các thông số hiệu năng chi tiết được tổng hợp trong Bảng \ref{tab:vgg16_breakdown}.
+Để kiểm chứng khả năng chịu tải của hệ thống đối với các mạng nơ-ron tích chập sâu, đồ án thực hiện mô phỏng trên VGG-16. Kết quả mô phỏng trên tập cấu hình phần cứng tối ưu ($T_k=1, T_m=28$) với giới hạn 168 PEs được trình bày tại Bảng \ref{tab:vgg16_breakdown}.
 
 \begin{table}[H]
 \centering

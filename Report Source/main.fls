@@ -844,6 +844,9 @@ INPUT .\2_co_so_ly_thuyet\image\ospitransaction.png
 INPUT .\2_co_so_ly_thuyet\2.4_cong_nghe_fpga.tex
 INPUT .\2_co_so_ly_thuyet\2.4_cong_nghe_fpga.tex
 INPUT 2_co_so_ly_thuyet\2.4_cong_nghe_fpga.tex
+INPUT .\2_co_so_ly_thuyet\3.1_related_work.tex
+INPUT .\2_co_so_ly_thuyet\3.1_related_work.tex
+INPUT 2_co_so_ly_thuyet\3.1_related_work.tex
 INPUT .\3_phan_tich_va_kien_truc\main.tex
 INPUT .\3_phan_tich_va_kien_truc\main.tex
 OUTPUT 3_phan_tich_va_kien_truc\main.aux

@@ -5,12 +5,13 @@
 \contentsline {table}{\numberline {2.1}{\ignorespaces Tập thanh ghi mục đích chung của RISC-V (RV32I)}}{9}{table.caption.3}%
 \addvspace {10\p@ }
 \addvspace {10\p@ }
-\contentsline {table}{\numberline {4.1}{\ignorespaces Bảng tham số thiết kế và ánh xạ ký hiệu}}{43}{table.caption.27}%
-\contentsline {table}{\numberline {4.2}{\ignorespaces Cấu trúc Descriptor điều khiển phần cứng}}{57}{table.caption.36}%
+\addvspace {10\p@ }
+\contentsline {table}{\numberline {5.1}{\ignorespaces Bảng tham số thiết kế và ánh xạ ký hiệu}}{44}{table.caption.27}%
+\contentsline {table}{\numberline {5.2}{\ignorespaces Cấu trúc Descriptor điều khiển phần cứng}}{57}{table.caption.36}%
 \addvspace {10\p@ }
 \addvspace {10\p@ }
-\contentsline {table}{\numberline {6.1}{\ignorespaces Chi tiết hiệu năng từng lớp của AlexNet (Mô phỏng với 168 PEs)}}{61}{table.caption.37}%
-\contentsline {table}{\numberline {6.2}{\ignorespaces Chi tiết hiệu năng từng lớp của VGG-16 (Mô phỏng với 168 PEs)}}{63}{table.caption.38}%
-\contentsline {table}{\numberline {6.3}{\ignorespaces Hiệu năng chi tiết từng lớp của MobileNet v1 (Total Latency: 109.88 ms)}}{64}{table.caption.39}%
-\contentsline {table}{\numberline {6.4}{\ignorespaces So sánh hiệu năng xử lý Convolution trên AlexNet và VGG16}}{66}{table.caption.40}%
+\contentsline {table}{\numberline {7.1}{\ignorespaces Chi tiết hiệu năng từng lớp của AlexNet (Mô phỏng với 168 PEs)}}{61}{table.caption.37}%
+\contentsline {table}{\numberline {7.2}{\ignorespaces Chi tiết hiệu năng từng lớp của VGG-16 (Mô phỏng với 168 PEs)}}{63}{table.caption.38}%
+\contentsline {table}{\numberline {7.3}{\ignorespaces Hiệu năng chi tiết từng lớp của MobileNet v1 (Total Latency: 109.88 ms)}}{64}{table.caption.39}%
+\contentsline {table}{\numberline {7.4}{\ignorespaces So sánh hiệu năng xử lý Convolution trên AlexNet và VGG16}}{66}{table.caption.40}%
 \addvspace {10\p@ }

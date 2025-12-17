@@ -206,7 +206,9 @@ Do đặc tính cộng gộp kênh, thuật toán cần ưu tiên vòng lặp t�
 \label{alg:pass_standard}
 \SetAlgoLined
 \DontPrintSemicolon
-\KwIn{$N_m, N_h, N_c$}
+\KwIn{$N_m$ (Groups), $N_h$ (Height Blocks)}
+\KwOut{DRAM (Valid OFM)}
+Initialize pointers: $Buf_{curr} \leftarrow A$, $Buf_{next} \leftarrow B$\;
 \For{$m = 0$ \textbf{to} $N_m - 1$}{
     \textit{1. Load Weights (Weight Stationary)}\;
     \For{$h = 0$ \textbf{to} $N_h - 1$}{
@@ -221,38 +223,7 @@ Do đặc tính cộng gộp kênh, thuật toán cần ưu tiên vòng lặp t�
 }
 \end{algorithm}
 
-Chi tiết kỹ thuật về việc quản lý bộ nhớ trong quá trình tích lũy và xử lý biên được mô tả kỹ hơn ở hai thuật toán phụ trợ sau:
 
-\begin{algorithm}[H]
-    \caption{Lịch trình Pass cho Standard Conv (Phần 1: Tích lũy)}
-    \label{alg:pass_std_part1}
-    \SetAlgoLined
-    \DontPrintSemicolon
-    \KwIn{$N_m, N_h, N_c$}
-    \For{$m = 0$ \textbf{to} $N_m - 1$}{
-        \textit{1. Load Weights...}\;
-        \For{$h = 0$ \textbf{to} $N_h - 1$}{
-            \For{$c = 0$ \textbf{to} $N_c - 1$}{
-                \textbf{Pass $(m, h, c)$:} ... (Code phần tích lũy) ...\;
-            }
-            \textit{(Chuyển sang xử lý biên tại Alg \ref{alg:pass_std_part2})}\;
-        }
-    }
-\end{algorithm}
-
-\begin{algorithm}[H]
-    \caption{Lịch trình Pass cho Standard Conv (Phần 2: Xử lý biên)}
-    \label{alg:pass_std_part2}
-    \SetAlgoLined
-    \DontPrintSemicolon
-    \setcounter{AlgoLine}{10}
-    \textit{...Tiếp tục từ vòng lặp h}\;
-    \ForEach{Tile $h$ đã hoàn tất tích lũy}{
-        \textit{2. Xử lý biên \& Ghi Output:}\;
-        - Ghi Valid xuống DRAM, giữ Residual lại.\;
-        - Hoán đổi Ping-Pong Buffer.\;
-    }
-\end{algorithm}
 
 \subsubsection{Trường hợp Depthwise Convolution}
 Do tính độc lập giữa các kênh, thuật toán loại bỏ vòng lặp tích lũy, giúp đơn giản hóa luồng dữ liệu.
@@ -403,7 +374,7 @@ Trước khi bắt đầu tính toán Pass đầu tiên, hệ thống cần nạ
 Do hệ thống sử dụng bus dữ liệu dùng chung (Shared Data Bus) cho cả luồng nạp (Load) và ghi (Store), băng thông bộ nhớ phải được chia sẻ thời gian. Bộ điều khiển sẽ ưu tiên nạp Pass tiếp theo, sau đó mới đến ghi Pass trước đó (hoặc xen kẽ tùy theo chính sách trọng tài).
 
 \subsubsection{Các kịch bản hiệu năng (Performance Scenarios)}
-Gọi $T_{load}$ là thời gian nạp 1 Input Pass, $T_{store}$ là thời gian ghi 1 Output Pass, và $T_{comp}$ là thời gian tính toán 1 Pass ($T_{pass}$ đã tính ở mục 4.3.3). Ta định nghĩa tham số $b$ là \textbf{số chu kỳ đồng hồ cần thiết để truyền 1 giá trị dữ liệu} (Cycles per Data Transfer).
+Gọi $T_{load}$ là thời gian nạp 1 Input Pass, $T_{store}$ là thời gian ghi 1 Output Pass, và $T_{comp}$ là thời gian tính toán 1 Pass (cũng chính là $T_{pass}$ đã tính ở mục 4.3.3). Ta định nghĩa tham số $b$ là \textbf{số chu kỳ đồng hồ cần thiết để truyền 1 giá trị dữ liệu} (Cycles per Data Transfer).
 
 Mô hình thời gian hoàn thành 1 layer được phân tích dựa trên sự chênh lệch giữa năng lực tính toán và băng thông bộ nhớ, được minh họa trong Hình \ref{fig:timing_diagrams}.
 
@@ -434,7 +405,7 @@ Xảy ra khi thời gian nạp dữ liệu lớn hơn thời gian tính toán ($
 \textbf{Trường hợp 2: Memory Bound 2 (Nghẽn băng thông trung bình)} \\
 Xảy ra khi thời gian tính toán nhanh hơn tổng thời gian nạp và ghi, nhưng chậm hơn thời gian nạp ($T_{load} < T_{comp} < T_{load} + T_{store}$). Lúc này, thời gian thực thi bao gồm thời gian nạp, ghi và một phần chênh lệch thời gian tính toán.
 \begin{equation}
-    T_{total} \approx T_{total\_IO} + (T_{comp} - T_{load})
+    T_{total} \approx T_{total\_IO} + (T_{comp} - T_{load\_first\_pass})
 \end{equation}
 Trong đó $T_{total\_IO}$ được tính theo công thức tại Trường hợp 1 tùy thuộc loại Convolution.
 
