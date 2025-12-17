@@ -1,104 +1,104 @@
 \relax 
 \providecommand\hyper@newdestlabel[2]{}
-\@writefile{toc}{\contentsline {chapter}{\numberline {4} Thiết kế Bộ tăng tốc AI (AI Accelerator):}{15}{chapter.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {4} Thiết kế Bộ tăng tốc AI (AI Accelerator):}{25}{chapter.4}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \@writefile{loa}{\addvspace {10\p@ }}
-\newlabel{ch:accelerator_design}{{4}{15}{Thiết kế Bộ tăng tốc AI (AI Accelerator):}{chapter.4}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {4.1}Phân tích toán học của phép tính tích chập}{15}{section.4.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.1.1}Standard Convolution (Tích chập tiêu chuẩn)}{16}{subsection.4.1.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.1.1.1}Công thức toán học tổng quát}{16}{subsubsection.4.1.1.1}\protected@file@percent }
-\newlabel{eq:std_conv}{{4.1}{16}{Công thức toán học tổng quát}{equation.4.1}{}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.1.1.2}Cấu trúc vòng lặp (Loop Nest)}{16}{subsubsection.4.1.1.2}\protected@file@percent }
-\@writefile{loa}{\contentsline {algocf}{\numberline {1}{\ignorespaces Standard Convolution (Standard Conv2D)}}{17}{algocf.1}\protected@file@percent }
-\newlabel{alg:std_conv}{{1}{17}{Cấu trúc vòng lặp (Loop Nest)}{algocf.1}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.1.2}Depthwise Separable Convolution}{17}{subsection.4.1.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.1.2.1}Depthwise Convolution (DW)}{18}{subsubsection.4.1.2.1}\protected@file@percent }
-\@writefile{loa}{\contentsline {algocf}{\numberline {2}{\ignorespaces Depthwise Convolution (với Padding)}}{18}{algocf.2}\protected@file@percent }
-\newlabel{alg:dw_conv}{{2}{18}{Depthwise Convolution (DW)}{algocf.2}{}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.1.2.2}Pointwise Convolution (PW)}{19}{subsubsection.4.1.2.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.1.3}Yêu cầu đối với Kiến trúc thống nhất (Unified Architecture)}{19}{subsection.4.1.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.1.4}Kỹ thuật Gập Batch Normalization (BN Folding)}{19}{subsection.4.1.4}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.1.4.1}Công thức biến đổi trọng số}{20}{subsubsection.4.1.4.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {4.2}Chiến lược phân mảnh và Dòng dữ liệu đề xuất}{21}{section.4.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.2.1}Định nghĩa khái niệm "Tile" (Mảnh dữ liệu)}{21}{subsection.4.2.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.2.2}Phương pháp Phân mảnh không gian dữ liệu (Space Partitioning)}{22}{subsection.4.2.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.2.2.1}Công thức chia khối (Block Calculation)}{22}{subsubsection.4.2.2.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.2.3}Mô hình hóa toán học và Tham số thiết kế}{23}{subsection.4.2.3}\protected@file@percent }
-\newlabel{subsec:math_model}{{4.2.3}{23}{Mô hình hóa toán học và Tham số thiết kế}{subsection.4.2.3}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {4.1}{\ignorespaces Bảng tham số thiết kế và ánh xạ ký hiệu}}{23}{table.caption.5}\protected@file@percent }
-\newlabel{tab:design_params}{{4.1}{23}{Bảng tham số thiết kế và ánh xạ ký hiệu}{table.caption.5}{}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.2.3.1}Công thức tính kích thước không gian toàn cục}{23}{subsubsection.4.2.3.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.2.3.2}Tính toán kích thước Output Tile theo cơ chế Ping-Pong}{24}{subsubsection.4.2.3.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.2.3.3}Phân tích số lượng Pass và Dữ liệu biên}{24}{subsubsection.4.2.3.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.2.3.4}Trường hợp Depthwise Convolution}{25}{subsubsection.4.2.3.4}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.2.4}Thuật toán Điều phối Pass (Pass Scheduling)}{25}{subsection.4.2.4}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.2.4.1}Thuật toán cho Standard Convolution}{26}{subsubsection.4.2.4.1}\protected@file@percent }
-\@writefile{loa}{\contentsline {algocf}{\numberline {3}{\ignorespaces Lịch trình Pass cho Standard Convolution}}{26}{algocf.3}\protected@file@percent }
-\newlabel{alg:pass_standard}{{3}{26}{Thuật toán cho Standard Convolution}{algocf.3}{}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.2.4.2}Thuật toán cho Depthwise Convolution}{26}{subsubsection.4.2.4.2}\protected@file@percent }
-\@writefile{loa}{\contentsline {algocf}{\numberline {4}{\ignorespaces Lịch trình Pass cho Depthwise Convolution}}{27}{algocf.4}\protected@file@percent }
-\newlabel{alg:pass_dw_a}{{4}{27}{Thuật toán cho Depthwise Convolution}{algocf.4}{}}
-\newlabel{fig:pass_div_std}{{4.1a}{27}{Standard Convolution ($H=21, M=2$)}{figure.caption.6}{}}
-\newlabel{sub@fig:pass_div_std}{{a}{27}{Standard Convolution ($H=21, M=2$)}{figure.caption.6}{}}
-\newlabel{fig:pass_div_dw}{{4.1b}{27}{Depthwise Convolution ($H=21, M=21$)}{figure.caption.6}{}}
-\newlabel{sub@fig:pass_div_dw}{{b}{27}{Depthwise Convolution ($H=21, M=21$)}{figure.caption.6}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4.1}{\ignorespaces Minh họa chiến lược phân chia Pass cho hai loại tích chập với $T_h=11$. (a) Standard Convolution chia thành 2 phần theo chiều dọc và tích lũy theo chiều sâu. (b) Depthwise Convolution xử lý độc lập từng nhóm kênh và chia 2 phần theo chiều dọc.}}{27}{figure.caption.6}\protected@file@percent }
-\newlabel{fig:pass_division_strategy}{{4.1}{27}{Minh họa chiến lược phân chia Pass cho hai loại tích chập với $T_h=11$. (a) Standard Convolution chia thành 2 phần theo chiều dọc và tích lũy theo chiều sâu. (b) Depthwise Convolution xử lý độc lập từng nhóm kênh và chia 2 phần theo chiều dọc}{figure.caption.6}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.2.5}Phân tích vấn đề tại biên và Dữ liệu dôi ra}{27}{subsection.4.2.5}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.2.5.1}Cơ sở hình thành Dữ liệu dôi ra}{28}{subsubsection.4.2.5.1}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {4.2}{\ignorespaces Sơ đồ minh họa quá trình tính toán tích chập và sự hình thành dữ liệu dôi ra (Residual Data) trong một pass với tile đầu vào $T_h=4$ và bộ lọc kích thước $3 \times 3$ trong trường hợp số kênh của ifmap feature là 1.}}{28}{figure.caption.7}\protected@file@percent }
-\newlabel{fig:residual_data_generation}{{4.2}{28}{Sơ đồ minh họa quá trình tính toán tích chập và sự hình thành dữ liệu dôi ra (Residual Data) trong một pass với tile đầu vào $T_h=4$ và bộ lọc kích thước $3 \times 3$ trong trường hợp số kênh của ifmap feature là 1}{figure.caption.7}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.2.6}Cơ chế Ping-Pong Buffer và Logic xử lý hàng hợp lệ}{29}{subsection.4.2.6}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.2.7}Thuật toán Điều phối và Xoay vòng bộ nhớ}{30}{subsection.4.2.7}\protected@file@percent }
-\@writefile{loa}{\contentsline {algocf}{\numberline {5}{\ignorespaces Lịch trình Pass cho Standard Conv (Phần 1: Tích lũy)}}{30}{algocf.5}\protected@file@percent }
-\newlabel{alg:pass_std_part1}{{5}{30}{Thuật toán Điều phối và Xoay vòng bộ nhớ}{algocf.5}{}}
-\@writefile{loa}{\contentsline {algocf}{\numberline {6}{\ignorespaces Lịch trình Pass cho Standard Conv (Phần 2: Xử lý biên)}}{30}{algocf.6}\protected@file@percent }
-\newlabel{alg:pass_std_part2}{{6}{30}{Thuật toán Điều phối và Xoay vòng bộ nhớ}{algocf.6}{}}
-\@writefile{loa}{\contentsline {algocf}{\numberline {7}{\ignorespaces Lịch trình Pass cho Depthwise Convolution}}{31}{algocf.7}\protected@file@percent }
-\newlabel{alg:pass_dw}{{7}{31}{Thuật toán Điều phối và Xoay vòng bộ nhớ}{algocf.7}{}}
-\newlabel{fig:ping_pong_state_k}{{4.3a}{33}{Giai đoạn 1 (Xử lý Tile $H_k$): Buffer A tích lũy kết quả Valid, Buffer B lưu trữ dữ liệu Dôi ra (Residual)}{figure.caption.8}{}}
-\newlabel{sub@fig:ping_pong_state_k}{{a}{33}{Giai đoạn 1 (Xử lý Tile $H_k$): Buffer A tích lũy kết quả Valid, Buffer B lưu trữ dữ liệu Dôi ra (Residual)}{figure.caption.8}{}}
-\newlabel{fig:ping_pong_state_k_plus_1}{{4.3b}{33}{Giai đoạn 2 (Xử lý Tile $H_{k+1}$): Buffer B hoàn thiện kết quả biên (từ Residual cũ), Buffer A lưu trữ dữ liệu Dôi ra mới}{figure.caption.8}{}}
-\newlabel{sub@fig:ping_pong_state_k_plus_1}{{b}{33}{Giai đoạn 2 (Xử lý Tile $H_{k+1}$): Buffer B hoàn thiện kết quả biên (từ Residual cũ), Buffer A lưu trữ dữ liệu Dôi ra mới}{figure.caption.8}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4.3}{\ignorespaces Sơ đồ luồng dữ liệu minh họa cơ chế Ping-Pong Buffer dùng để quản lý vùng dữ liệu dôi ra (Residual Data). Hệ thống luân phiên vai trò của Buffer A và B để đảm bảo tính liên tục của phép tính biên mà không cần nạp lại dữ liệu đầu vào.}}{33}{figure.caption.8}\protected@file@percent }
-\newlabel{fig:ping_pong_mechanism}{{4.3}{33}{Sơ đồ luồng dữ liệu minh họa cơ chế Ping-Pong Buffer dùng để quản lý vùng dữ liệu dôi ra (Residual Data). Hệ thống luân phiên vai trò của Buffer A và B để đảm bảo tính liên tục của phép tính biên mà không cần nạp lại dữ liệu đầu vào}{figure.caption.8}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {4.3}Thiết kế kiến trúc vi mô (Micro-architecture)}{34}{section.4.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.3.1}Sơ đồ khối tổng quát hệ thống}{34}{subsection.4.3.1}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {4.4}{\ignorespaces Sơ đồ khối tổng quát kiến trúc Beta Accelerator với bus dữ liệu tách biệt}}{34}{figure.caption.9}\protected@file@percent }
-\newlabel{fig:system_arch}{{4.4}{34}{Sơ đồ khối tổng quát kiến trúc Beta Accelerator với bus dữ liệu tách biệt}{figure.caption.9}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.3.2}Tổ chức Mảng tính toán (Processing Hierarchy)}{36}{subsection.4.3.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.3.2.1}Mảng xử lý (Process Array - PA)}{36}{subsubsection.4.3.2.1}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {4.5}{\ignorespaces Kiến trúc bên trong khối Process Array (PA)}}{37}{figure.caption.10}\protected@file@percent }
-\newlabel{fig:pa_arch}{{4.5}{37}{Kiến trúc bên trong khối Process Array (PA)}{figure.caption.10}{}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.3.2.2}Đơn vị xử lý (Process Unit - PU)}{37}{subsubsection.4.3.2.2}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {4.6}{\ignorespaces Kiến trúc khối Process Unit (PU) với các PE hoạt động song song}}{37}{figure.caption.11}\protected@file@percent }
-\newlabel{fig:pu_arch}{{4.6}{37}{Kiến trúc khối Process Unit (PU) với các PE hoạt động song song}{figure.caption.11}{}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.3.2.3}Phần tử xử lý (Process Element - PE)}{38}{subsubsection.4.3.2.3}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {4.7}{\ignorespaces Cấu trúc bên trong một Process Element (PE)}}{38}{figure.caption.12}\protected@file@percent }
-\newlabel{fig:pe_arch}{{4.7}{38}{Cấu trúc bên trong một Process Element (PE)}{figure.caption.12}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.3.3}Đánh giá thời gian thực thi (Performance Estimation)}{38}{subsection.4.3.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.3.3.1}Thời gian xử lý một Pass cơ sở ($T_{pass}$)}{38}{subsubsection.4.3.3.1}\protected@file@percent }
-\newlabel{eq:t_pass}{{4.15}{39}{Thời gian xử lý một Pass cơ sở ($T_{pass}$)}{equation.4.15}{}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.3.3.2}Tổng thời gian thực thi ($T_{total}$)}{39}{subsubsection.4.3.3.2}\protected@file@percent }
-\newlabel{eq:total_std}{{4.16}{39}{Tổng thời gian thực thi ($T_{total}$)}{equation.4.16}{}}
-\newlabel{eq:total_dw}{{4.17}{39}{Tổng thời gian thực thi ($T_{total}$)}{equation.4.17}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.3.4}Chiến lược Che giấu độ trễ và Mô hình hiệu năng toàn hệ thống}{40}{subsection.4.3.4}\protected@file@percent }
-\newlabel{subsec:latency_hiding}{{4.3.4}{40}{Chiến lược Che giấu độ trễ và Mô hình hiệu năng toàn hệ thống}{subsection.4.3.4}{}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.3.4.1}Cơ chế hoạt động với Bộ nhớ tách biệt}{40}{subsubsection.4.3.4.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.3.4.2}Các kịch bản hiệu năng (Performance Scenarios)}{41}{subsubsection.4.3.4.2}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {4.8}{\ignorespaces Biểu đồ thời gian thực thi trong 3 trường hợp cân bằng tải}}{41}{figure.caption.13}\protected@file@percent }
-\newlabel{fig:timing_diagrams}{{4.8}{41}{Biểu đồ thời gian thực thi trong 3 trường hợp cân bằng tải}{figure.caption.13}{}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.3.4.3}Tổng thời gian toàn mạng (Model Latency)}{42}{subsubsection.4.3.4.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {4.4}Tối ưu hóa Tham số và Cơ chế Sinh mã cấu hình}{42}{section.4.4}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.4.1}Bài toán Tối ưu hóa Không gian thiết kế}{43}{subsection.4.4.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.4.1.1}Các ràng buộc phần cứng (Hardware Constraints)}{43}{subsubsection.4.4.1.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.4.2}Chiến lược Tìm kiếm và Sinh mã (Search \& Generate)}{43}{subsection.4.4.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.4.3}Cấu trúc Lệnh cấu hình (Layer Descriptor)}{44}{subsection.4.4.3}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {4.2}{\ignorespaces Cấu trúc dữ liệu cấu hình cho một Layer}}{44}{table.caption.14}\protected@file@percent }
-\newlabel{tab:instr_format}{{4.2}{44}{Cấu trúc dữ liệu cấu hình cho một Layer}{table.caption.14}{}}
+\newlabel{ch:accelerator_design}{{4}{25}{Thiết kế Bộ tăng tốc AI (AI Accelerator):}{chapter.4}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {4.1}Phân tích toán học của phép tính tích chập}{25}{section.4.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1.1}Standard Convolution (Tích chập tiêu chuẩn)}{26}{subsection.4.1.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.1.1.1}Công thức toán học tổng quát}{26}{subsubsection.4.1.1.1}\protected@file@percent }
+\newlabel{eq:std_conv}{{4.1}{26}{Công thức toán học tổng quát}{equation.4.1}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.1.1.2}Cấu trúc vòng lặp (Loop Nest)}{26}{subsubsection.4.1.1.2}\protected@file@percent }
+\@writefile{loa}{\contentsline {algocf}{\numberline {1}{\ignorespaces Standard Convolution (Standard Conv2D)}}{27}{algocf.1}\protected@file@percent }
+\newlabel{alg:std_conv}{{1}{27}{Cấu trúc vòng lặp (Loop Nest)}{algocf.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1.2}Depthwise Separable Convolution}{27}{subsection.4.1.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.1.2.1}Depthwise Convolution (DW)}{28}{subsubsection.4.1.2.1}\protected@file@percent }
+\@writefile{loa}{\contentsline {algocf}{\numberline {2}{\ignorespaces Depthwise Convolution (với Padding)}}{28}{algocf.2}\protected@file@percent }
+\newlabel{alg:dw_conv}{{2}{28}{Depthwise Convolution (DW)}{algocf.2}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.1.2.2}Pointwise Convolution (PW)}{29}{subsubsection.4.1.2.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1.3}Yêu cầu đối với Kiến trúc thống nhất (Unified Architecture)}{29}{subsection.4.1.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1.4}Kỹ thuật Gập Batch Normalization (BN Folding)}{29}{subsection.4.1.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.1.4.1}Công thức biến đổi trọng số}{30}{subsubsection.4.1.4.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4.2}Chiến lược phân mảnh và Dòng dữ liệu đề xuất}{31}{section.4.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2.1}Định nghĩa khái niệm "Tile" (Mảnh dữ liệu)}{31}{subsection.4.2.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2.2}Phương pháp Phân mảnh không gian dữ liệu (Space Partitioning)}{32}{subsection.4.2.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.2.2.1}Công thức chia khối (Block Calculation)}{32}{subsubsection.4.2.2.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2.3}Mô hình hóa toán học và Tham số thiết kế}{33}{subsection.4.2.3}\protected@file@percent }
+\newlabel{subsec:math_model}{{4.2.3}{33}{Mô hình hóa toán học và Tham số thiết kế}{subsection.4.2.3}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {4.1}{\ignorespaces Bảng tham số thiết kế và ánh xạ ký hiệu}}{33}{table.caption.13}\protected@file@percent }
+\newlabel{tab:design_params}{{4.1}{33}{Bảng tham số thiết kế và ánh xạ ký hiệu}{table.caption.13}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.2.3.1}Công thức tính kích thước không gian toàn cục}{33}{subsubsection.4.2.3.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.2.3.2}Tính toán kích thước Output Tile theo cơ chế Ping-Pong}{34}{subsubsection.4.2.3.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.2.3.3}Phân tích số lượng Pass và Dữ liệu biên}{34}{subsubsection.4.2.3.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.2.3.4}Trường hợp Depthwise Convolution}{35}{subsubsection.4.2.3.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2.4}Thuật toán Điều phối Pass (Pass Scheduling)}{35}{subsection.4.2.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.2.4.1}Thuật toán cho Standard Convolution}{36}{subsubsection.4.2.4.1}\protected@file@percent }
+\@writefile{loa}{\contentsline {algocf}{\numberline {3}{\ignorespaces Lịch trình Pass cho Standard Convolution}}{36}{algocf.3}\protected@file@percent }
+\newlabel{alg:pass_standard}{{3}{36}{Thuật toán cho Standard Convolution}{algocf.3}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.2.4.2}Thuật toán cho Depthwise Convolution}{36}{subsubsection.4.2.4.2}\protected@file@percent }
+\@writefile{loa}{\contentsline {algocf}{\numberline {4}{\ignorespaces Lịch trình Pass cho Depthwise Convolution}}{37}{algocf.4}\protected@file@percent }
+\newlabel{alg:pass_dw_a}{{4}{37}{Thuật toán cho Depthwise Convolution}{algocf.4}{}}
+\newlabel{fig:pass_div_std}{{4.1a}{37}{Standard Convolution ($H=21, M=2$)}{figure.caption.14}{}}
+\newlabel{sub@fig:pass_div_std}{{a}{37}{Standard Convolution ($H=21, M=2$)}{figure.caption.14}{}}
+\newlabel{fig:pass_div_dw}{{4.1b}{37}{Depthwise Convolution ($H=21, M=21$)}{figure.caption.14}{}}
+\newlabel{sub@fig:pass_div_dw}{{b}{37}{Depthwise Convolution ($H=21, M=21$)}{figure.caption.14}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4.1}{\ignorespaces Minh họa chiến lược phân chia Pass cho hai loại tích chập với $T_h=11$. (a) Standard Convolution chia thành 2 phần theo chiều dọc và tích lũy theo chiều sâu. (b) Depthwise Convolution xử lý độc lập từng nhóm kênh và chia 2 phần theo chiều dọc.}}{37}{figure.caption.14}\protected@file@percent }
+\newlabel{fig:pass_division_strategy}{{4.1}{37}{Minh họa chiến lược phân chia Pass cho hai loại tích chập với $T_h=11$. (a) Standard Convolution chia thành 2 phần theo chiều dọc và tích lũy theo chiều sâu. (b) Depthwise Convolution xử lý độc lập từng nhóm kênh và chia 2 phần theo chiều dọc}{figure.caption.14}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2.5}Phân tích vấn đề tại biên và Dữ liệu dôi ra}{37}{subsection.4.2.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.2.5.1}Cơ sở hình thành Dữ liệu dôi ra}{38}{subsubsection.4.2.5.1}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {4.2}{\ignorespaces Sơ đồ minh họa quá trình tính toán tích chập và sự hình thành dữ liệu dôi ra (Residual Data) trong một pass với tile đầu vào $T_h=4$ và bộ lọc kích thước $3 \times 3$ trong trường hợp số kênh của ifmap feature là 1.}}{38}{figure.caption.15}\protected@file@percent }
+\newlabel{fig:residual_data_generation}{{4.2}{38}{Sơ đồ minh họa quá trình tính toán tích chập và sự hình thành dữ liệu dôi ra (Residual Data) trong một pass với tile đầu vào $T_h=4$ và bộ lọc kích thước $3 \times 3$ trong trường hợp số kênh của ifmap feature là 1}{figure.caption.15}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2.6}Cơ chế Ping-Pong Buffer và Logic xử lý hàng hợp lệ}{39}{subsection.4.2.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2.7}Thuật toán Điều phối và Xoay vòng bộ nhớ}{40}{subsection.4.2.7}\protected@file@percent }
+\@writefile{loa}{\contentsline {algocf}{\numberline {5}{\ignorespaces Lịch trình Pass cho Standard Conv (Phần 1: Tích lũy)}}{40}{algocf.5}\protected@file@percent }
+\newlabel{alg:pass_std_part1}{{5}{40}{Thuật toán Điều phối và Xoay vòng bộ nhớ}{algocf.5}{}}
+\@writefile{loa}{\contentsline {algocf}{\numberline {6}{\ignorespaces Lịch trình Pass cho Standard Conv (Phần 2: Xử lý biên)}}{40}{algocf.6}\protected@file@percent }
+\newlabel{alg:pass_std_part2}{{6}{40}{Thuật toán Điều phối và Xoay vòng bộ nhớ}{algocf.6}{}}
+\@writefile{loa}{\contentsline {algocf}{\numberline {7}{\ignorespaces Lịch trình Pass cho Depthwise Convolution}}{41}{algocf.7}\protected@file@percent }
+\newlabel{alg:pass_dw}{{7}{41}{Thuật toán Điều phối và Xoay vòng bộ nhớ}{algocf.7}{}}
+\newlabel{fig:ping_pong_state_k}{{4.3a}{43}{Giai đoạn 1 (Xử lý Tile $H_k$): Buffer A tích lũy kết quả Valid, Buffer B lưu trữ dữ liệu Dôi ra (Residual)}{figure.caption.16}{}}
+\newlabel{sub@fig:ping_pong_state_k}{{a}{43}{Giai đoạn 1 (Xử lý Tile $H_k$): Buffer A tích lũy kết quả Valid, Buffer B lưu trữ dữ liệu Dôi ra (Residual)}{figure.caption.16}{}}
+\newlabel{fig:ping_pong_state_k_plus_1}{{4.3b}{43}{Giai đoạn 2 (Xử lý Tile $H_{k+1}$): Buffer B hoàn thiện kết quả biên (từ Residual cũ), Buffer A lưu trữ dữ liệu Dôi ra mới}{figure.caption.16}{}}
+\newlabel{sub@fig:ping_pong_state_k_plus_1}{{b}{43}{Giai đoạn 2 (Xử lý Tile $H_{k+1}$): Buffer B hoàn thiện kết quả biên (từ Residual cũ), Buffer A lưu trữ dữ liệu Dôi ra mới}{figure.caption.16}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4.3}{\ignorespaces Sơ đồ luồng dữ liệu minh họa cơ chế Ping-Pong Buffer dùng để quản lý vùng dữ liệu dôi ra (Residual Data). Hệ thống luân phiên vai trò của Buffer A và B để đảm bảo tính liên tục của phép tính biên mà không cần nạp lại dữ liệu đầu vào.}}{43}{figure.caption.16}\protected@file@percent }
+\newlabel{fig:ping_pong_mechanism}{{4.3}{43}{Sơ đồ luồng dữ liệu minh họa cơ chế Ping-Pong Buffer dùng để quản lý vùng dữ liệu dôi ra (Residual Data). Hệ thống luân phiên vai trò của Buffer A và B để đảm bảo tính liên tục của phép tính biên mà không cần nạp lại dữ liệu đầu vào}{figure.caption.16}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {4.3}Thiết kế kiến trúc vi mô (Micro-architecture)}{44}{section.4.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3.1}Sơ đồ khối tổng quát hệ thống}{44}{subsection.4.3.1}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {4.4}{\ignorespaces Sơ đồ khối tổng quát kiến trúc Beta Accelerator với bus dữ liệu tách biệt}}{44}{figure.caption.17}\protected@file@percent }
+\newlabel{fig:system_arch}{{4.4}{44}{Sơ đồ khối tổng quát kiến trúc Beta Accelerator với bus dữ liệu tách biệt}{figure.caption.17}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3.2}Tổ chức Mảng tính toán (Processing Hierarchy)}{46}{subsection.4.3.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.3.2.1}Mảng xử lý (Process Array - PA)}{46}{subsubsection.4.3.2.1}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {4.5}{\ignorespaces Kiến trúc bên trong khối Process Array (PA)}}{47}{figure.caption.18}\protected@file@percent }
+\newlabel{fig:pa_arch}{{4.5}{47}{Kiến trúc bên trong khối Process Array (PA)}{figure.caption.18}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.3.2.2}Đơn vị xử lý (Process Unit - PU)}{47}{subsubsection.4.3.2.2}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {4.6}{\ignorespaces Kiến trúc khối Process Unit (PU) với các PE hoạt động song song}}{47}{figure.caption.19}\protected@file@percent }
+\newlabel{fig:pu_arch}{{4.6}{47}{Kiến trúc khối Process Unit (PU) với các PE hoạt động song song}{figure.caption.19}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.3.2.3}Phần tử xử lý (Process Element - PE)}{48}{subsubsection.4.3.2.3}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {4.7}{\ignorespaces Cấu trúc bên trong một Process Element (PE)}}{48}{figure.caption.20}\protected@file@percent }
+\newlabel{fig:pe_arch}{{4.7}{48}{Cấu trúc bên trong một Process Element (PE)}{figure.caption.20}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3.3}Đánh giá thời gian thực thi (Performance Estimation)}{48}{subsection.4.3.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.3.3.1}Thời gian xử lý một Pass cơ sở ($T_{pass}$)}{48}{subsubsection.4.3.3.1}\protected@file@percent }
+\newlabel{eq:t_pass}{{4.15}{49}{Thời gian xử lý một Pass cơ sở ($T_{pass}$)}{equation.4.15}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.3.3.2}Tổng thời gian thực thi ($T_{total}$)}{49}{subsubsection.4.3.3.2}\protected@file@percent }
+\newlabel{eq:total_std}{{4.16}{49}{Tổng thời gian thực thi ($T_{total}$)}{equation.4.16}{}}
+\newlabel{eq:total_dw}{{4.17}{49}{Tổng thời gian thực thi ($T_{total}$)}{equation.4.17}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3.4}Chiến lược Che giấu độ trễ và Mô hình hiệu năng toàn hệ thống}{50}{subsection.4.3.4}\protected@file@percent }
+\newlabel{subsec:latency_hiding}{{4.3.4}{50}{Chiến lược Che giấu độ trễ và Mô hình hiệu năng toàn hệ thống}{subsection.4.3.4}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.3.4.1}Cơ chế hoạt động với Bộ nhớ tách biệt}{50}{subsubsection.4.3.4.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.3.4.2}Các kịch bản hiệu năng (Performance Scenarios)}{51}{subsubsection.4.3.4.2}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {4.8}{\ignorespaces Biểu đồ thời gian thực thi trong 3 trường hợp cân bằng tải}}{51}{figure.caption.21}\protected@file@percent }
+\newlabel{fig:timing_diagrams}{{4.8}{51}{Biểu đồ thời gian thực thi trong 3 trường hợp cân bằng tải}{figure.caption.21}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.3.4.3}Tổng thời gian toàn mạng (Model Latency)}{52}{subsubsection.4.3.4.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4.4}Tối ưu hóa Tham số và Cơ chế Sinh mã cấu hình}{52}{section.4.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.4.1}Bài toán Tối ưu hóa Không gian thiết kế}{53}{subsection.4.4.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.4.1.1}Các ràng buộc phần cứng (Hardware Constraints)}{53}{subsubsection.4.4.1.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.4.2}Chiến lược Tìm kiếm và Sinh mã (Search \& Generate)}{53}{subsection.4.4.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.4.3}Cấu trúc Lệnh cấu hình (Layer Descriptor)}{54}{subsection.4.4.3}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {4.2}{\ignorespaces Cấu trúc dữ liệu cấu hình cho một Layer}}{54}{table.caption.22}\protected@file@percent }
+\newlabel{tab:instr_format}{{4.2}{54}{Cấu trúc dữ liệu cấu hình cho một Layer}{table.caption.22}{}}
 \@setckpt{4_thiet_ke_accelerator/main}{
-\setcounter{page}{46}
+\setcounter{page}{56}
 \setcounter{equation}{25}
 \setcounter{enumi}{3}
 \setcounter{enumii}{0}
@@ -254,9 +254,9 @@
 \setcounter{bbx:relatedcount}{0}
 \setcounter{bbx:relatedtotal}{0}
 \setcounter{section@level}{0}
-\setcounter{Item}{9}
+\setcounter{Item}{14}
 \setcounter{Hfootnote}{0}
-\setcounter{bookmark@seq@number}{72}
+\setcounter{bookmark@seq@number}{79}
 \setcounter{lastpagecount}{0}
 \setcounter{subsubsubsection}{0}
 \setcounter{lstlisting}{0}
