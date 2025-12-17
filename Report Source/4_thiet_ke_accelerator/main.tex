@@ -1,16 +1,495 @@
-\chapter{ Thiết kế Bộ tăng tốc AI (AI Accelerator):}
+\chapter{Thiết kế Bộ tăng tốc AI (AI Accelerator)}
 \label{ch:accelerator_design}
 
-\textit{Chương này trình bày chi tiết thiết kế của lõi IP Accelerator, bao gồm phân tích toán học, chiến lược tối ưu dòng dữ liệu và kiến trúc vi mô.}
+\textit{Chương này trình bày chi tiết quy trình thiết kế lõi IP AI Accelerator, bắt đầu từ phân tích cơ sở toán học, đề xuất chiến lược tối ưu dòng dữ liệu (Dataflow) đến hiện thực hóa kiến trúc vi mô (Micro-architecture).}
 
-\section{Phân tích toán học của phép tính tích chập}
-\input{4_thiet_ke_accelerator/4.1_phan_tich_toan_hoc.tex}
+\section{Cơ sở Toán học và Thách thức Thiết kế}
 
-\section{Chiến lược phân mảnh và Dòng dữ liệu đề xuất}
-\input{4_thiet_ke_accelerator/4.2_chien_luoc_dataflow.tex}
+Để xây dựng một kiến trúc phần cứng thống nhất (Unified Architecture) có khả năng xử lý linh hoạt các mô hình mạng nơ-ron đa dạng—từ các mạng kinh điển (như VGG16) đến các mạng tối ưu cho thiết bị biên (như MobileNet)—chúng tôi tập trung phân tích đặc tả toán học của hai phép tính cốt lõi: \textbf{Standard Convolution} và \textbf{Depthwise Separable Convolution}.
 
-\section{Thiết kế kiến trúc vi mô (Micro-architecture)}
-\input{4_thiet_ke_accelerator/4.3_kien_truc_vi_mo.tex}
+Mục tiêu là tìm ra điểm chung trong cấu trúc tính toán và cơ chế xử lý biên (Padding) để tối ưu hóa phần cứng.
 
-\section{Tối ưu hóa Tham số và Cơ chế Sinh mã cấu hình}
-\input{4_thiet_ke_accelerator/4.4_toi_uu_tham_so_codegen.tex}
+\subsection{Standard Convolution (Tích chập tiêu chuẩn)}
+Đây là phép tính nền tảng trong CNN truyền thống. Đặc trưng của nó là sự liên kết dày đặc: mỗi điểm ảnh đầu ra là kết quả của việc tổng hợp thông tin từ toàn bộ không gian không gian đầu vào và toàn bộ chiều sâu của kênh (Channels).
+
+\subsubsection{Mô hình toán học}
+Xét lớp tích chập với đầu vào $I$ ($C \times H_{in} \times W_{in}$) và bộ trọng số $W$ ($M \times C \times R \times S$). Giá trị đầu ra $O$ tại kênh $m$, vị trí $(h, w)$ được tính như sau:
+
+\begin{equation}
+    O[m][h][w] = B[m] + \sum_{c=0}^{C-1} \sum_{r=0}^{R-1} \sum_{s=0}^{S-1} I[c][h \cdot U + r - P][w \cdot U + s - P] \times W[m][c][r][s]
+    \label{eq:std_conv}
+\end{equation}
+
+Trong đó: $U$ là bước trượt (Stride), $P$ là đệm (Padding).
+
+\subsubsection{Thuật toán xử lý}
+Để hiện thực hóa trên phần cứng, phép tính được mô hình hóa thành 6 vòng lặp lồng nhau. Việc xử lý Padding được tích hợp trực tiếp vào logic điều khiển: nếu chỉ số truy cập nằm ngoài biên ảnh, giá trị trả về là 0 (Zero-padding).
+
+\begin{algorithm}[H]
+\caption{Standard Convolution (Standard Conv2D)}
+\label{alg:std_conv}
+\SetAlgoLined
+\DontPrintSemicolon
+\KwIn{$I[C][H_{in}][W_{in}]$, $W[M][C][R][S]$, Padding $P$, Stride $U$}
+\KwOut{$O[M][H_{out}][W_{out}]$}
+
+\For{$m = 0$ \textbf{to} $M-1$}{
+    \For{$c = 0$ \textbf{to} $C-1$}{
+        \For{$h = 0$ \textbf{to} $H_{out}-1$}{
+            \For{$w = 0$ \textbf{to} $W_{out}-1$}{
+                \For{$r = 0$ \textbf{to} $R-1$}{
+                    \For{$s = 0$ \textbf{to} $S-1$}{
+                        $h_{in} = h \cdot U + r - P$\;
+                        $w_{in} = w \cdot U + s - P$\;
+                        \eIf{$h_{in} \geq 0 \land h_{in} < H_{in} \land w_{in} \geq 0 \land w_{in} < W_{in}$}{
+                            $val = I[c][h_{in}][w_{in}]$\;
+                        }{
+                            $val = 0$ \Comment*[r]{Zero Padding}
+                        }
+                        $O[m][h][w] \leftarrow O[m][h][w] + val \times W[m][c][r][s]$\;
+                    }
+                }
+            }
+        }
+    }
+}
+\end{algorithm}
+
+\subsection{Depthwise Separable Convolution}
+Nhằm giảm tải khối lượng tính toán cho thiết bị biên, kỹ thuật này tách phép chập chuẩn thành hai bước độc lập:
+
+\subsubsection{Depthwise Convolution (DW)}
+Phép tính này áp dụng bộ lọc riêng biệt cho từng kênh đầu vào, không có sự cộng gộp giữa các kênh.
+
+\begin{equation}
+    O_{dw}[c][h][w] = \sum_{r=0}^{R-1} \sum_{s=0}^{S-1} I[c][h \cdot U + r - P][w \cdot U + s - P] \times W_{dw}[c][r][s]
+\end{equation}
+
+\begin{algorithm}[H]
+\caption{Depthwise Convolution (với Padding)}
+\label{alg:dw_conv}
+\SetAlgoLined
+\DontPrintSemicolon
+\For{$c = 0$ \textbf{to} $C-1$ \Comment*[r]{Parallel Channels}}{
+    \For{$h = 0$ \textbf{to} $H_{out}-1$}{
+        \For{$w = 0$ \textbf{to} $W_{out}-1$}{
+            \For{$r = 0$ \textbf{to} $R-1$}{
+                \For{$s = 0$ \textbf{to} $S-1$}{
+                    $h_{in} = h \cdot U + r - P$\;
+                    $w_{in} = w \cdot U + s - P$\;
+                    \If{$h_{in} \in [0, H_{in}) \land w_{in} \in [0, W_{in})$}{
+                        $O_{dw}[c][h][w] += I[c][h_{in}][w_{in}] \times W_{dw}[c][r][s]$\;
+                    }
+                }
+            }
+        }
+    }
+}
+\end{algorithm}
+
+\subsubsection{Pointwise Convolution (PW)}
+Thực chất là phép chập chuẩn với kernel $1 \times 1$. Nó chịu trách nhiệm trộn thông tin giữa các kênh sau khi lớp Depthwise đã xử lý không gian.
+
+\begin{equation}
+    O_{pw}[m][h][w] = \sum_{c=0}^{C-1} I[c][h][w] \times W_{pw}[m][c]
+\end{equation}
+
+\subsection{Tối ưu hóa: Kỹ thuật Gập Batch Normalization (BN Folding)}
+Để giảm độ phức tạp phần cứng, chúng tôi loại bỏ hoàn toàn khối tính toán Batch Normalization (BN) riêng biệt bằng kỹ thuật \textbf{BN Folding}.
+
+Nguyên lý là gộp các tham số của lớp BN ($\mu, \sigma, \gamma, \beta$) vào trực tiếp trọng số ($W$) và bias ($B$) của lớp Convolution liền trước nó. Quá trình này được thực hiện offline bởi phần mềm (driver) trước khi nạp xuống phần cứng.
+
+Công thức biến đổi trọng số mới $(W', B')$:
+\begin{align}
+    W'[m][c][r][s] &= W_{orig}[m][c][r][s] \cdot \frac{\gamma_m}{\sqrt{\sigma_m^2 + \epsilon}} \\
+    B'[m] &= \left( B_{orig}[m] - \mu_m \right) \cdot \frac{\gamma_m}{\sqrt{\sigma_m^2 + \epsilon}} + \beta_m
+\end{align}
+Nhờ đó, Accelerator chỉ cần thực hiện phép tính Convolution thuần túy mà vẫn đảm bảo độ chính xác toán học.
+
+\section{Chiến lược Phân mảnh và Quản lý Dòng dữ liệu}
+
+Do tài nguyên bộ nhớ on-chip (BRAM) trên FPGA là hữu hạn, không thể nạp toàn bộ Feature Map của các mạng lớn vào cùng lúc. Chúng tôi áp dụng chiến lược \textbf{Phân mảnh dữ liệu (Tiling)} kết hợp với cơ chế quản lý bộ nhớ \textbf{Ping-Pong} để xử lý vấn đề này.
+
+\subsection{Chiến lược Phân mảnh không gian (Space Partitioning)}
+
+Chúng tôi định nghĩa một "Tile" (Mảnh dữ liệu) là đơn vị dữ liệu cơ sở được nạp và xử lý trong một lần. Không gian tính toán được chia nhỏ theo 3 chiều:
+\begin{enumerate}
+    \item \textbf{Chiều dọc ($H$):} Chia ảnh đầu vào thành $N_h = \lceil H/T_h \rceil$ phần.
+    \item \textbf{Chiều sâu kênh ($C$):} Chia số kênh đầu vào thành $N_c = \lceil C/T_c \rceil$ nhóm.
+    \item \textbf{Số bộ lọc ($M$):} Chia số bộ lọc đầu ra thành $N_m = \lceil M/T_m \rceil$ nhóm.
+\end{enumerate}
+
+Một chu trình xử lý trọn vẹn một cặp (Input Tile, Weight Tile) để cập nhật giá trị cho Output Tile được gọi là một \textbf{Pass}.
+
+\subsection{Mô hình hóa và Tham số thiết kế}
+Các ký hiệu và tham số thiết kế cho bài toán phân mảnh được tóm tắt trong Bảng \ref{tab:design_params}.
+
+\begin{table}[H]
+\centering
+\caption{Bảng tham số thiết kế và ánh xạ ký hiệu}
+\label{tab:design_params}
+\begin{tabularx}{\textwidth}{|l|c|X|}
+\hline
+\textbf{Nhóm tham số} & \textbf{Ký hiệu} & \textbf{Mô tả} \\ \hline
+\multirow{2}{*}{Filter} & $S, R$ & Độ rộng ($w_f$) và Độ dài ($h_f$) của bộ lọc \\ \cline{2-3} 
+ & $N_f$ & Tổng số bộ lọc (Filters) \\ \hline
+\multirow{3}{*}{Feature Map} & $W, H, C$ & Kích thước Input Feature Map (Rộng, Dài, Số kênh) \\ \cline{2-3} 
+ & $W_{out}, H_{out}, N_f$ & Kích thước Output Feature Map \\ \hline
+\multirow{3}{*}{Tiling (Pass)} & $T_h$ & Chiều cao IFM nạp trong 1 pass ($h$) \\ \cline{2-3} 
+ & $T_c$ & Số kênh IFM tính toán song song ($k$) \\ \cline{2-3} 
+ & $T_m$ & Số bộ lọc tính toán song song ($m$) \\ \hline
+\multirow{2}{*}{Output Tile} & $T_{ho}$ & Chiều cao OFM hợp lệ tạo ra trong 1 pass ($h_o$) \\ \hline
+Khác & $P, Str$ & Padding và Stride \\ \hline
+\end{tabularx}
+\end{table}
+
+\subsection{Bài toán Dữ liệu biên và Cơ chế Ping-Pong}
+
+Thách thức lớn nhất của việc chia nhỏ ảnh theo chiều dọc là xử lý biên giữa các Tile. Khi bộ lọc trượt đến hàng cuối cùng của Tile hiện tại ($H_k$), nó cần dữ liệu của các hàng đầu tiên thuộc Tile tiếp theo ($H_{k+1}$) để hoàn thành phép tính.
+
+\subsubsection{Phân tích Dữ liệu dôi ra (Residual Data)}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\linewidth]{image/4/du_lieu_doi_ra.png} 
+    \caption{Minh họa sự hình thành dữ liệu dôi ra. Tại hàng 2 và 3, bộ lọc thiếu dữ liệu từ hàng 4, 5 (thuộc tile sau) nên kết quả chưa hoàn thiện.}
+    \label{fig:residual_data_generation}
+\end{figure}
+
+Như hình minh họa, các kết quả tính toán tại biên dưới (nơi thiếu dữ liệu lân cận) được gọi là \textbf{Dữ liệu dôi ra (Residual Data)}. Thay vì loại bỏ hoặc tính lại từ đầu, hệ thống lưu giữ các giá trị bán hoàn chỉnh này và cộng dồn với kết quả từ Pass tiếp theo.
+
+Số lượng hàng đầu ra hợp lệ ($T_{ho}$) trong mỗi Pass tuân theo quy tắc:
+\begin{equation}
+    T_{ho} = 
+    \begin{cases}
+        T_h - R + 1 & \text{với Tile đầu tiên (chưa có residual)} \\
+        T_h & \text{với các Tile sau (nhờ cộng gộp residual)}
+    \end{cases}
+\end{equation}
+
+\subsubsection{Logic Hoạt động Ping-Pong}
+Hệ thống sử dụng hai bộ đệm đầu ra ($Buffer_A, Buffer_B$) luân phiên vai trò để xử lý vấn đề này:
+\begin{enumerate}
+    \item \textbf{Pass $k$:} Ghi kết quả hợp lệ vào Buffer hiện tại. Các hàng dôi ra được ghi vào Buffer kế tiếp.
+    \item \textbf{Pass $k+1$:} Buffer kế tiếp (chứa dữ liệu dôi ra cũ) trở thành Buffer hiện tại. Phép tính mới cộng dồn vào đó, hoàn thiện các hàng dôi ra thành hợp lệ.
+\end{enumerate}
+
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}[b]{0.8\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{image/4/buffer_hinh_a.png}
+        \caption{Giai đoạn 1: Tích lũy Valid vào A, lưu Residual vào B.}
+        \label{fig:ping_pong_state_k}
+    \end{subfigure}
+    
+    \par\bigskip 
+    
+    \begin{subfigure}[b]{0.8\textwidth} 
+        \centering
+        \includegraphics[width=\linewidth]{image/4/buffer_hinh_b.png}
+        \caption{Giai đoạn 2: B hoàn thiện kết quả từ Residual cũ, A lưu Residual mới.}
+        \label{fig:ping_pong_state_k_plus_1}
+    \end{subfigure}
+    \caption{Cơ chế Ping-Pong Buffer luân phiên để quản lý vùng dữ liệu biên liên tục.}
+    \label{fig:ping_pong_mechanism}
+\end{figure}
+
+\subsection{Thuật toán Điều phối Pass (Pass Scheduling)}
+
+Trình tự thực thi các Pass (Scheduling) đóng vai trò quyết định đến hiệu năng và tính đúng đắn của dòng dữ liệu. Chúng tôi đề xuất hai thuật toán riêng biệt cho Standard Conv và Depthwise Conv.
+
+\subsubsection{Trường hợp Standard Convolution}
+Do đặc tính cộng gộp kênh, thuật toán cần ưu tiên vòng lặp tích lũy (Reduction Loop) theo chiều $C$ trước khi chuyển sang xử lý không gian $H$.
+
+\begin{algorithm}[H]
+\caption{Lịch trình Pass cho Standard Convolution}
+\label{alg:pass_standard}
+\SetAlgoLined
+\DontPrintSemicolon
+\KwIn{$N_m, N_h, N_c$}
+\For{$m = 0$ \textbf{to} $N_m - 1$}{
+    \textit{1. Load Weights (Weight Stationary)}\;
+    \For{$h = 0$ \textbf{to} $N_h - 1$}{
+        \For{$c = 0$ \textbf{to} $N_c - 1$}{
+            \textbf{Pass $(m, h, c)$:} Tính toán và tích lũy Partial Sum vào Buffer\;
+        }
+        \textit{2. Xử lý biên \& Ghi Output:}\;
+        - Kiểm tra Buffer, tách phần Valid và Residual.\;
+        - Ghi phần Valid xuống DRAM.\;
+        - Hoán đổi Ping-Pong Buffer.\;
+    }
+}
+\end{algorithm}
+
+Chi tiết kỹ thuật về việc quản lý bộ nhớ trong quá trình tích lũy và xử lý biên được mô tả kỹ hơn ở hai thuật toán phụ trợ sau:
+
+\begin{algorithm}[H]
+    \caption{Lịch trình Pass cho Standard Conv (Phần 1: Tích lũy)}
+    \label{alg:pass_std_part1}
+    \SetAlgoLined
+    \DontPrintSemicolon
+    \KwIn{$N_m, N_h, N_c$}
+    \For{$m = 0$ \textbf{to} $N_m - 1$}{
+        \textit{1. Load Weights...}\;
+        \For{$h = 0$ \textbf{to} $N_h - 1$}{
+            \For{$c = 0$ \textbf{to} $N_c - 1$}{
+                \textbf{Pass $(m, h, c)$:} ... (Code phần tích lũy) ...\;
+            }
+            \textit{(Chuyển sang xử lý biên tại Alg \ref{alg:pass_std_part2})}\;
+        }
+    }
+\end{algorithm}
+
+\begin{algorithm}[H]
+    \caption{Lịch trình Pass cho Standard Conv (Phần 2: Xử lý biên)}
+    \label{alg:pass_std_part2}
+    \SetAlgoLined
+    \DontPrintSemicolon
+    \setcounter{AlgoLine}{10}
+    \textit{...Tiếp tục từ vòng lặp h}\;
+    \ForEach{Tile $h$ đã hoàn tất tích lũy}{
+        \textit{2. Xử lý biên \& Ghi Output:}\;
+        - Ghi Valid xuống DRAM, giữ Residual lại.\;
+        - Hoán đổi Ping-Pong Buffer.\;
+    }
+\end{algorithm}
+
+\subsubsection{Trường hợp Depthwise Convolution}
+Do tính độc lập giữa các kênh, thuật toán loại bỏ vòng lặp tích lũy, giúp đơn giản hóa luồng dữ liệu.
+
+\begin{algorithm}[H]
+\caption{Lịch trình Pass cho Depthwise Convolution}
+\label{alg:pass_dw}
+\SetAlgoLined
+\DontPrintSemicolon
+\KwIn{$N_m$ (Groups), $N_h$ (Height Blocks)}
+\KwOut{DRAM (Valid OFM)}
+Initialize pointers: $Buf_{curr} \leftarrow A$, $Buf_{next} \leftarrow B$\;
+\For{$m = 0$ \textbf{to} $N_m - 1$}{
+    \textit{1. Load Weights}\;
+    \For{$h = 0$ \textbf{to} $N_h - 1$}{
+        \textbf{Pass $(m, h)$:} Tính toán Depthwise (1-to-1)\;
+        \eIf{$h == 0$}{
+            \textit{// Tile đầu: Lưu Residual vào Buf\_next}\;
+            - Ghi Valid ($T_h - R + 1$ hàng) xuống DRAM\;
+        }{
+            \textit{// Tile sau: Hoàn thiện Residual cũ trong Buf\_curr}\;
+            - Ghi toàn bộ Valid ($T_h$ hàng) xuống DRAM\;
+        }
+        \textit{3. Chuẩn bị tiếp theo:}\;
+        - Clear $Buf_{curr}$, Swap pointers: $Buf_{curr} \leftrightarrow Buf_{next}$\;
+    }
+}
+\end{algorithm}
+
+\begin{figure}[h!]
+    \centering
+    \begin{subfigure}[b]{0.8\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{image/4/std_conv_pass.png}
+        \caption{Standard Convolution ($H=21, M=2$)}
+    \end{subfigure}
+    \par\bigskip
+    \begin{subfigure}[b]{0.8\textwidth} 
+        \centering
+        \includegraphics[width=\linewidth]{image/4/dw_conv_pass.png}
+        \caption{Depthwise Convolution ($H=21, M=21$)}
+    \end{subfigure}
+    \caption{So sánh chiến lược phân chia Pass: Standard Conv cần tích lũy theo chiều sâu (hình a), trong khi Depthwise Conv xử lý song song độc lập (hình b).}
+    \label{fig:pass_division_strategy}
+\end{figure}
+
+\section{Thiết kế Kiến trúc Vi mô (Micro-architecture)}
+
+Dựa trên các phân tích dòng dữ liệu, chúng tôi đề xuất kiến trúc phần cứng \textbf{Beta Accelerator}. Điểm nhấn của kiến trúc là việc tách biệt hoàn toàn đường dẫn dữ liệu (Data Path) và trọng số (Weight Path) để tối đa hóa băng thông.
+
+\subsection{Sơ đồ khối tổng quát}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\linewidth]{image/4/system_arch.png} 
+    \caption{Kiến trúc Beta Accelerator với Bus dữ liệu và Trọng số tách biệt.}
+    \label{fig:system_arch}
+\end{figure}
+
+Hệ thống bao gồm các thành phần chính:
+\begin{itemize}
+    \item \textbf{Controller:} Điều phối hoạt động toàn hệ thống. Quản lý hai giao tiếp bộ nhớ độc lập: \textit{Weight Memory Interface} và \textit{Activation Memory Interface}.
+    \item \textbf{Dispatcher:} Phân phối dữ liệu từ Bus vào các bộ đệm cục bộ.
+    \item \textbf{Ping-Pong Buffers:} Hệ thống bộ nhớ đệm kép cho cả IFM và Weight, cho phép nạp dữ liệu Pass $k+1$ song song với việc tính toán Pass $k$.
+    \item \textbf{Process Array (PA):} Mảng tính toán song song, thực hiện phép nhân chập.
+    \item \textbf{Reduction Unit \& Accumulator:} Thực hiện cộng dồn kết quả từ các kênh (đối với Standard Conv) và quản lý việc ghi kết quả xuống DRAM.
+\end{itemize}
+
+\subsection{Tổ chức Phân cấp Đơn vị Tính toán}
+Kiến trúc tính toán được thiết kế theo mô hình phân cấp 3 tầng: PA $\rightarrow$ PU $\rightarrow$ PE.
+
+\subsubsection{Mảng xử lý (Process Array - PA)}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\linewidth]{image/4/pa_arch.png} 
+    \caption{Mỗi PA xử lý 1 kênh Input và tạo ra kết quả cho $T_m$ kênh Output.}
+    \label{fig:pa_arch}
+\end{figure}
+Khối PA tận dụng tính song song mức bộ lọc (Filter Parallelism). Dữ liệu đầu vào (IFM) được Broadcast tới tất cả các đơn vị bên trong, trong khi trọng số được phân phối riêng biệt.
+
+\subsubsection{Đơn vị xử lý (Process Unit - PU)}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\linewidth]{image/4/pu_arch.png} 
+    \caption{Khối PU chứa 11 PE trong trường hợp chạy model AlexNet.}
+    \label{fig:pu_arch}
+\end{figure}
+Mỗi PU chịu trách nhiệm cho một bộ lọc. Khối PU chứa số PE song song bằng với độ cao của filter weight, từ đó giúp xử lý được bộ lọc có kích thước lớn nhất. Như trong model AlexNet kích thước filter lớn nhất là $11 \times 11$ nên số PE trong PU là 11. Mỗi PE xử lý một hàng của kernel.
+
+\subsubsection{Phần tử xử lý (Process Element - PE)}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\linewidth]{image/4/pe_arch.png} 
+    \caption{PE thực hiện phép MAC với cơ chế Weight Stationary.}
+    \label{fig:pe_arch}
+\end{figure}
+PE là đơn vị nhỏ nhất thực hiện phép nhân cộng (MAC). Nó sử dụng thanh ghi trượt (Sliding Window Register) để di chuyển dữ liệu IFM qua bộ lọc cố định.
+
+\subsection{Đánh giá thời gian thực thi (Performance Estimation)}
+Thời gian thực thi của hệ thống phụ thuộc vào loại lớp tích chập (Standard hay Depthwise) do sự khác biệt trong chiến lược luồng dữ liệu.
+
+\subsubsection{Thời gian xử lý một Pass cơ sở ($T_{pass}$)}
+Dựa trên kiến trúc Pipeline của các Process Element (PE), thời gian để hoàn thành tính toán cho một tile có chiều cao $T_h$ và độ rộng OFM $W_{out}$ được xác định bởi:
+
+\begin{equation}
+    T_{pass} = \left[ (W_{out} - 1) \times (S + U - 1) + S \right] \times T_h
+    \label{eq:t_pass}
+\end{equation}
+
+Trong đó:
+\begin{itemize}
+    \item $S$: Kích thước bộ lọc (Filter width).
+    \item $U$: Bước trượt (Stride).
+    \item $W_{out}$: Chiều rộng của OFM.
+    \item $(S + U - 1)$: Số chu kỳ trung bình để tính một điểm ảnh tiếp theo nhờ tối ưu hóa Pipeline (khi $U=1$, thời gian này là $S$).
+\end{itemize}
+
+\subsubsection{Tổng thời gian thực thi ($T_{total}$)}
+
+\textbf{Trường hợp 1: Standard Convolution} \\
+Với tích chập tiêu chuẩn, mỗi điểm ảnh đầu ra là tổng hợp của tất cả $C$ kênh đầu vào. Hệ thống phải thực hiện vòng lặp tích lũy qua các khối kênh $T_c$.
+
+\begin{equation}
+    T_{total\_std} = \underbrace{\left\lceil \frac{N_f}{T_m} \right\rceil}_{\text{Output Blocks}} \times \underbrace{\left\lceil \frac{C}{T_c} \right\rceil}_{\text{Input Blocks}} \times \underbrace{\left\lceil \frac{H}{T_h} \right\rceil}_{\text{Height Blocks}} \times T_{pass}
+    \label{eq:total_std}
+\end{equation}
+
+\textbf{Trường hợp 2: Depthwise Convolution} \\
+Với tích chập chiều sâu, các kênh hoạt động độc lập ($N_f = C$). Hệ thống không cần thực hiện vòng lặp tích lũy kênh đầu vào ($\lceil C/T_c \rceil$ bị loại bỏ). Các nhóm kênh được xử lý song song dựa trên khả năng của phần cứng ($T_m$).
+
+\begin{equation}
+    T_{total\_dw} = \underbrace{\left\lceil \frac{N_f}{T_m} \right\rceil}_{\text{Channel Groups}} \times \underbrace{\left\lceil \frac{H}{T_h} \right\rceil}_{\text{Height Blocks}} \times T_{pass}
+    \label{eq:total_dw}
+\end{equation}
+
+\textbf{Nhận xét:} So với Standard Convolution, Depthwise Convolution giảm được hệ số $\lceil C/T_c \rceil$ lần số lượng tính toán, giúp tăng tốc độ xử lý đáng kể đối với các mạng nhẹ (Lightweight CNNs) như MobileNet.
+\subsection{Mô hình hóa độ trễ toàn hệ thống}
+\label{subsec:latency_hiding}
+
+Để xác định cấu hình phần cứng tối ưu cho từng lớp mạng, chúng tôi xây dựng mô hình ước lượng thời gian thực thi. Mô hình này thực hiện quét qua không gian các tham số chia khối (Tiling parameters) gồm $(T_c, T_m, T_h)$ để tìm ra bộ tham số giúp cực tiểu hóa tổng số chu kỳ hoạt động (Total Cycles).
+
+\subsubsection{Cơ chế hoạt động}
+Trước khi bắt đầu tính toán Pass đầu tiên, hệ thống cần nạp đầy đủ dữ liệu (IFM, Weights) vào buffer. Sau giai đoạn khởi tạo này, quy trình hoạt động theo nguyên lý "gối đầu":
+\begin{itemize}
+    \item Trong khi lõi tính toán đang xử lý Pass $i$, bộ điều khiển DMA đồng thời nạp dữ liệu cho Pass $i+1$ vào nửa còn lại của Buffer.
+    \item Đồng thời, kết quả của Pass $i-1$ (nếu đã hoàn tất) được ghi trả về bộ nhớ ngoài.
+\end{itemize}
+
+Do hệ thống sử dụng bus dữ liệu dùng chung (Shared Data Bus) cho cả luồng nạp (Load) và ghi (Store), băng thông bộ nhớ phải được chia sẻ thời gian. Bộ điều khiển sẽ ưu tiên nạp Pass tiếp theo, sau đó mới đến ghi Pass trước đó (hoặc xen kẽ tùy theo chính sách trọng tài).
+
+\subsubsection{Các kịch bản hiệu năng (Performance Scenarios)}
+Gọi $T_{load}$ là thời gian nạp 1 Input Pass, $T_{store}$ là thời gian ghi 1 Output Pass, và $T_{comp}$ là thời gian tính toán 1 Pass ($T_{pass}$ đã tính ở mục 4.3.3). Ta định nghĩa tham số $b$ là \textbf{số chu kỳ đồng hồ cần thiết để truyền 1 giá trị dữ liệu} (Cycles per Data Transfer).
+
+Mô hình thời gian hoàn thành 1 layer được phân tích dựa trên sự chênh lệch giữa năng lực tính toán và băng thông bộ nhớ, được minh họa trong Hình \ref{fig:timing_diagrams}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\linewidth]{image/4/image_f8eee0.png} 
+    \caption{Biểu đồ thời gian thực thi trong 3 trường hợp: (Trên cùng) Memory Bound 1, (Giữa) Memory Bound 2, (Dưới cùng) Compute Bound.}
+    \label{fig:timing_diagrams}
+\end{figure}
+
+\textbf{Trường hợp 1: Memory Bound 1 (Nghẽn băng thông nghiêm trọng)} \\
+Xảy ra khi thời gian nạp dữ liệu lớn hơn thời gian tính toán ($T_{load} \ge T_{comp}$). Lõi tính toán phải chờ dữ liệu nạp xong mới có thể chạy. Tổng thời gian hoàn thành layer được quyết định chủ yếu bởi tổng lượng dữ liệu cần truyền tải (Input + Output).
+
+\begin{itemize}
+    \item \textbf{Đối với Standard Convolution:}
+    Do phải nạp lại Input Feature Map cho mỗi nhóm Filter khác nhau (nếu không đủ bộ nhớ on-chip), tổng thời gian là:
+    \begin{equation}
+        T_{total} \approx \left[ \left( H \times W \times C \times \left\lceil \frac{N_f}{T_m} \right\rceil \right) + \left( H_{out} \times W_{out} \times N_f \right) \right] \times b
+    \end{equation}
+    
+    \item \textbf{Đối với Depthwise Convolution:}
+    Mỗi kênh Input chỉ tương tác với 1 kênh Filter tương ứng ($N_f = C$), nên Input Feature Map chỉ cần nạp 1 lần duy nhất:
+    \begin{equation}
+        T_{total} \approx \left[ \left( H \times W \times C \right) + \left( H_{out} \times W_{out} \times C \right) \right] \times b
+    \end{equation}
+\end{itemize}
+
+\textbf{Trường hợp 2: Memory Bound 2 (Nghẽn băng thông trung bình)} \\
+Xảy ra khi thời gian tính toán nhanh hơn tổng thời gian nạp và ghi, nhưng chậm hơn thời gian nạp ($T_{load} < T_{comp} < T_{load} + T_{store}$). Lúc này, thời gian thực thi bao gồm thời gian nạp, ghi và một phần chênh lệch thời gian tính toán.
+\begin{equation}
+    T_{total} \approx T_{total\_IO} + (T_{comp} - T_{load})
+\end{equation}
+Trong đó $T_{total\_IO}$ được tính theo công thức tại Trường hợp 1 tùy thuộc loại Convolution.
+
+\textbf{Trường hợp 3: Compute Bound (Nghẽn tính toán)} \\
+Xảy ra khi thời gian tính toán lớn hơn tổng thời gian nạp và ghi ($T_{comp} > T_{load} + T_{store}$). Lúc này, toàn bộ thời gian truyền tải dữ liệu (trừ pass đầu và cuối) được che giấu hoàn toàn bên dưới thời gian tính toán.
+
+Công thức tổng quát:
+\begin{equation}
+    T_{total} = T_{load\_first\_pass} + \sum_{all\_passes} T_{comp} + T_{store\_residual}
+\end{equation}
+
+\begin{itemize}
+    \item \textbf{Đối với Standard Convolution:}
+    \begin{equation}
+        T_{total} \approx (T_h W T_c b) + \left( \left\lceil \frac{H}{T_h} \right\rceil \left\lceil \frac{C}{T_c} \right\rceil \left\lceil \frac{N_f}{T_m} \right\rceil \times T_{comp} \right) + T_{res\_std}
+    \end{equation}
+    Với $T_{res\_std}$ là thời gian ghi phần dư cuối cùng phụ thuộc số filter dư ($N_f \% T_m$):
+    \begin{equation}
+        T_{res\_std} = \left( \left\lfloor \frac{H \% T_h}{Str} \right\rfloor + 1 \right) \times W_{out} \times (N_f \% T_m) \times b
+    \end{equation}
+
+    \item \textbf{Đối với Depthwise Convolution:}
+    Do không có vòng lặp tích lũy kênh đầu vào ($C/T_c$), tổng số pass giảm đi đáng kể:
+    \begin{equation}
+        T_{total} \approx (T_h W T_c b) + \left( \left\lceil \frac{H}{T_h} \right\rceil \left\lceil \frac{C}{T_m} \right\rceil \times T_{comp} \right) + T_{res\_dw}
+    \end{equation}
+    Với $T_{res\_dw}$ là thời gian ghi phần dư cuối cùng phụ thuộc số kênh dư ($C \% T_m$):
+    \begin{equation}
+        T_{res\_dw} = \left( \left\lfloor \frac{H \% T_h}{Str} \right\rfloor + 1 \right) \times W_{out} \times (C \% T_m) \times b
+    \end{equation}
+\end{itemize}
+
+\subsubsection{Tổng thời gian toàn mạng (Model Latency)}
+Thời gian thực thi của toàn bộ mô hình (Model) bao gồm $N$ lớp tích chập là tổng thời gian của từng lớp, do sự phụ thuộc dữ liệu tuần tự giữa các lớp (Layer $i+1$ cần OFM của Layer $i$ làm IFM):
+\begin{equation}
+    T_{model} = \sum_{i=1}^{N} T_{total}^{(i)}
+\end{equation}
+
+Mục tiêu của bài toán tối ưu hóa thiết kế là tìm bộ tham số cấu hình ($T_h, T_m, T_c$) cho từng layer sao cho $T_{total}^{(i)}$ là nhỏ nhất, cân bằng giữa tài nguyên tính toán và băng thông bộ nhớ.
+\subsection{Tự động sinh mã cấu hình (Auto-Generation)}
+
+Để vận hành hệ thống, chúng tôi xây dựng công cụ phần mềm nhằm tìm kiếm bộ tham số phân mảnh tối ưu $\mathbf{S}_i = \{T_{h}, T_{c}, T_{m}\}$ cho từng lớp.
+
+Kết quả tối ưu được đóng gói thành chuỗi lệnh (Descriptor) để nạp xuống Controller sẽ có dạng như sau:
+
+\begin{table}[H]
+\centering
+\caption{Cấu trúc Descriptor điều khiển phần cứng}
+\label{tab:instr_format}
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Offset} & \textbf{Trường thông tin} & \textbf{Mô tả} \\ \hline
+0x00 - 0x04 & Layer Kernel Info & Thông tin kích thước gốc \\ \hline
+\textbf{0x08} & \textbf{Tiling Config} & \textbf{Tham số tối ưu ($T_h, T_c, T_m$)} \\ \hline
+0x0C - 0x14 & Base Addresses & Địa chỉ vùng nhớ IFM, WGT, OFM \\ \hline
+0x18 & Control Flags & Cờ báo hiệu loại layer, hàm kích hoạt... \\ \hline
+\end{tabular}
+\end{table}
