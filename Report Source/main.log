@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (MiKTeX 25.4) (preloaded format=pdflatex 2025.11.22)  17 DEC 2025 16:44
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (MiKTeX 25.4) (preloaded format=pdflatex 2025.11.22)  17 DEC 2025 18:02
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -1634,6 +1634,9 @@ LaTeX Warning: Label `fig:spi_modes' multiply defined.
 
 LaTeX Warning: Label `fig:spi_modes' multiply defined.
 
+
+LaTeX Warning: Label `fig:ospi_ddr_timing' multiply defined.
+
 ) (3_phan_tich_va_kien_truc/main.aux) (4_thiet_ke_accelerator/main.aux) (5_hien_thuc_soc/main.aux) (6_danh_gia_hieu_nang/main.aux) (7_ke_hoach_phat_trien/main.aux) (appendix/main.aux))
 \openout1 = `main.aux'.
 
@@ -1755,7 +1758,7 @@ Package hyperref Info: Link coloring ON on input line 226.
 \@outlinefile=\write5
 \openout5 = `main.out'.
 
-<image/hcmut.png, id=422, 845.0772pt x 597.6729pt>
+<image/hcmut.png, id=442, 845.0772pt x 597.6729pt>
 File: image/hcmut.png Graphic file (type png)
 <use image/hcmut.png>
 Package pdftex.def Info: image/hcmut.png  used on input line 245.
@@ -1849,17 +1852,17 @@ LaTeX Font Warning: Font shape `U/lasy/m/n' in size <13> not available
 
 
 ] [2]
-Overfull \hbox (3.96545pt too wide) in paragraph at lines 58--58
+Overfull \hbox (3.96545pt too wide) in paragraph at lines 63--63
  [][] [][][]\T5/lmr/m/n/13 Ph÷ìng ph¡p Ph¥n m£nh khæng gian dú li»u (Space 
  []
 
 [3]
-Overfull \hbox (4.00447pt too wide) in paragraph at lines 83--83
+Overfull \hbox (4.00447pt too wide) in paragraph at lines 88--88
  [][] [][][]\T5/lmr/m/n/13 C¡c kàch b£n hi»u n«ng (Per-for-mance Sce- 
  []
 
 
-Overfull \hbox (4.17659pt too wide) in paragraph at lines 87--87
+Overfull \hbox (4.17659pt too wide) in paragraph at lines 92--92
  [][] [][][]\T5/lmr/m/n/13 C¡c r ng buëc ph¦n cùng (Hard-ware Con- 
  []
 
@@ -1987,18 +1990,18 @@ Overfull \hbox (11.24815pt too wide) in paragraph at lines 62--72
  []
 
 [10] [11] [12]) (2_co_so_ly_thuyet/2.2_tong_quan_cnn.tex) (2_co_so_ly_thuyet/2.3_chuan_giao_tiep.tex [13]
-<2_co_so_ly_thuyet/image/axi.png, id=762, 177.66376pt x 298.11375pt>
+<2_co_so_ly_thuyet/image/axi.png, id=796, 177.66376pt x 298.11375pt>
 File: 2_co_so_ly_thuyet/image/axi.png Graphic file (type png)
 <use 2_co_so_ly_thuyet/image/axi.png>
 Package pdftex.def Info: 2_co_so_ly_thuyet/image/axi.png  used on input line 16.
 (pdftex.def)             Requested size: 206.28249pt x 346.14426pt.
-<2_co_so_ly_thuyet/image/axi2.png, id=763, 587.94656pt x 323.70938pt>
+<2_co_so_ly_thuyet/image/axi2.png, id=797, 587.94656pt x 323.70938pt>
 File: 2_co_so_ly_thuyet/image/axi2.png Graphic file (type png)
 <use 2_co_so_ly_thuyet/image/axi2.png>
 Package pdftex.def Info: 2_co_so_ly_thuyet/image/axi2.png  used on input line 23.
 (pdftex.def)             Requested size: 371.30595pt x 204.43193pt.
  [14 <./2_co_so_ly_thuyet/image/axi.png>]
-<2_co_so_ly_thuyet/image/axichannel.png, id=769, 407.27156pt x 207.02344pt>
+<2_co_so_ly_thuyet/image/axichannel.png, id=803, 407.27156pt x 207.02344pt>
 File: 2_co_so_ly_thuyet/image/axichannel.png Graphic file (type png)
 <use 2_co_so_ly_thuyet/image/axichannel.png>
 Package pdftex.def Info: 2_co_so_ly_thuyet/image/axichannel.png  used on input line 35.
@@ -2008,30 +2011,30 @@ Overfull \hbox (9.11786pt too wide) in paragraph at lines 44--45
 []\T5/lmr/bx/n/13 Write Re-sponse Chan-nel (B): \T5/lmr/m/n/13 Slave gûi ph£n hçi tr¤ng th¡i (OKAY,
  []
 
-<2_co_so_ly_thuyet/image/battay.png, id=777, 547.2947pt x 142.28156pt>
+<2_co_so_ly_thuyet/image/battay.png, id=811, 547.2947pt x 142.28156pt>
 File: 2_co_so_ly_thuyet/image/battay.png Graphic file (type png)
 <use 2_co_so_ly_thuyet/image/battay.png>
 Package pdftex.def Info: 2_co_so_ly_thuyet/image/battay.png  used on input line 58.
 (pdftex.def)             Requested size: 371.30595pt x 96.5309pt.
 [16 <./2_co_so_ly_thuyet/image/battay.png>]
-<2_co_so_ly_thuyet/image/transfer.png, id=787, 726.46407pt x 325.96782pt>
+<2_co_so_ly_thuyet/image/transfer.png, id=821, 726.46407pt x 325.96782pt>
 File: 2_co_so_ly_thuyet/image/transfer.png Graphic file (type png)
 <use 2_co_so_ly_thuyet/image/transfer.png>
 Package pdftex.def Info: 2_co_so_ly_thuyet/image/transfer.png  used on input line 71.
 (pdftex.def)             Requested size: 371.30595pt x 166.60944pt.
-<2_co_so_ly_thuyet/image/transaction.png, id=788, 559.33969pt x 488.57532pt>
+<2_co_so_ly_thuyet/image/transaction.png, id=822, 559.33969pt x 488.57532pt>
 File: 2_co_so_ly_thuyet/image/transaction.png Graphic file (type png)
 <use 2_co_so_ly_thuyet/image/transaction.png>
 Package pdftex.def Info: 2_co_so_ly_thuyet/image/transaction.png  used on input line 79.
 (pdftex.def)             Requested size: 371.30595pt x 324.33937pt.
  [17 <./2_co_so_ly_thuyet/image/transfer.png>]
-<2_co_so_ly_thuyet/image/write.png, id=794, 805.50937pt x 444.15938pt>
+<2_co_so_ly_thuyet/image/write.png, id=828, 805.50937pt x 444.15938pt>
 File: 2_co_so_ly_thuyet/image/write.png Graphic file (type png)
 <use 2_co_so_ly_thuyet/image/write.png>
 Package pdftex.def Info: 2_co_so_ly_thuyet/image/write.png  used on input line 96.
 (pdftex.def)             Requested size: 371.30595pt x 204.73598pt.
  [18 <./2_co_so_ly_thuyet/image/transaction.png>] [19 <./2_co_so_ly_thuyet/image/write.png>]
-<2_co_so_ly_thuyet/image/read.png, id=806, 826.58812pt x 359.84438pt>
+<2_co_so_ly_thuyet/image/read.png, id=840, 826.58812pt x 359.84438pt>
 File: 2_co_so_ly_thuyet/image/read.png Graphic file (type png)
 <use 2_co_so_ly_thuyet/image/read.png>
 Package pdftex.def Info: 2_co_so_ly_thuyet/image/read.png  used on input line 126.
@@ -2042,69 +2045,87 @@ Overfull \hbox (1.04355pt too wide) in paragraph at lines 135--136
  []
 
 [20 <./2_co_so_ly_thuyet/image/read.png>] [21] [22]
-<2_co_so_ly_thuyet/image/uart.png, id=820, 665.48625pt x 219.82124pt>
+<2_co_so_ly_thuyet/image/uart.png, id=854, 665.48625pt x 219.82124pt>
 File: 2_co_so_ly_thuyet/image/uart.png Graphic file (type png)
 <use 2_co_so_ly_thuyet/image/uart.png>
 Package pdftex.def Info: 2_co_so_ly_thuyet/image/uart.png  used on input line 207.
 (pdftex.def)             Requested size: 371.30595pt x 122.64958pt.
  [23]
-<2_co_so_ly_thuyet/image/uart2.png, id=825, 650.43pt x 324.46219pt>
+<2_co_so_ly_thuyet/image/uart2.png, id=859, 650.43pt x 324.46219pt>
 File: 2_co_so_ly_thuyet/image/uart2.png Graphic file (type png)
 <use 2_co_so_ly_thuyet/image/uart2.png>
 Package pdftex.def Info: 2_co_so_ly_thuyet/image/uart2.png  used on input line 214.
 (pdftex.def)             Requested size: 330.05322pt x 164.64671pt.
  [24 <./2_co_so_ly_thuyet/image/uart.png> <./2_co_so_ly_thuyet/image/uart2.png>]
-<2_co_so_ly_thuyet/image/uart_frame.png, id=836, 658.25925pt x 74.07675pt>
+<2_co_so_ly_thuyet/image/uart_frame.png, id=870, 658.25925pt x 74.07675pt>
 File: 2_co_so_ly_thuyet/image/uart_frame.png Graphic file (type png)
 <use 2_co_so_ly_thuyet/image/uart_frame.png>
 Package pdftex.def Info: 2_co_so_ly_thuyet/image/uart_frame.png  used on input line 236.
 (pdftex.def)             Requested size: 330.05322pt x 37.14227pt.
-<2_co_so_ly_thuyet/image/uart_frame_example.png, id=837, 579.66562pt x 112.16907pt>
+<2_co_so_ly_thuyet/image/uart_frame_example.png, id=871, 579.66562pt x 112.16907pt>
 File: 2_co_so_ly_thuyet/image/uart_frame_example.png Graphic file (type png)
 <use 2_co_so_ly_thuyet/image/uart_frame_example.png>
 Package pdftex.def Info: 2_co_so_ly_thuyet/image/uart_frame_example.png  used on input line 243.
 (pdftex.def)             Requested size: 330.05322pt x 63.86684pt.
  [25 <./2_co_so_ly_thuyet/image/uart_frame.png> <./2_co_so_ly_thuyet/image/uart_frame_example.png>]
-<2_co_so_ly_thuyet/image/spiwrite.png, id=846, 505.89pt x 207.02344pt>
+<2_co_so_ly_thuyet/image/spiwrite.png, id=880, 505.89pt x 207.02344pt>
 File: 2_co_so_ly_thuyet/image/spiwrite.png Graphic file (type png)
 <use 2_co_so_ly_thuyet/image/spiwrite.png>
 Package pdftex.def Info: 2_co_so_ly_thuyet/image/spiwrite.png  used on input line 270.
 (pdftex.def)             Requested size: 288.79422pt x 118.18463pt.
  [26 <./2_co_so_ly_thuyet/image/spiwrite.png>]
-<2_co_so_ly_thuyet/image/spireg.png, id=852, 547.2947pt x 248.42813pt>
+<2_co_so_ly_thuyet/image/spireg.png, id=886, 547.2947pt x 248.42813pt>
 File: 2_co_so_ly_thuyet/image/spireg.png Graphic file (type png)
 <use 2_co_so_ly_thuyet/image/spireg.png>
 Package pdftex.def Info: 2_co_so_ly_thuyet/image/spireg.png  used on input line 290.
 (pdftex.def)             Requested size: 371.30595pt x 168.54602pt.
  [27 <./2_co_so_ly_thuyet/image/spireg.png>]
-<2_co_so_ly_thuyet/image/spimode.png, id=860, 782.17218pt x 335.75438pt>
+<2_co_so_ly_thuyet/image/spimode.png, id=894, 782.17218pt x 335.75438pt>
 File: 2_co_so_ly_thuyet/image/spimode.png Graphic file (type png)
 <use 2_co_so_ly_thuyet/image/spimode.png>
 Package pdftex.def Info: 2_co_so_ly_thuyet/image/spimode.png  used on input line 326.
 (pdftex.def)             Requested size: 412.56497pt x 177.09851pt.
-<2_co_so_ly_thuyet/image/spimod0.png, id=861, 770.88pt x 253.69781pt>
+<2_co_so_ly_thuyet/image/spimod0.png, id=895, 770.88pt x 253.69781pt>
 File: 2_co_so_ly_thuyet/image/spimod0.png Graphic file (type png)
 <use 2_co_so_ly_thuyet/image/spimod0.png>
 Package pdftex.def Info: 2_co_so_ly_thuyet/image/spimod0.png  used on input line 337.
 (pdftex.def)             Requested size: 412.56497pt x 135.77538pt.
  [28 <./2_co_so_ly_thuyet/image/spimode.png>]
-<2_co_so_ly_thuyet/image/spimode3.png, id=868, 794.2172pt x 268.00125pt>
+<2_co_so_ly_thuyet/image/spimode3.png, id=902, 794.2172pt x 268.00125pt>
 File: 2_co_so_ly_thuyet/image/spimode3.png Graphic file (type png)
 <use 2_co_so_ly_thuyet/image/spimode3.png>
 Package pdftex.def Info: 2_co_so_ly_thuyet/image/spimode3.png  used on input line 345.
 (pdftex.def)             Requested size: 412.56497pt x 139.2183pt.
-<2_co_so_ly_thuyet/image/spisingle.png, id=869, 781.41937pt x 359.84438pt>
+<2_co_so_ly_thuyet/image/spisingle.png, id=903, 781.41937pt x 359.84438pt>
 File: 2_co_so_ly_thuyet/image/spisingle.png Graphic file (type png)
 <use 2_co_so_ly_thuyet/image/spisingle.png>
 Package pdftex.def Info: 2_co_so_ly_thuyet/image/spisingle.png  used on input line 359.
 (pdftex.def)             Requested size: 371.30595pt x 170.98825pt.
  [29 <./2_co_so_ly_thuyet/image/spimod0.png> <./2_co_so_ly_thuyet/image/spimode3.png>]
-<2_co_so_ly_thuyet/image/spidaisy.png, id=877, 407.27156pt x 603.75563pt>
+<2_co_so_ly_thuyet/image/spidaisy.png, id=911, 407.27156pt x 603.75563pt>
 File: 2_co_so_ly_thuyet/image/spidaisy.png Graphic file (type png)
 <use 2_co_so_ly_thuyet/image/spidaisy.png>
 Package pdftex.def Info: 2_co_so_ly_thuyet/image/spidaisy.png  used on input line 370.
 (pdftex.def)             Requested size: 371.30595pt x 550.4595pt.
- [30 <./2_co_so_ly_thuyet/image/spisingle.png>]) (2_co_so_ly_thuyet/2.4_cong_nghe_fpga.tex)) [31 <./2_co_so_ly_thuyet/image/spidaisy.png>] [32]
+ [30 <./2_co_so_ly_thuyet/image/spisingle.png>] [31 <./2_co_so_ly_thuyet/image/spidaisy.png>]
+<2_co_so_ly_thuyet/image/ospipinout.png, id=923, 443.6575pt x 242.9075pt>
+File: 2_co_so_ly_thuyet/image/ospipinout.png Graphic file (type png)
+<use 2_co_so_ly_thuyet/image/ospipinout.png>
+Package pdftex.def Info: 2_co_so_ly_thuyet/image/ospipinout.png  used on input line 393.
+(pdftex.def)             Requested size: 371.30595pt x 203.29219pt.
+ [32 <./2_co_so_ly_thuyet/image/ospipinout.png>]
+<2_co_so_ly_thuyet/image/ddrsdr.png, id=929, 1027.84pt x 391.4625pt>
+File: 2_co_so_ly_thuyet/image/ddrsdr.png Graphic file (type png)
+<use 2_co_so_ly_thuyet/image/ddrsdr.png>
+Package pdftex.def Info: 2_co_so_ly_thuyet/image/ddrsdr.png  used on input line 422.
+(pdftex.def)             Requested size: 371.30595pt x 141.41618pt.
+ [33] [34 <./2_co_so_ly_thuyet/image/ddrsdr.png (PNG copy)>]
+<2_co_so_ly_thuyet/image/ospitransaction.png, id=939, 1067.48813pt x 471.26062pt>
+File: 2_co_so_ly_thuyet/image/ospitransaction.png Graphic file (type png)
+<use 2_co_so_ly_thuyet/image/ospitransaction.png>
+Package pdftex.def Info: 2_co_so_ly_thuyet/image/ospitransaction.png  used on input line 453.
+(pdftex.def)             Requested size: 371.30595pt x 163.91539pt.
+) (2_co_so_ly_thuyet/2.4_cong_nghe_fpga.tex)) [35 <./2_co_so_ly_thuyet/image/ospitransaction.png>]
 \openout2 = `3_phan_tich_va_kien_truc/main.aux'.
 
  (3_phan_tich_va_kien_truc/main.tex
@@ -2113,7 +2134,7 @@ ChÆ°Æ¡ng 3.
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
 (hyperref)                removing `\\' on input line 1.
 
-(3_phan_tich_va_kien_truc/3.1_phan_tich_yeu_cau.tex) (3_phan_tich_va_kien_truc/3.2_kien_truc_tong_the.tex) (3_phan_tich_va_kien_truc/3.3_dac_ta_khoi.tex) (3_phan_tich_va_kien_truc/3.4_memory_map.tex)) [33
+(3_phan_tich_va_kien_truc/3.1_phan_tich_yeu_cau.tex) (3_phan_tich_va_kien_truc/3.2_kien_truc_tong_the.tex) (3_phan_tich_va_kien_truc/3.3_dac_ta_khoi.tex) (3_phan_tich_va_kien_truc/3.4_memory_map.tex)) [36
 
 
 
@@ -2123,7 +2144,7 @@ Package hyperref Warning: Token not allowed in a PDF string (Unicode):
 
  (4_thiet_ke_accelerator/main.tex
 ChÆ°Æ¡ng 4.
-(4_thiet_ke_accelerator/4.1_phan_tich_toan_hoc.tex [34
+(4_thiet_ke_accelerator/4.1_phan_tich_toan_hoc.tex [37
 
 
 
@@ -2133,64 +2154,64 @@ Overfull \hbox (10.3473pt too wide) detected at line 15
 [][][]\OML/lmm/m/it/13 O\OT1/lmr/m/n/13 [\OML/lmm/m/it/13 m\OT1/lmr/m/n/13 ][\OML/lmm/m/it/13 h\OT1/lmr/m/n/13 ][\OML/lmm/m/it/13 w\OT1/lmr/m/n/13 ] = \OML/lmm/m/it/13 B\OT1/lmr/m/n/13 [\OML/lmm/m/it/13 m\OT1/lmr/m/n/13 ] + [] [] [] \OML/lmm/m/it/13 I\OT1/lmr/m/n/13 [\OML/lmm/m/it/13 c\OT1/lmr/m/n/13 ][\OML/lmm/m/it/13 h \OMS/lmsy/m/n/13 ^^A \OML/lmm/m/it/13 U \OT1/lmr/m/n/13 + \OML/lmm/m/it/13 r \OMS/lmsy/m/n/13 ^^@ \OML/lmm/m/it/13 P\OT1/lmr/m/n/13 ][\OML/lmm/m/it/13 w \OMS/lmsy/m/n/13 ^^A \OML/lmm/m/it/13 U \OT1/lmr/m/n/13 + \OML/lmm/m/it/13 s \OMS/lmsy/m/n/13 ^^@ \OML/lmm/m/it/13 P\OT1/lmr/m/n/13 ] \OMS/lmsy/m/n/13 ^^B \OML/lmm/m/it/13 W\OT1/lmr/m/n/13 [\OML/lmm/m/it/13 m\OT1/lmr/m/n/13 ][\OML/lmm/m/it/13 c\OT1/lmr/m/n/13 ][\OML/lmm/m/it/13 r\OT1/lmr/m/n/13 ][\OML/lmm/m/it/13 s\OT1/lmr/m/n/13 ]
  []
 
-[35{D:/Latex_project/tool/miktex/fonts/enc/dvips/lm/lm-mathex.enc}] [36] [37] [38] [39]) (4_thiet_ke_accelerator/4.2_chien_luoc_dataflow.tex [40] [41]
+[38{D:/Latex_project/tool/miktex/fonts/enc/dvips/lm/lm-mathex.enc}] [39] [40] [41] [42]) (4_thiet_ke_accelerator/4.2_chien_luoc_dataflow.tex [43] [44]
 Underfull \hbox (badness 4726) in paragraph at lines 51--51
 []|\T5/lmr/m/n/13 K½ch th÷îc In-put Fea-ture Map
  []
 
-[42] [43] [44]
-<image/4/std_conv_pass.png, id=967, 696.80325pt x 125.268pt>
+[45] [46] [47]
+<image/4/std_conv_pass.png, id=1022, 696.80325pt x 125.268pt>
 File: image/4/std_conv_pass.png Graphic file (type png)
 <use image/4/std_conv_pass.png>
 Package pdftex.def Info: image/4/std_conv_pass.png  used on input line 171.
 (pdftex.def)             Requested size: 330.05322pt x 59.33661pt.
-<image/4/dw_conv_pass.png, id=968, 690.78075pt x 69.25874pt>
+<image/4/dw_conv_pass.png, id=1023, 690.78075pt x 69.25874pt>
 File: image/4/dw_conv_pass.png Graphic file (type png)
 <use image/4/dw_conv_pass.png>
 Package pdftex.def Info: image/4/dw_conv_pass.png  used on input line 182.
 (pdftex.def)             Requested size: 330.05322pt x 33.09268pt.
- [45] [46 <./image/4/std_conv_pass.png> <./image/4/dw_conv_pass.png>]
-<image/4/du_lieu_doi_ra.png, id=983, 540.21825pt x 451.6875pt>
+ [48] [49 <./image/4/std_conv_pass.png> <./image/4/dw_conv_pass.png>]
+<image/4/du_lieu_doi_ra.png, id=1039, 540.21825pt x 451.6875pt>
 File: image/4/du_lieu_doi_ra.png Graphic file (type png)
 <use image/4/du_lieu_doi_ra.png>
 Package pdftex.def Info: image/4/du_lieu_doi_ra.png  used on input line 205.
 (pdftex.def)             Requested size: 330.05322pt x 275.97696pt.
- [47 <./image/4/du_lieu_doi_ra.png>] [48] [49] [50]
-<image/4/buffer_hinh_a.png, id=1013, 461.3235pt x 320.99925pt>
+ [50 <./image/4/du_lieu_doi_ra.png>] [51] [52] [53]
+<image/4/buffer_hinh_a.png, id=1068, 461.3235pt x 320.99925pt>
 File: image/4/buffer_hinh_a.png Graphic file (type png)
 <use image/4/buffer_hinh_a.png>
 Package pdftex.def Info: image/4/buffer_hinh_a.png  used on input line 326.
 (pdftex.def)             Requested size: 330.05322pt x 229.65965pt.
-<image/4/buffer_hinh_b.png, id=1014, 458.9145pt x 310.761pt>
+<image/4/buffer_hinh_b.png, id=1069, 458.9145pt x 310.761pt>
 File: image/4/buffer_hinh_b.png Graphic file (type png)
 <use image/4/buffer_hinh_b.png>
 Package pdftex.def Info: image/4/buffer_hinh_b.png  used on input line 336.
 (pdftex.def)             Requested size: 330.05322pt x 223.50117pt.
-) [51]
+) [54]
 Overfull \hbox (42.93755pt too wide) in paragraph at lines 12--12
 |[]\T5/lmr/bx/n/18.72003 Thi¸t k¸ ki¸n tróc vi mæ (Micro-architecture)| 
  []
 
-(4_thiet_ke_accelerator/4.3_kien_truc_vi_mo.tex [52 <./image/4/buffer_hinh_a.png> <./image/4/buffer_hinh_b.png>]
-<image/4/system_arch.png, id=1031, 397.485pt x 340.8735pt>
+(4_thiet_ke_accelerator/4.3_kien_truc_vi_mo.tex [55 <./image/4/buffer_hinh_a.png> <./image/4/buffer_hinh_b.png>]
+<image/4/system_arch.png, id=1087, 397.485pt x 340.8735pt>
 File: image/4/system_arch.png Graphic file (type png)
 <use image/4/system_arch.png>
 Package pdftex.def Info: image/4/system_arch.png  used on input line 8.
 (pdftex.def)             Requested size: 330.05322pt x 283.05495pt.
- [53 <./image/4/system_arch.png>] [54]
-<image/4/pa_arch.png, id=1043, 348.1005pt x 205.9695pt>
+ [56 <./image/4/system_arch.png>] [57]
+<image/4/pa_arch.png, id=1098, 348.1005pt x 205.9695pt>
 File: image/4/pa_arch.png Graphic file (type png)
 <use image/4/pa_arch.png>
 Package pdftex.def Info: image/4/pa_arch.png  used on input line 47.
 (pdftex.def)             Requested size: 247.54149pt x 146.46878pt.
- [55]
-<image/4/pu_arch.png, id=1049, 248.127pt x 186.6975pt>
+ [58]
+<image/4/pu_arch.png, id=1104, 248.127pt x 186.6975pt>
 File: image/4/pu_arch.png Graphic file (type png)
 <use image/4/pu_arch.png>
 Package pdftex.def Info: image/4/pu_arch.png  used on input line 61.
 (pdftex.def)             Requested size: 247.54149pt x 186.25546pt.
- [56 <./image/4/pa_arch.png> <./image/4/pu_arch.png>]
-<image/4/pe_arch.png, id=1057, 254.1495pt x 123.46124pt>
+ [59 <./image/4/pa_arch.png> <./image/4/pu_arch.png>]
+<image/4/pe_arch.png, id=1112, 254.1495pt x 123.46124pt>
 File: image/4/pe_arch.png Graphic file (type png)
 <use image/4/pe_arch.png>
 Package pdftex.def Info: image/4/pe_arch.png  used on input line 76.
@@ -2208,7 +2229,7 @@ Package hyperref Warning: Token not allowed in a PDF string (Unicode):
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
 (hyperref)                removing `math shift' on input line 84.
 
-[57 <./image/4/pe_arch.png>]
+[60 <./image/4/pe_arch.png>]
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
 (hyperref)                removing `math shift' on input line 100.
@@ -2221,18 +2242,18 @@ Package hyperref Warning: Token not allowed in a PDF string (Unicode):
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
 (hyperref)                removing `math shift' on input line 100.
 
-[58] [59]
-<image/4/image_f8eee0.png, id=1075, 692.5875pt x 236.082pt>
+[61] [62]
+<image/4/image_f8eee0.png, id=1131, 692.5875pt x 236.082pt>
 File: image/4/image_f8eee0.png Graphic file (type png)
 <use image/4/image_f8eee0.png>
 Package pdftex.def Info: image/4/image_f8eee0.png  used on input line 145.
 (pdftex.def)             Requested size: 412.56497pt x 140.63443pt.
- [60 <./image/4/image_f8eee0.png>]) (4_thiet_ke_accelerator/4.4_toi_uu_tham_so_codegen.tex [61] [62]
+ [63 <./image/4/image_f8eee0.png>]) (4_thiet_ke_accelerator/4.4_toi_uu_tham_so_codegen.tex [64] [65]
 Overfull \hbox (38.34804pt too wide) in paragraph at lines 50--61
  [][] 
  []
 
-)) [63] [64]
+)) [66] [67]
 \openout2 = `5_hien_thuc_soc/main.aux'.
 
  (5_hien_thuc_soc/main.tex
@@ -2242,12 +2263,12 @@ Overfull \hbox (2.95259pt too wide) in paragraph at lines 1--1
 |\T5/lmr/bx/n/32.34409 Hi»n thüc SoC v  T½ch hñp
  []
 
-(5_hien_thuc_soc/5.1_moi_truong_hien_thuc.tex) (5_hien_thuc_soc/5.2_riscv_bus_integration.tex) (5_hien_thuc_soc/5.3_tich_hop_ngoai_vi.tex) (5_hien_thuc_soc/5.4_firmware_driver.tex) (5_hien_thuc_soc/5.5_trien_khai_fpga.tex)) [65
+(5_hien_thuc_soc/5.1_moi_truong_hien_thuc.tex) (5_hien_thuc_soc/5.2_riscv_bus_integration.tex) (5_hien_thuc_soc/5.3_tich_hop_ngoai_vi.tex) (5_hien_thuc_soc/5.4_firmware_driver.tex) (5_hien_thuc_soc/5.5_trien_khai_fpga.tex)) [68
 
 
 
 
-] [66]
+] [69]
 \openout2 = `6_danh_gia_hieu_nang/main.aux'.
 
  (6_danh_gia_hieu_nang/main.tex
@@ -2257,17 +2278,17 @@ Overfull \hbox (5.03651pt too wide) in paragraph at lines 6--6
 |[]\T5/lmr/bx/n/18.72003 Mæi tr÷íng v  Ph÷ìng ph¡p thüc nghi»m| 
  []
 
-[67
+[70
 
 
 
 
-] [68] [69] [70]) [71]
+] [71] [72] [73]) [74]
 \openout2 = `7_ke_hoach_phat_trien/main.aux'.
 
  (7_ke_hoach_phat_trien/main.tex
 ChÆ°Æ¡ng 7.
-(7_ke_hoach_phat_trien/7.1_danh_gia_giai_doan_1.tex) (7_ke_hoach_phat_trien/7.2_ke_hoach_giai_doan_2.tex) (7_ke_hoach_phat_trien/7.3_tien_do_du_kien.tex)) [72
+(7_ke_hoach_phat_trien/7.1_danh_gia_giai_doan_1.tex) (7_ke_hoach_phat_trien/7.2_ke_hoach_giai_doan_2.tex) (7_ke_hoach_phat_trien/7.3_tien_do_du_kien.tex)) [75
 
 
 
@@ -2295,23 +2316,23 @@ LaTeX Font Warning: Size substitutions with differences
 LaTeX Warning: There were multiply-defined labels.
 
 Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: E7BD8DA970231259770FAB3FBE589638;28984.
+(rerunfilecheck)             Checksum: 5133DAB32DFD4EF8C639571671F51F5A;30285.
 Package logreq Info: Writing requests to 'main.run.xml'.
 \openout1 = `main.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 41937 strings out of 467871
- 801346 string characters out of 5426071
- 1680056 words of memory out of 5000000
- 69637 multiletter control sequences out of 15000+600000
+ 41980 strings out of 467871
+ 802643 string characters out of 5426071
+ 1680282 words of memory out of 5000000
+ 69665 multiletter control sequences out of 15000+600000
  770856 words of font info for 133 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  108i,29n,117p,1250b,2301s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <D:/Latex_project/tool/miktex/fonts/type1/public/lm/lmbx10.pfb><D:/Latex_project/tool/miktex/fonts/type1/public/lm/lmbx12.pfb><D:/Latex_project/tool/miktex/fonts/type1/public/lm/lmbxi10.pfb><D:/Latex_project/tool/miktex/fonts/type1/public/lm/lmex10.pfb><D:/Latex_project/tool/miktex/fonts/type1/public/lm/lmmi10.pfb><D:/Latex_project/tool/miktex/fonts/type1/public/lm/lmmi12.pfb><D:/Latex_project/tool/miktex/fonts/type1/public/lm/lmmi8.pfb><D:/Latex_project/tool/miktex/fonts/type1/public/lm/lmmi9.pfb><D:/Latex_project/tool/miktex/fonts/type1/public/lm/lmr10.pfb><D:/Latex_project/tool/miktex/fonts/type1/public/lm/lmr12.pfb><D:/Latex_project/tool/miktex/fonts/type1/public/lm/lmr17.pfb><D:/Latex_project/tool/miktex/fonts/type1/public/lm/lmr9.pfb><D:/Latex_project/tool/miktex/fonts/type1/public/lm/lmri12.pfb><D:/Latex_project/tool/miktex/fonts/type1/public/lm/lmsy10.pfb><D:/Latex_project/tool/miktex/fonts/type1/public/lm/lmtt12.pfb>
-Output written on main.pdf (85 pages, 1640784 bytes).
+Output written on main.pdf (88 pages, 1880389 bytes).
 PDF statistics:
- 1289 PDF objects out of 1440 (max. 8388607)
- 287 named destinations out of 1000 (max. 500000)
- 995 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 1348 PDF objects out of 1440 (max. 8388607)
+ 302 named destinations out of 1000 (max. 500000)
+ 1050 words of extra memory for PDF output out of 10000 (max. 10000000)
 
