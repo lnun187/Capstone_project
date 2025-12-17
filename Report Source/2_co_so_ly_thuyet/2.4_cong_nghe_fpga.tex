@@ -1,0 +1,54 @@
+% File: 2_co_so_ly_thuyet/2.4_cong_nghe_fpga.tex
+
+\subsection{Tổng quan về công nghệ FPGA}
+FPGA (Field Programmable Gate Array) là giải pháp vi mạch bán dẫn cho phép tái cấu hình logic sau khi sản xuất, mang lại sự linh hoạt vượt trội so với các thiết kế ASIC cố định. Cấu trúc của FPGA dựa trên một ma trận các khối logic khả trình (Configurable Logic Blocks - CLB) được kết nối với nhau thông qua hệ thống dây dẫn nội bộ linh hoạt (Programmable Interconnects).
+
+Trong lĩnh vực thiết kế SoC và trí tuệ nhân tạo, FPGA mang lại những ưu thế đặc biệt. Khả năng tái cấu hình cho phép các kỹ sư cập nhật thuật toán phần cứng tức thời mà không cần thay đổi bo mạch vật lý. Quan trọng hơn, kiến trúc song song của FPGA rất phù hợp để hiện thực hóa các mảng tính toán Systolic Array trong mạng nơ-ron tích chập (CNN). Điều này giúp giảm thiểu đáng kể rủi ro thiết kế và rút ngắn thời gian đưa sản phẩm ra thị trường (Time-to-market) so với quy trình sản xuất chip ASIC truyền thống.
+
+\subsection{Kiến trúc phần cứng Xilinx 7-Series}
+Đề tài được triển khai trên nền tảng kiến trúc \textbf{Xilinx 7-Series}. Cấu trúc phần cứng cơ bản của dòng chip này được hình thành từ hai thành phần tài nguyên cốt lõi:
+
+\subsubsection{Configurable Logic Block (CLB)}
+CLB đóng vai trò xương sống của FPGA, chịu trách nhiệm thực hiện các hàm logic tuần tự và tổ hợp. Mỗi CLB chứa các đơn vị nhỏ hơn gọi là Slices, bao gồm các bảng tra 6 đầu vào (\textbf{LUT6}) có thể cấu hình để thực hiện bất kỳ hàm logic nào, cùng với các phần tử nhớ \textbf{Flip-Flop} (FF) để lưu trạng thái và đồng bộ tín hiệu. Ngoài ra, các chuỗi nhớ số học (Carry Chain) tốc độ cao cũng được tích hợp để tối ưu hóa cho các bộ cộng/trừ.
+
+
+\subsubsection{Bộ nhớ nội BRAM (Block RAM)}
+BRAM là các khối bộ nhớ tĩnh (SRAM) dung lượng 36Kb được nhúng rải rác trong FPGA. Chúng đóng vai trò là bộ đệm (Buffer) lưu trữ.
+
+\subsection{Nền tảng phần cứng thực nghiệm}
+Quá trình hiện thực hệ thống SoC được tiến hành qua hai giai đoạn thử nghiệm trên hai nền tảng phần cứng khác nhau nhằm đánh giá tính khả thi và tối ưu hóa tài nguyên.
+
+\subsubsection{Giai đoạn 1: Thử nghiệm trên Digilent Arty A7 (Artix-7)}
+Ở giai đoạn đầu, nhóm nghiên cứu lựa chọn bo mạch \textbf{Arty A7-100T} (sử dụng chip XC7A100T) làm nền tảng mục tiêu. Tuy nhiên, trong quá trình thiết kế SoC, giới hạn về tài nguyên phần cứng của chip Artix-7 đã trở thành nút thắt cổ chai và giới hạn việc mở rộng. Cụ thể, số dung lượng bộ nhớ BRAM yêu cầu đã vượt quá khả năng cung cấp của chip, dẫn đến việc không thể tổng hợp (Synthesis) thành công thiết kế tối ưu hoặc phải cắt giảm quá nhiều tính năng quan trọng.
+
+\subsubsection{Giai đoạn 2: Triển khai trên Xilinx VC707 (Virtex-7)}
+Để giải quyết bài toán thiếu hụt tài nguyên và tập trung vào việc kiểm chứng kiến trúc hệ thống (Proof of Concept), đề tài đã chuyển sang sử dụng bo mạch \textbf{Xilinx VC707 Evaluation Kit} (sử dụng chip Virtex-7 XC7VX485T). Đây là dòng FPGA hiệu năng cao với tài nguyên logic và bộ nhớ vượt trội. Việc chuyển đổi sang VC707 cho phép nhóm hiện thực trọn vẹn kiến trúc SoC, tích hợp vi xử lý PicoRV32 và các ngoại vi tốc độ cao mà không bị giới hạn bởi phần cứng.
+
+\begin{table}[H]
+    \centering
+    \caption{So sánh tài nguyên giữa Arty A7 (Thử nghiệm ban đầu) và VC707 (Triển khai chính thức)}
+    \label{tab:fpga_comparison}
+    \begin{tabular}{|l|c|c|c|}
+        \hline
+        \textbf{Tài nguyên} & \textbf{Arty A7 (XC7A100T)} & \textbf{VC707 (XC7VX485T)} & \textbf{Tỷ lệ tăng} \\ \hline
+        Logic Cells & 101,440 & 485,760 & $\approx$ 4.8x \\ \hline
+        Block RAM & 4.8 Mb & 37 Mb & $\approx$ 7.7x \\ \hline
+        DSP Slices & 240 & 2,800& $\approx$ 11.6x \\ \hline
+        Transceivers & N/A & GTX (12.5 Gbps) & - \\ \hline
+    \end{tabular}
+\end{table}
+Số liệu từ Bảng \ref{tab:fpga_comparison} cho thấy sự vượt trội về tài nguyên Logic Cells và Block RAM của VC707, đảm bảo không gian rộng lớn cho việc mở rộng quy mô mảng tính toán Systolic Array.
+
+\subsection{Quy trình thiết kế trên Vivado}
+Toàn bộ quy trình hiện thực hệ thống SoC được thực hiện trên môi trường \textbf{Xilinx Vivado Design Suite}, tuân thủ luồng thiết kế dựa trên mã nguồn (HDL-based Design Flow) để đảm bảo khả năng kiểm soát chi tiết và tối ưu hóa tài nguyên phần cứng cũng như hướng tói ASIC trong tương lai. \\ 
+
+
+% \begin{figure}[H]
+%     \centering
+%     % Placeholder cho hình quy trình thiết kế
+%     \includegraphics[width=0.6\linewidth]{2_co_so_ly_thuyet/image/fpga_design_flow.png} 
+%     \caption{Quy trình thiết kế vi mạch trên FPGA}
+%     \label{fig:design_flow}
+% \end{figure}
+
+Quy trình bắt đầu bằng giai đoạn \textbf{Thiết kế (Design Entry)}, trong đó toàn bộ hệ thống được mô tả bằng ngôn ngữ \textbf{Verilog HDL}. Thay vì sử dụng công cụ thiết kế dạng sơ đồ khối (IP Integrator), các thành phần lõi như PicoRV32, hệ thống Bus, khối Accelerator, khối DMA và các khối ngoại vi như UART, SPI, OSPI, I2C, DVP,... được kết nối trực tiếp thông qua kỹ thuật khởi tạo module (Module Instantiation) bên trong một tập tin thiết kế đỉnh (Top-level Module). Sau khi hoàn tất mã nguồn, hệ thống trải qua bước \textbf{Mô phỏng (Simulation)} hành vi bằng Testbench để kiểm chứng tính đúng đắn của logic trước khi đi vào \textbf{Tổng hợp (Synthesis)} để chuyển đổi mã RTL thành danh sách lưới cổng (Netlist). Giai đoạn quan trọng tiếp theo là \textbf{Hiện thực (Implementation)}, bao gồm việc sắp xếp linh kiện (Place) và đi dây (Route) trên chip thực tế, quyết định tần số hoạt động tối đa (Fmax) của hệ thống. Cuối cùng, công cụ sẽ thực hiện \textbf{Tạo Bitstream} (tệp nhị phân .bit) để nạp cấu hình xuống bo mạch FPGA VC707, hoàn tất quy trình thiết kế phần cứng.
