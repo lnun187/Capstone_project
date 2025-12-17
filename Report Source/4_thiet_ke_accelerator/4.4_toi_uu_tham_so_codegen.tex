@@ -9,12 +9,12 @@ Với mỗi lớp tích chập thứ $i$, mục tiêu là tìm ra bộ ba tham s
 Bộ tham số được chọn bắt buộc phải thỏa mãn các giới hạn vật lý của FPGA. Các ràng buộc chính bao gồm:
 
 \begin{enumerate}
-    \item \textbf{Dung lượng bộ nhớ on-chip (BRAM):} Tổng kích thước của các Tile (bao gồm cả cơ chế Ping-Pong nhân hệ số 2) không được vượt quá dung lượng BRAM dành riêng cho từng loại dữ liệu.
+    \item \textbf{Dung lượng bộ nhớ on-chip (BRAM):} Tổng kích thước của các Tile (bao gồm cả cơ chế Ping-Pong nhân hệ số 2) không được vượt quá dung lượng BRAM (4096 bytes) dành riêng cho từng loại dữ liệu.
     \begin{equation}
-        2 \times (T_{c} \times T_{h} \times W) \times DW \le BRAM_{IFM\_MAX}
+        \left \lceil (T_{c} \times T_{h} \times W / 2048) \right \rceil  \le BRAM_{IFM\_MAX}
     \end{equation}
     \begin{equation}
-        2 \times (T_{m} \times T_{c} \times R \times S) \times DW \le BRAM_{WGT\_MAX}
+        \left \lceil (T_{m} \times T_{c} \times R \times S / 2048) \right \rceil \le BRAM_{WGT\_MAX}
     \end{equation}
     
     \item \textbf{Tài nguyên tính toán:} Số lượng bộ lọc tính toán song song ($T_m$) không được vượt quá số lượng mảng xử lý (PA) vật lý có trên chip.
