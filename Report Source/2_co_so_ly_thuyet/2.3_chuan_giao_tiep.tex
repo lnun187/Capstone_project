@@ -60,7 +60,7 @@
         \label{fig:axi_handshake}
     \end{figure}
 
-    Giao dịch chỉ thực sự diễn ra tại sườn dương của xung nhịp khi và chỉ khi cả \texttt{VALID} và \texttt{READY} đều ở mức cao (High). Cơ chế này cho phép bên nhận có thể "kìm" (back-pressure) bên gửi nếu bộ đệm bị đầy, hoặc bên gửi có thể đợi chuẩn bị dữ liệu xong mới phát tín hiệu.
+    Giao dịch chỉ thực sự diễn ra tại cạnh dương của xung nhịp khi và chỉ khi cả \texttt{VALID} và \texttt{READY} đều ở mức cao (High). Cơ chế này cho phép bên nhận có thể "kìm" (back-pressure) bên gửi nếu bộ đệm bị đầy, hoặc bên gửi có thể đợi chuẩn bị dữ liệu xong mới phát tín hiệu.
 
     Dựa trên cơ chế bắt tay này, chuẩn AXI định nghĩa hai cấp độ truyền tải dữ liệu cần phân biệt rõ:
     \begin{itemize}
@@ -225,7 +225,7 @@
 
     \begin{enumerate}
         \item \textbf{Trạng thái nghỉ (Idle State):} Khi không có dữ liệu truyền, đường truyền luôn được giữ ở mức điện áp cao (Logic 1).
-        \item \textbf{Start Bit:} Để bắt đầu một phiên truyền, thiết bị phát sẽ kéo đường truyền từ mức cao xuống mức thấp (Logic 0) trong một chu kỳ bit. Bên thu phát hiện sườn xuống này để bắt đầu quá trình đồng bộ.
+        \item \textbf{Start Bit:} Để bắt đầu một phiên truyền, thiết bị phát sẽ kéo đường truyền từ mức cao xuống mức thấp (Logic 0) trong một chu kỳ bit. Bên thu phát hiện cạnh xuống này để bắt đầu quá trình đồng bộ.
         \item \textbf{Data Bits:} Chứa thông tin thực tế cần truyền, thường có độ dài từ 5 đến 9 bit (phổ biến nhất là 8 bit). Theo quy ước, bit có trọng số nhỏ nhất (LSB) được truyền đi trước.
         \item \textbf{Parity Bit (Tùy chọn):} Dùng để kiểm tra lỗi đơn giản. Bit này có thể được cấu hình là chẵn (Even), lẻ (Odd) hoặc không sử dụng (None). Nếu sử dụng, tổng số bit '1' trong gói dữ liệu (bao gồm cả parity) phải thỏa mãn quy tắc chẵn/lẻ đã thiết lập.
         \item \textbf{Stop Bit:} Đánh dấu kết thúc gói tin bằng cách kéo đường truyền về mức cao (Logic 1). Độ dài có thể là 1, 1.5, hoặc 2 bit thời gian. Stop bit đảm bảo đường truyền quay về trạng thái nghỉ để sẵn sàng cho Start bit tiếp theo.
@@ -252,3 +252,134 @@
         \item Bên thu sẽ lấy mẫu tín hiệu (sample) tại điểm giữa của mỗi chu kỳ bit dự kiến để đọc dữ liệu.
     \end{itemize}
     Theo khuyến cáo kỹ thuật, độ sai lệch tốc độ Baud giữa hai thiết bị không được vượt quá 10\% để đảm bảo dữ liệu được đọc chính xác. Các tốc độ phổ biến thường dùng là 9600, 19200, 115200 bps.
+
+
+    \subsection{Giao thức truyền thông SPI}
+
+SPI (Serial Peripheral Interface) là chuẩn giao tiếp nối tiếp đồng bộ tốc độ cao, hoạt động ở chế độ song công toàn phần (Full-duplex). Chuẩn này được Motorola giới thiệu vào giữa những năm 1980 và hiện nay đã trở thành tiêu chuẩn công nghiệp để kết nối vi xử lý với các thiết bị ngoại vi như cảm biến, bộ nhớ Flash (SPI Flash), màn hình LCD, hoặc bộ chuyển đổi ADC/DAC.
+
+Khác với UART (bất đồng bộ) hay I2C (bán song công, tốc độ thấp), SPI sử dụng đường xung nhịp riêng biệt và kiến trúc Master-Slave chặt chẽ, cho phép đạt băng thông truyền tải rất cao (có thể lên tới hàng chục MHz).
+
+\subsubsection{Cấu hình tín hiệu vật lý}
+Một bus SPI tiêu chuẩn (4-wire mode) bao gồm 4 đường tín hiệu logic kết nối giữa Master và Slave.
+
+% --- VỊ TRÍ CHÈN ẢNH 1: Sơ đồ kết nối Master-Slave ---
+\begin{figure}[H]
+    \centering
+    % Bạn thay tên file ảnh vào dòng dưới
+    \includegraphics[width=0.7\linewidth]{2_co_so_ly_thuyet/image/spiwrite.png} 
+    \caption{Sơ đồ kết nối tín hiệu chuẩn 4 dây của SPI}
+    \label{fig:spi_connection}
+\end{figure}
+
+Chức năng các chân tín hiệu bao gồm:
+\begin{itemize}
+    \item \textbf{SCLK (Serial Clock):} Tín hiệu xung nhịp do Master tạo ra. Toàn bộ quá trình truyền nhận dữ liệu được đồng bộ theo cạnh lên hoặc cạnh xuống của xung này. Slave không được phép tạo xung Clock.
+    \item \textbf{MOSI (Master Out Slave In):} Đường truyền dữ liệu từ Master đến Slave.
+    \item \textbf{MISO (Master In Slave Out):} Đường truyền dữ liệu từ Slave về Master. Nếu chỉ có Master gửi dữ liệu (ví dụ điều khiển LCD), chân này có thể bỏ qua.
+    \item \textbf{CS/SS (Chip Select / Slave Select):} Tín hiệu chọn thiết bị, thường hoạt động ở mức thấp (Active Low). Master kéo chân này xuống 0V để bắt đầu giao dịch với một Slave cụ thể.
+\end{itemize}
+
+\subsubsection{Cơ chế hoạt động: Thanh ghi dịch (Shift Register)}
+Cốt lõi của giao thức SPI là cấu trúc thanh ghi dịch vòng tròn (Circular Shift Register).
+
+% --- VỊ TRÍ CHÈN ẢNH 2: Cơ chế thanh ghi dịch ---
+\begin{figure}[H]
+    \centering
+    % Bạn thay tên file ảnh vào dòng dưới
+    \includegraphics[width=0.9\linewidth]{2_co_so_ly_thuyet/image/spireg.png} 
+    \caption{Cơ chế trao đổi dữ liệu dùng thanh ghi dịch trong SPI}
+    \label{fig:spi_shift_register}
+\end{figure}
+
+Quá trình truyền nhận diễn ra như sau:
+\begin{enumerate}
+    \item Master và Slave mỗi bên đều có một thanh ghi dịch (thường là 8-bit hoặc 16-bit).
+    \item Tại mỗi chu kỳ xung nhịp SCLK:
+    \begin{itemize}
+        \item 1 bit dữ liệu từ Master được đẩy ra đường MOSI và dịch vào thanh ghi của Slave.
+        \item Đồng thời, 1 bit dữ liệu từ Slave được đẩy ra đường MISO và dịch vào thanh ghi của Master.
+    \end{itemize}
+    \item Sau $N$ chu kỳ xung nhịp (với $N$ là độ rộng dữ liệu), giá trị trong thanh ghi của Master và Slave được trao đổi hoàn toàn cho nhau.
+    
+\end{enumerate}
+
+\subsubsection{Các chế độ hoạt động (Clock Polarity \& Phase)}
+SPI định nghĩa 4 chế độ hoạt động (Modes) dựa trên trạng thái của xung Clock, được quy định bởi hai tham số:
+\begin{itemize}
+    \item \textbf{CPOL (Clock Polarity):} Trạng thái nghỉ của đường SCLK (0 hoặc 1).
+    \item \textbf{CPHA (Clock Phase):} Cạnh lên hoặc xuống của xung dùng để lấy mẫu (Sample) và dùng để thay đổi dữ liệu (Shift).
+\end{itemize}
+
+% --- VỊ TRÍ CHÈN ẢNH 3: Giản đồ xung 4 Mode (Lấy từ file Analog Device) ---
+% \begin{figure}[H]
+%     \centering
+%     % Bạn thay tên file ảnh vào dòng dưới
+%     \includegraphics[width=0.9\linewidth]{2_co_so_ly_thuyet/image/spi_modes.png} 
+%     \caption{Giản đồ thời gian của 4 chế độ hoạt động SPI (CPOL/CPHA)}
+%     \label{fig:spi_modes}
+% \end{figure}
+
+\begin{figure}[H]
+    \centering
+    % Bạn thay tên file ảnh vào dòng dưới
+    \includegraphics[width=1\linewidth]{2_co_so_ly_thuyet/image/spimode.png} 
+    \caption{4 chế độ hoạt động của SPI(CPOL/CPHA)}
+    \label{fig:spi_modes}
+\end{figure}
+
+
+\textit{Lưu ý:} Mode 0 và Mode 3 là hai cấu hình phổ biến nhất. Master và Slave phải được cấu hình cùng một Mode để giao tiếp thành công.
+
+\begin{figure}[H]
+    \centering
+    % Bạn thay tên file ảnh vào dòng dưới
+    \includegraphics[width=1\linewidth]{2_co_so_ly_thuyet/image/spimod0.png} 
+    \caption{SPI MODE 0 (CPOL=0, CPHA=0), trạng thái SCLK ban đầu ở mức low, dữ liệu được lấy mẫu tại cạnh lên của SCLK và dịch ở cạnh xuống}
+    \label{fig:spi_modes}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    % Bạn thay tên file ảnh vào dòng dưới
+    \includegraphics[width=1\linewidth]{2_co_so_ly_thuyet/image/spimode3.png} 
+    \caption{SPI MODE 3 (CPOL=1, CPHA=1), trạng thái SCLK ban đầu ở mức high, dữ liệu được lấy mẫu tại cạnh lên của SCLK và dịch ở cạnh xuống}
+    \label{fig:spi_modes}
+\end{figure}
+
+\subsubsection{Các mô hình kết nối đa thiết bị}
+SPI cho phép một Master giao tiếp với nhiều Slave thông qua hai cấu hình chính:
+
+\textbf{1. Cấu hình Slave độc lập (Independent Slaves):} \\
+Master sử dụng các chân CS riêng biệt ($CS_1, CS_2, ...$) cho từng Slave. Đây là cấu hình phổ biến giúp tối ưu băng thông.
+
+\begin{figure}[H]
+    \centering
+    % Bạn thay tên file ảnh vào dòng dưới
+    \includegraphics[width=0.9\linewidth]{2_co_so_ly_thuyet/image/spisingle.png} 
+    \caption{Cấu hình Slave độc lập trong SPI}
+    \label{fig:spi_modes}
+\end{figure}
+
+\textbf{2. Cấu hình Chuỗi (Daisy Chain):} \\
+Các Slave được nối tiếp nhau (MISO của Slave này nối vào MOSI của Slave kia). Dữ liệu đi qua chuỗi các thiết bị, giúp tiết kiệm chân điều khiển của Master nhưng làm giảm tốc độ truyền tổng thể.
+
+\begin{figure}[H]
+    \centering
+    % Bạn thay tên file ảnh vào dòng dưới
+    \includegraphics[width=0.9\linewidth]{2_co_so_ly_thuyet/image/spidaisy.png} 
+    \caption{Cấu hình Chuỗi (Daisy Chain) trong SPI}
+    \label{fig:spi_modes}
+\end{figure}
+
+% --- VỊ TRÍ CHÈN ẢNH 4: Cấu hình Daisy Chain vs Independent ---
+% \begin{figure}[H]
+%     \centering
+%     % Bạn thay tên file ảnh vào dòng dưới
+%     \includegraphics[width=0.8\linewidth]{2_co_so_ly_thuyet/image/spi_configs.png} 
+%     \caption{Hai mô hình kết nối đa thiết bị trong SPI: Độc lập và Chuỗi}
+%     \label{fig:spi_configs}
+% \end{figure}
+
+
+    SPI có tốc độ truyền cao nhất so với UART và I2C, phần cứng đơn giản, hỗ trợ Full-duplex. Nhưng tốn nhiều dây tín hiệu, khoảng cách truyền ngắn, không có cơ chế xác nhận lỗi (ACK) như I2C.

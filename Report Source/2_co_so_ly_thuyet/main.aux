@@ -55,11 +55,30 @@
 \@writefile{lof}{\contentsline {figure}{\numberline {2.13}{\ignorespaces Ví dụ khung dữ liệu UART với 8bit dữ liệu, không parity và 1 stop bit}}{25}{figure.caption.16}\protected@file@percent }
 \newlabel{fig:uart_frame}{{2.13}{25}{Ví dụ khung dữ liệu UART với 8bit dữ liệu, không parity và 1 stop bit}{figure.caption.16}{}}
 \@writefile{toc}{\contentsline {subsubsection}{\numberline {2.3.2.3}Tốc độ Baud (Baud Rate)}{25}{subsubsection.2.3.2.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {2.4}Công nghệ FPGA và Quy trình thiết kế}{26}{section.2.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.3}Giao thức truyền thông SPI}{26}{subsection.2.3.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {2.3.3.1}Cấu hình tín hiệu vật lý}{26}{subsubsection.2.3.3.1}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {2.14}{\ignorespaces Sơ đồ kết nối tín hiệu chuẩn 4 dây của SPI}}{26}{figure.caption.17}\protected@file@percent }
+\newlabel{fig:spi_connection}{{2.14}{26}{Sơ đồ kết nối tín hiệu chuẩn 4 dây của SPI}{figure.caption.17}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {2.3.3.2}Cơ chế hoạt động: Thanh ghi dịch (Shift Register)}{27}{subsubsection.2.3.3.2}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {2.15}{\ignorespaces Cơ chế trao đổi dữ liệu dùng thanh ghi dịch trong SPI}}{27}{figure.caption.18}\protected@file@percent }
+\newlabel{fig:spi_shift_register}{{2.15}{27}{Cơ chế trao đổi dữ liệu dùng thanh ghi dịch trong SPI}{figure.caption.18}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {2.3.3.3}Các chế độ hoạt động (Clock Polarity \& Phase)}{28}{subsubsection.2.3.3.3}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {2.16}{\ignorespaces 4 chế độ hoạt động của SPI(CPOL/CPHA)}}{28}{figure.caption.19}\protected@file@percent }
+\newlabel{fig:spi_modes}{{2.16}{28}{4 chế độ hoạt động của SPI(CPOL/CPHA)}{figure.caption.19}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.17}{\ignorespaces SPI MODE 0 (CPOL=0, CPHA=0), trạng thái SCLK ban đầu ở mức low, dữ liệu được lấy mẫu tại cạnh lên của SCLK và dịch ở cạnh xuống}}{29}{figure.caption.20}\protected@file@percent }
+\newlabel{fig:spi_modes}{{2.17}{29}{SPI MODE 0 (CPOL=0, CPHA=0), trạng thái SCLK ban đầu ở mức low, dữ liệu được lấy mẫu tại cạnh lên của SCLK và dịch ở cạnh xuống}{figure.caption.20}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.18}{\ignorespaces SPI MODE 3 (CPOL=1, CPHA=1), trạng thái SCLK ban đầu ở mức high, dữ liệu được lấy mẫu tại cạnh lên của SCLK và dịch ở cạnh xuống}}{29}{figure.caption.21}\protected@file@percent }
+\newlabel{fig:spi_modes}{{2.18}{29}{SPI MODE 3 (CPOL=1, CPHA=1), trạng thái SCLK ban đầu ở mức high, dữ liệu được lấy mẫu tại cạnh lên của SCLK và dịch ở cạnh xuống}{figure.caption.21}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {2.3.3.4}Các mô hình kết nối đa thiết bị}{29}{subsubsection.2.3.3.4}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {2.19}{\ignorespaces Cấu hình Slave độc lập trong SPI}}{30}{figure.caption.22}\protected@file@percent }
+\newlabel{fig:spi_modes}{{2.19}{30}{Cấu hình Slave độc lập trong SPI}{figure.caption.22}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.20}{\ignorespaces Cấu hình Chuỗi (Daisy Chain) trong SPI}}{31}{figure.caption.23}\protected@file@percent }
+\newlabel{fig:spi_modes}{{2.20}{31}{Cấu hình Chuỗi (Daisy Chain) trong SPI}{figure.caption.23}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {2.4}Công nghệ FPGA và Quy trình thiết kế}{32}{section.2.4}\protected@file@percent }
 \@setckpt{2_co_so_ly_thuyet/main}{
-\setcounter{page}{27}
+\setcounter{page}{33}
 \setcounter{equation}{0}
-\setcounter{enumi}{5}
+\setcounter{enumi}{3}
 \setcounter{enumii}{0}
 \setcounter{enumiii}{0}
 \setcounter{enumiv}{0}
@@ -72,7 +91,7 @@
 \setcounter{subsubsection}{0}
 \setcounter{paragraph}{0}
 \setcounter{subparagraph}{0}
-\setcounter{figure}{13}
+\setcounter{figure}{20}
 \setcounter{table}{1}
 \setcounter{caption@flags}{2}
 \setcounter{continuedfloat}{0}
@@ -213,9 +232,9 @@
 \setcounter{bbx:relatedcount}{0}
 \setcounter{bbx:relatedtotal}{0}
 \setcounter{section@level}{0}
-\setcounter{Item}{10}
+\setcounter{Item}{13}
 \setcounter{Hfootnote}{0}
-\setcounter{bookmark@seq@number}{33}
+\setcounter{bookmark@seq@number}{38}
 \setcounter{lastpagecount}{0}
 \setcounter{subsubsubsection}{0}
 \setcounter{lstlisting}{0}
