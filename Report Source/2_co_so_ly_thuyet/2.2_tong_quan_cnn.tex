@@ -1,0 +1,60 @@
+
+
+Phần này trình bày các cơ sở lý thuyết về trí tuệ nhân tạo, trọng tâm là các mạng nơ-ron tích chập (CNN). Đồng thời, các phân tích về xu hướng tính toán biên (Edge AI) và đặc tả toán học của các phép tính cốt lõi cũng được thảo luận chi tiết nhằm làm rõ động lực thiết kế phần cứng của đồ án.
+
+\subsection{Trí tuệ nhân tạo và Học sâu}
+
+Trí tuệ nhân tạo (Artificial Intelligence - AI) là lĩnh vực khoa học kỹ thuật với mục tiêu kiến tạo các hệ thống máy móc thông minh, sở hữu khả năng thực hiện các tác vụ vốn đòi hỏi trí tuệ con người. Là một tập con quan trọng của AI, Học máy (Machine Learning - ML) cho phép máy tính tự học hỏi từ dữ liệu và cải thiện hiệu suất mà không cần lập trình cụ thể cho từng tác vụ. Thay vì dựa vào các quy tắc thủ công tĩnh, các thuật toán ML sử dụng quá trình huấn luyện để xây dựng mô hình giải quyết vấn đề.
+
+Trong đó, Học sâu (Deep Learning - DL) là bước tiến vượt bậc của ML, tập trung phát triển các Mạng nơ-ron sâu (Deep Neural Networks - DNNs). Các mạng hiện đại có thể sở hữu từ 5 đến hàng nghìn lớp, vượt xa quy mô của các mạng nơ-ron truyền thống. Sức mạnh vượt trội của DNN nằm ở khả năng phân cấp đặc trưng (Feature Hierarchy). Khi dữ liệu đi qua các lớp của mạng, thông tin được trích xuất theo mức độ trừu tượng tăng dần: từ các đặc trưng cấp thấp như cạnh, đường thẳng ở lớp đầu, đến hình dạng phức tạp ở lớp giữa, và cuối cùng là nhận diện vật thể hoàn chỉnh ở lớp cuối. Cấu trúc này đặc biệt hiệu quả trong các bài toán Thị giác máy tính (Computer Vision) như phân loại ảnh hay xe tự hành.
+
+\subsection{Xu hướng chuyển dịch tính toán xuống biên (Edge AI)}
+
+Vòng đời của một mô hình AI bao gồm hai giai đoạn chính là Huấn luyện (Training) và Suy luận (Inference). Trong khi quá trình huấn luyện đòi hỏi tài nguyên khổng lồ thường thực hiện trên Cloud, quá trình suy luận đang có xu hướng dịch chuyển mạnh mẽ xuống các thiết bị biên (Edge devices/IoT).
+
+Việc đưa tác vụ Inference xuống biên, hay còn gọi là Edge AI, giải quyết được ba thách thức cốt lõi của mô hình tập trung. Thứ nhất là độ trễ (latency), yếu tố sống còn đối với các ứng dụng thời gian thực như xe tự lái, nơi độ trễ đường truyền Cloud có thể gây rủi ro an toàn. Thứ hai là tối ưu hóa băng thông mạng khi không cần truyền tải dữ liệu thô (như video giám sát) lên máy chủ. Cuối cùng là đảm bảo quyền riêng tư và bảo mật dữ liệu người dùng.
+
+Tuy nhiên, các nền tảng nhúng thường bị giới hạn nghiêm ngặt về ngân sách năng lượng, tài nguyên tính toán và dung lượng bộ nhớ. Do đó, việc thiết kế các kiến trúc phần cứng chuyên dụng (AI Accelerator) để xử lý hiệu quả các thuật toán DNN dưới các ràng buộc này là yêu cầu cấp thiết.
+
+\subsection{Cơ sở toán học của Mạng Nơ-ron Tích chập (CNN)}
+
+Mạng nơ-ron tích chập (CNN) là kiến trúc phổ biến nhất trong Deep Learning để xử lý dữ liệu hình ảnh. Để đảm bảo tính linh hoạt cho phần cứng, đồ án tập trung phân tích đặc tả toán học của hai loại phép tính cốt lõi thường gặp: Standard Convolution và Depthwise Separable Convolution.
+
+\subsubsection{Standard Convolution (Tích chập tiêu chuẩn)}
+Standard Convolution thực hiện trượt bộ lọc trên không gian đầu vào và tích lũy giá trị qua toàn bộ chiều sâu kênh (Channels). Giá trị đầu ra $O$ tại kênh $m$, vị trí $(h, w)$ được xác định bởi công thức:
+
+\begin{equation}
+    O[m][h][w] = B[m] + \sum_{c=0}^{C-1} \sum_{r=0}^{R-1} \sum_{s=0}^{S-1} I[c][h \cdot U + r - P][w \cdot U + s - P] \times W[m][c][r][s]
+    \label{eq:std_conv}
+\end{equation}
+
+Trong đó, $U$ là bước trượt (Stride), $P$ là lượng đệm (Padding), $W$ là trọng số và $I$ là đầu vào. Việc xử lý biên (Padding) đóng vai trò quan trọng để duy trì kích thước không gian, yêu cầu phần cứng phải có logic tự động chèn giá trị 0 (Zero-padding) khi chỉ số truy cập nằm ngoài phạm vi hình ảnh thực tế.
+
+\subsubsection{Depthwise Separable Convolution}
+Để tối ưu hóa cho các thiết bị biên có tài nguyên hạn chế, các kiến trúc hiện đại như MobileNet sử dụng kỹ thuật Depthwise Separable Convolution. Kỹ thuật này tách tích chập chuẩn thành hai bước riêng biệt nhằm giảm đáng kể khối lượng tính toán:
+
+\textbf{1. Depthwise Convolution (DW):} Áp dụng bộ lọc riêng biệt cho từng kênh đầu vào mà không tích lũy qua các kênh. Do tính độc lập giữa các kênh, các đơn vị tính toán có thể hoạt động song song hoàn toàn.
+\begin{equation}
+    O_{dw}[c][h][w] = \sum_{r=0}^{R-1} \sum_{s=0}^{S-1} I[c][h \cdot U + r - P][w \cdot U + s - P] \times W_{dw}[c][r][s]
+\end{equation}
+
+\textbf{2. Pointwise Convolution (PW):} Là tích chập chuẩn với kích thước kernel $1 \times 1$, thực hiện nhiệm vụ trộn thông tin giữa các kênh (channel mixing).
+\begin{equation}
+    O_{pw}[m][h][w] = \sum_{c=0}^{C-1} I[c][h][w] \times W_{pw}[m][c]
+\end{equation}
+
+Từ phân tích trên, kiến trúc phần cứng đề xuất cần có khả năng cấu hình linh hoạt (reconfigurable) để hỗ trợ cả chế độ tích lũy theo không gian (cho Standard/Pointwise) và chế độ tính toán độc lập theo kênh (cho Depthwise).
+
+\subsection{Kỹ thuật Gập Batch Normalization (BN Folding)}
+
+Trong giai đoạn suy luận, để giảm thiểu độ phức tạp tính toán, đồ án áp dụng kỹ thuật BN Folding. Lớp Batch Normalization thường đi kèm sau Convolution có các tham số $(\mu, \sigma, \gamma, \beta)$ là hằng số cố định khi suy luận. Ta có thể gộp các phép tính này vào trực tiếp trọng số ($W$) và bias ($B$) của lớp Convolution phía trước:
+
+\begin{equation}
+    W' = W_{orig} \cdot \frac{\gamma}{\sqrt{\sigma^2 + \epsilon}}; \quad B' = \left( B_{orig} - \mu \right) \cdot \frac{\gamma}{\sqrt{\sigma^2 + \epsilon}} + \beta
+\end{equation}
+
+Kỹ thuật này giúp loại bỏ hoàn toàn khối tính toán Batch Normalization trên phần cứng, giúp tiết kiệm tài nguyên và giảm độ trễ xử lý mà không làm ảnh hưởng đến độ chính xác của mô hình.
+
+\subsection{Mô hình và Dữ liệu kiểm thử}
+
+Để đánh giá hiệu năng hệ thống, đồ án sử dụng các mô hình đã huấn luyện sẵn (Pretrained Models) được chuẩn hóa qua định dạng ONNX. Các bộ dữ liệu kiểm thử bao gồm MNIST (nhận diện chữ số), CIFAR-10 (phân loại vật thể cơ bản) và ImageNet. Trong đó, ImageNet với 1000 lớp vật thể là chuẩn mực quan trọng để đánh giá độ chính xác Top-1 và Top-5 của các mạng nơ-ron sâu hiện đại.

@@ -94,17 +94,6 @@ Thực chất là phép chập chuẩn với kernel $1 \times 1$. Nó chịu tr�
     O_{pw}[m][h][w] = \sum_{c=0}^{C-1} I[c][h][w] \times W_{pw}[m][c]
 \end{equation}
 
-\subsection{Tối ưu hóa: Kỹ thuật Gập Batch Normalization (BN Folding)}
-Để giảm độ phức tạp phần cứng, chúng tôi loại bỏ hoàn toàn khối tính toán Batch Normalization (BN) riêng biệt bằng kỹ thuật \textbf{BN Folding}.
-
-Nguyên lý là gộp các tham số của lớp BN ($\mu, \sigma, \gamma, \beta$) vào trực tiếp trọng số ($W$) và bias ($B$) của lớp Convolution liền trước nó. Quá trình này được thực hiện offline bởi phần mềm (driver) trước khi nạp xuống phần cứng.
-
-Công thức biến đổi trọng số mới $(W', B')$:
-\begin{align}
-    W'[m][c][r][s] &= W_{orig}[m][c][r][s] \cdot \frac{\gamma_m}{\sqrt{\sigma_m^2 + \epsilon}} \\
-    B'[m] &= \left( B_{orig}[m] - \mu_m \right) \cdot \frac{\gamma_m}{\sqrt{\sigma_m^2 + \epsilon}} + \beta_m
-\end{align}
-Nhờ đó, Accelerator chỉ cần thực hiện phép tính Convolution thuần túy mà vẫn đảm bảo độ chính xác toán học.
 
 \section{Chiến lược Phân mảnh và Quản lý Dòng dữ liệu}
 
