@@ -1,0 +1,38 @@
+ % File: 4_phan_tich_va_kien_truc/4.3_dac_ta_khoi.tex
+
+\subsection{Vi xử lý trung tâm (Central Processing Unit)}
+Đóng vai trò là bộ não điều phối toàn bộ hoạt động của hệ thống SoC, phân hệ này được xây dựng xung quanh lõi vi xử lý mềm \textbf{PicoRV32} - một hiện thực tối ưu về tài nguyên của kiến trúc tập lệnh RISC-V chuẩn RV32I. Lõi vi xử lý này chịu trách nhiệm thực thi các tác vụ điều khiển logic chính, từ việc khởi tạo hệ thống đến quản lý các ngoại vi.
+
+Để hỗ trợ hoạt động của CPU, kiến trúc bộ nhớ cục bộ được tổ chức thành ba vùng riêng biệt nhằm tối ưu hóa hiệu năng truy xuất:
+\begin{itemize}
+    \item[] \textbf{Bộ nhớ Khởi động (BMEM - Bootloader Memory):} Đây là thành phần quan trọng chứa các tập lệnh khởi động cơ bản (Boot ROM). Ngay khi hệ thống được cấp nguồn hoặc reset, CPU sẽ trỏ thanh ghi bộ đếm chương trình (PC) vào vùng nhớ này đầu tiên. Nhiệm vụ của Bootloader là thiết lập các thông số phần cứng ban đầu và nạp chương trình chính từ bộ nhớ ngoài (Flash SPI) vào IMEM trước khi trao quyền điều khiển lại cho ứng dụng.
+    \item[] \textbf{Bộ nhớ Lệnh (IMEM - Instruction Memory):} Là vùng nhớ chứa mã chương trình chính (Main Application) mà CPU sẽ thực thi sau quá trình khởi động. Vùng nhớ này thường được ánh xạ vào Block RAM để đảm bảo tốc độ truy xuất lệnh nhanh nhất (một chu kỳ máy).
+    \item[] \textbf{Bộ nhớ Dữ liệu (DMEM - Data Memory):} Dùng để lưu trữ các biến toàn cục, ngăn xếp (Stack) và dữ liệu tạm thời trong quá trình tính toán của chương trình. Việc tách biệt DMEM và IMEM (kiến trúc Harvard sửa đổi) giúp tránh xung đột khi CPU thực hiện nạp lệnh và truy xuất dữ liệu đồng thời.
+    
+\end{itemize}
+
+\subsection{Nhận diện Hình ảnh (Image Detector)}
+Đây là phân hệ cốt lõi tạo nên tính năng thông minh của hệ thống, chịu trách nhiệm thực hiện song song hai tác vụ: duy trì luồng hình ảnh thời gian thực và thực thi các thuật toán trí tuệ nhân tạo. Cấu trúc của phân hệ này là sự tích hợp chặt chẽ giữa chuỗi xử lý video (Video Streaming Pipeline) và khối tính toán chuyên dụng.
+
+\subsubsection{Hệ thống Video Streaming}
+Khối này quản lý dòng chảy dữ liệu hình ảnh liên tục để phục vụ nhu cầu quan sát. Tại ngõ vào, giao diện thu thập dữ liệu tiếp nhận tín hiệu từ Camera qua chuẩn song song DVP, thực hiện đồng bộ và đóng gói dữ liệu vào bộ đệm khung hình (Frame Buffer). Tại ngõ ra, bộ điều khiển hiển thị đọc dữ liệu từ bộ đệm này và chuyển đổi thành tín hiệu chuẩn HDMI, đảm bảo xuất hình ảnh mượt mà lên màn hình với độ trễ tối thiểu.
+
+\subsubsection{Khối Gia tốc (Accelerator)}
+Đóng vai trò là trung tâm xử lý AI, khối gia tốc được thiết kế dựa trên kiến trúc Mảng tâm thu (Systolic Array) kích thước $N \times N$, chuyên trách xử lý các phép toán nhân chập (Convolution) nặng nề của mạng nơ-ron.
+
+Để đảm bảo khả năng cung cấp dữ liệu liên tục cho mảng tính toán mà không làm nghẽn bus hệ thống, khối gia tốc được tích hợp cơ chế truy xuất bộ nhớ băng thông rộng thông qua hai kênh DMA chuyên biệt:
+\begin{itemize}
+    \item[] \textbf{DMA 0 (Data/Weight Reader):} Kênh này chịu trách nhiệm đọc dữ liệu đặc trưng đầu vào (Input Feature Maps) và các bộ trọng số (Weights) từ bộ nhớ hệ thống (Frame Buffer hoặc Weight Memory) để nạp vào bộ đệm nội của Accelerator.
+    \item[] \textbf{DMA 1 (Result Writer):} Kênh này chịu trách nhiệm thu thập kết quả tính toán (Output Feature Maps) từ mảng Systolic và ghi ngược trở lại bộ nhớ chính, sẵn sàng cho các lớp xử lý tiếp theo hoặc để vi xử lý trung tâm đọc kết quả phân lớp.
+\end{itemize}
+
+
+\subsection{Các Ngoại vi (Peripherals)}
+Phân hệ Ngoại vi tích hợp các khối chức năng chuẩn hóa, cung cấp các giao thức giao tiếp phổ biến để đảm bảo khả năng tương thích và mở rộng cho hệ thống nhúng:
+
+\begin{itemize}
+    \item[] \textbf{UART:} Cung cấp giao thức truyền thông nối tiếp không đồng bộ (Asynchronous Serial Communication), phục vụ việc trao đổi dữ liệu dòng và hỗ trợ giao diện gỡ lỗi hệ thống.
+    \item[] \textbf{I2C:} Cung cấp giao thức giao tiếp nối tiếp hai dây (Two-wire Interface), đóng vai trò Master điều khiển và cấu hình các thiết bị ngoại vi tham gia vào bus hệ thống.
+    \item[] \textbf{SPI/OSPI:} Cung cấp giao thức truyền thông nối tiếp đồng bộ tốc độ cao (Serial Peripheral Interface), hỗ trợ mở rộng kết nối với các bộ nhớ ngoài hoặc các thiết bị ngoại vi yêu cầu băng thông truyền tải lớn.
+    \item[] \textbf{Timer \& GPIO:} Cung cấp tài nguyên định thời gian thực cho hệ thống và các giao diện điều khiển tín hiệu số vào/ra đa mục đích (General Purpose Input/Output).
+\end{itemize}

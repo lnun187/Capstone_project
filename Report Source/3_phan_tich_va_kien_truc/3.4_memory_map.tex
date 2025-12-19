@@ -1,0 +1,68 @@
+% File: 4_phan_tich_va_kien_truc/4.4_memory_map.tex
+
+\subsection{Khái niệm và vai trò của Memory Map}
+\textbf{Bản đồ bộ nhớ (Memory Map)} là một cấu trúc dữ liệu mô hình hóa cách thức hệ thống phân bổ các địa chỉ số (thường dưới dạng hệ thập lục phân - Hexadecimal) vào các tài nguyên phần cứng vật lý trong hệ thống SoC. Trong kiến trúc xử lý, vi xử lý PicoRV32 không tương tác trực tiếp với các thiết bị ngoại vi bằng tên gọi, mà thông qua một không gian địa chỉ phẳng duy nhất.
+
+
+
+Việc quy hoạch bản đồ bộ nhớ là bước thiết kế tiên quyết vì những lý do sau:
+\begin{itemize}
+    \item[] \textbf{Thống nhất giao tiếp (Memory-mapped I/O):} Cho phép CPU coi các thanh ghi điều khiển của ngoại vi (như UART, I2C) tương tự như các ô nhớ thông thường. Điều này giúp đơn giản hóa tập lệnh của vi xử lý vì chỉ cần các lệnh nạp/lưu dữ liệu ($Load/Store$) để điều khiển toàn bộ phần cứng.
+    \item[] \textbf{Định tuyến dữ liệu (Address Decoding):} Cung cấp thông tin cho bộ giải mã địa chỉ (Address Decoder) trong khối \textbf{AXI Interconnect}. Dựa trên địa chỉ mà CPU phát ra, hệ thống sẽ biết chính xác cần kích hoạt tín hiệu chọn thiết bị ($Chip Select$) nào để dẫn luồng dữ liệu đến đúng đích.
+    \item[] \textbf{Tránh xung đột tài nguyên:} Đảm bảo mỗi thành phần phần cứng được cấp phát một vùng không gian riêng biệt, không chồng lấn, từ đó triệt tiêu các lỗi xung đột địa chỉ khi hệ thống vận hành.
+    \item[] \textbf{Cơ sở cho phát triển phần mềm (Firmware):} Bản đồ bộ nhớ cung cấp các địa chỉ cơ sở ($Base Address$) giúp người lập trình xây dựng các trình điều khiển thiết bị (Drivers) và cấu hình trình biên dịch (Linker Script) để nạp mã nguồn vào đúng vị trí trong bộ nhớ.
+\end{itemize}
+
+Dựa trên kiến trúc SoC đề xuất, không gian địa chỉ được chia thành hai phân vùng lớn: Vùng nhớ hệ thống (System Memory) và Vùng địa chỉ ngoại vi (Peripherals).
+
+\subsection{Bản đồ vùng nhớ hệ thống}
+Vùng nhớ hệ thống bao gồm các khối BRAM chứa mã thực thi và dữ liệu hoạt động của vi xử lý. Chi tiết phân bổ được trình bày trong Bảng \ref{tab:system_memory_map}.
+
+\begin{table}[H]
+    \centering
+    \caption{Bản đồ địa chỉ vùng nhớ hệ thống (System Memory Map)}
+    \label{tab:system_memory_map}
+    \renewcommand{\arraystretch}{1.4}
+    \begin{tabular}{|p{2.5cm}|p{4.5cm}|p{7.5cm}|}
+        \hline
+        \textbf{Thành phần} & \textbf{Dải địa chỉ (Hex)} & \textbf{Mô tả Chức năng} \\ 
+        \hline
+        \textbf{DMEM} & \texttt{0x0000\_0000}  \texttt{0x0001\_0000} & \textbf{Data Memory (64KB)}. Vùng nhớ dữ liệu, Stack, Heap \\ 
+        \hline
+        \textbf{BMEM} & \texttt{0x0100\_0000}  \texttt{0x0101\_0000} & \textbf{Boot Memory (64KB)}. Chứa mã khởi động (Bootloader). \\ 
+        \hline
+        \textbf{IMEM} & \texttt{0x0110\_0000}  \texttt{0x0111\_0000} & \textbf{Instruction Memory (64KB)}. Vùng nhớ chứa mã lệnh chương trình chính (Firmware). \\ 
+        \hline
+        
+    \end{tabular}
+\end{table}
+
+\subsection{Bản đồ vùng ngoại vi}
+Vùng ngoại vi bắt đầu từ địa chỉ cơ sở \texttt{0x8000\_0000}. Mỗi ngoại vi được cấp phát một không gian 4KB (Offset \texttt{0x1000}) để chứa các thanh ghi cấu hình. Chi tiết được trình bày trong Bảng \ref{tab:peripheral_map}.
+
+\begin{table}[H]
+    \centering
+    \caption{Bản đồ địa chỉ vùng ngoại vi (Peripheral Memory Map)}
+    \label{tab:peripheral_map}
+    \renewcommand{\arraystretch}{1.4}
+    \begin{tabular}{|p{2.5cm}|p{4.5cm}|p{7.5cm}|}
+        \hline
+        \textbf{Thành phần} & \textbf{Dải địa chỉ (Hex)} & \textbf{Mô tả Chức năng} \\ 
+        \hline
+        \textbf{GPIO} & \texttt{0x8000\_0000}  \texttt{0x8000\_0FFF} & Điều khiển các tín hiệu vào/ra cơ bản (LEDs, Buttons). \\ 
+        \hline
+        \textbf{UART} & \texttt{0x8000\_1000}  \texttt{0x8000\_1FFF} & Bộ điều khiển giao tiếp nối tiếp (Console/Debug). \\ 
+        \hline
+        \textbf{I2C} & \texttt{0x8000\_2000}  \texttt{0x8000\_2FFF} & Giao tiếp cấu hình Camera và chip HDMI PHY. \\ 
+        \hline
+        \textbf{SPI} & \texttt{0x8000\_3000}  \texttt{0x8000\_3FFF} & Giao tiếp thẻ nhớ SD Card hoặc Flash phụ trợ. \\ 
+        \hline
+        \textbf{OSPI} & \texttt{0x8000\_4000}  \texttt{0x8000\_4FFF} & Giao tiếp bộ nhớ tốc độ cao (Octal-SPI/DDR). \\ 
+        \hline
+        \textbf{Timer} & \texttt{0x8000\_5000}  \texttt{0x8000\_5FFF} & Bộ định thời gian thực và đo đạc hiệu năng. \\ 
+        \hline
+
+    \end{tabular}
+\end{table}
+
+Cơ chế giải mã địa chỉ được thực hiện bởi bộ \textbf{AXI Interconnect}, đảm bảo tín hiệu chọn thiết bị tớ (Slave Select) được gửi chính xác đến từng khối chức năng dựa trên địa chỉ mà CPU phát ra trên bus hệ thống.

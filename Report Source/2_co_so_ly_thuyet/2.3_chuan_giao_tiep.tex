@@ -5,10 +5,10 @@
 
     Phiên bản AXI4 (được giới thiệu trong AMBA 4.0) hỗ trợ các tính năng vượt trội so với các thế hệ trước:
     \begin{itemize}
-        \item Tách biệt hoàn toàn pha địa chỉ/điều khiển và pha dữ liệu.
-        \item Hỗ trợ giao dịch dữ liệu không thẳng hàng (Unaligned data transfers).
-        \item Cho phép phát hành nhiều địa chỉ chờ (Outstanding addresses) trước khi dữ liệu hoàn tất.
-        \item Hỗ trợ hoàn thành giao dịch không theo thứ tự (Out-of-order completion) thông qua ID.
+        \item[] Tách biệt hoàn toàn pha địa chỉ/điều khiển và pha dữ liệu.
+        \item[] Hỗ trợ giao dịch dữ liệu không thẳng hàng (Unaligned data transfers).
+        \item[] Cho phép phát hành nhiều địa chỉ chờ (Outstanding addresses) trước khi dữ liệu hoàn tất.
+        \item[] Hỗ trợ hoàn thành giao dịch không theo thứ tự (Out-of-order completion) thông qua ID.
     \end{itemize}
 
     \begin{figure}[H]
@@ -49,8 +49,8 @@
     \subsubsection{Cơ chế bắt tay (Handshake Mechanism)}
     Toàn bộ 5 kênh AXI đều sử dụng chung một cơ chế bắt tay hai chiều \texttt{VALID/READY} để điều khiển luồng dữ liệu:
     \begin{itemize}
-        \item \textbf{VALID (từ Bên gửi):} Báo hiệu rằng dữ liệu hoặc địa chỉ trên đường truyền đã hợp lệ và ổn định.
-        \item \textbf{READY (từ Bên nhận):} Báo hiệu rằng bên nhận đã sẵn sàng chấp nhận dữ liệu mới.
+        \item[] \textbf{VALID (từ Bên gửi):} Báo hiệu rằng dữ liệu hoặc địa chỉ trên đường truyền đã hợp lệ và ổn định.
+        \item[] \textbf{READY (từ Bên nhận):} Báo hiệu rằng bên nhận đã sẵn sàng chấp nhận dữ liệu mới.
     \end{itemize}
 
     \begin{figure}[H]
@@ -64,7 +64,7 @@
 
     Dựa trên cơ chế bắt tay này, chuẩn AXI định nghĩa hai cấp độ truyền tải dữ liệu cần phân biệt rõ:
     \begin{itemize}
-        \item \textbf{Transfer (hoặc Beat):} Là một lần trao đổi dữ liệu đơn lẻ thành công (một lần bắt tay VALID/READY = 1). Trong một chuỗi dữ liệu (Burst), mỗi nhịp truyền một gói tin (ví dụ 32-bit) được gọi là một Transfer.
+        \item[] \textbf{Transfer (hoặc Beat):} Là một lần trao đổi dữ liệu đơn lẻ thành công (một lần bắt tay VALID/READY = 1). Trong một chuỗi dữ liệu (Burst), mỗi nhịp truyền một gói tin (ví dụ 32-bit) được gọi là một Transfer.
         
         \begin{figure}[H]
             \centering
@@ -73,7 +73,7 @@
             \label{fig:axi_handshake}
         \end{figure}
 
-        \item \textbf{Transaction (Giao dịch):} Là một hoạt động đọc hoặc ghi hoàn chỉnh. Một Transaction bao gồm toàn bộ quá trình: gửi địa chỉ (Address Phase), truyền một hoặc nhiều dữ liệu (Data Phase - gồm nhiều Transfers) và nhận phản hồi (Response Phase).
+        \item[] \textbf{Transaction (Giao dịch):} Là một hoạt động đọc hoặc ghi hoàn chỉnh. Một Transaction bao gồm toàn bộ quá trình: gửi địa chỉ (Address Phase), truyền một hoặc nhiều dữ liệu (Data Phase - gồm nhiều Transfers) và nhận phản hồi (Response Phase).
         \begin{figure}[H]
             \centering
             \includegraphics[width=0.9\linewidth]{2_co_so_ly_thuyet/image/transaction.png} 
@@ -99,19 +99,19 @@
     \end{figure}
 
     \begin{itemize}
-        \item \textbf{Pha địa chỉ (Write Address Channel):}
+        \item[] \textbf{Pha địa chỉ (Write Address Channel):}
         \begin{itemize}
             \item[] \textbf{Master $\rightarrow$ Slave:} Master đặt địa chỉ lên bus \texttt{AWADDR} và các thông tin điều khiển (Burst type, length) lên \texttt{AWLEN}, \texttt{AWSIZE}... sau đó xác lập tín hiệu \texttt{AWVALID = 1}.
             \item[] \textbf{Slave $\rightarrow$ Master:} Khi Slave sẵn sàng nhận địa chỉ, nó bật \texttt{AWREADY = 1}. Giao dịch địa chỉ hoàn tất.
         \end{itemize}
         
-        \item \textbf{Pha dữ liệu (Write Data Channel):}
+        \item[] \textbf{Pha dữ liệu (Write Data Channel):}
         \begin{itemize}
             \item[] \textbf{Master $\rightarrow$ Slave:} Master đưa dữ liệu lên bus \texttt{WDATA}. Nếu đây là gói cuối cùng trong Burst, Master bật tín hiệu \texttt{WLAST = 1}. Đồng thời, Master xác lập \texttt{WVALID = 1}.
             \item[] \textbf{Slave $\rightarrow$ Master:} Slave bật \texttt{WREADY = 1} để báo hiệu đã nhận gói dữ liệu đó. Quá trình lặp lại cho đến hết Burst.
         \end{itemize}
 
-        \item \textbf{Pha phản hồi (Write Response Channel):}
+        \item[] \textbf{Pha phản hồi (Write Response Channel):}
         \begin{itemize}
             \item[] \textbf{Slave $\rightarrow$ Master:} Sau khi nhận đủ dữ liệu và hoàn tất việc ghi vào bộ nhớ, Slave gửi trạng thái (ví dụ: OKAY) qua bus \texttt{BRESP} và xác lập \texttt{BVALID = 1}.
             \item[] \textbf{Master $\rightarrow$ Slave:} Master xác nhận đã nhận được phản hồi bằng cách bật \texttt{BREADY = 1}. Kết thúc giao dịch.
@@ -129,13 +129,13 @@
     \end{figure}
 
     \begin{itemize}
-        \item \textbf{Pha địa chỉ (Read Address Channel):}
+        \item[] \textbf{Pha địa chỉ (Read Address Channel):}
         \begin{itemize}
             \item[] \textbf{Master $\rightarrow$ Slave:} Master đặt địa chỉ cần đọc lên bus \texttt{ARADDR} cùng các tham số điều khiển, sau đó bật \texttt{ARVALID = 1}.
             \item[] \textbf{Slave $\rightarrow$ Master:} Slave chấp nhận địa chỉ bằng cách bật \texttt{ARREADY = 1}.
         \end{itemize}
 
-        \item \textbf{Pha dữ liệu (Read Data Channel):}
+        \item[] \textbf{Pha dữ liệu (Read Data Channel):}
         \begin{itemize}
             \item[] \textbf{Slave $\rightarrow$ Master:} Slave truy xuất dữ liệu và đưa lên bus \texttt{RDATA}. Nếu thành công, Slave gửi kèm trạng thái OKAY trên bus \texttt{RRESP}. Tại gói dữ liệu cuối cùng, Slave bật \texttt{RLAST = 1}. Tín hiệu \texttt{RVALID = 1} được xác lập khi dữ liệu trên bus là hợp lệ.
             \item[] \textbf{Master $\rightarrow$ Slave:} Master nhận dữ liệu bằng cách bật \texttt{RREADY = 1}.
@@ -149,9 +149,9 @@
     AXI là giao thức dựa trên Burst, nghĩa là chỉ cần gửi một địa chỉ khởi đầu, Master có thể truyền liên tiếp một chuỗi dữ liệu (tức là thực hiện một Transaction gồm nhiều Transfers). Các tham số chính điều khiển Burst bao gồm:
 
     \begin{itemize}
-        \item \textbf{Burst Length (AxLEN):} Số lượng gói dữ liệu (beat/transfer) trong một burst. AXI4 hỗ trợ lên đến 256 beat cho kiểu INCR.
-        \item \textbf{Burst Size (AxSIZE):} Số byte trong mỗi beat (ví dụ: 4 bytes cho hệ thống 32-bit).
-        \item \textbf{Burst Type (AxBURST):} Xác định cách tính địa chỉ cho các beat tiếp theo:
+        \item[] \textbf{Burst Length (AxLEN):} Số lượng gói dữ liệu (beat/transfer) trong một burst. AXI4 hỗ trợ lên đến 256 beat cho kiểu INCR.
+        \item[] \textbf{Burst Size (AxSIZE):} Số byte trong mỗi beat (ví dụ: 4 bytes cho hệ thống 32-bit).
+        \item[] \textbf{Burst Type (AxBURST):} Xác định cách tính địa chỉ cho các beat tiếp theo:
         \begin{itemize}
             \item[] \textit{FIXED:} Địa chỉ giữ nguyên (dùng cho FIFO).
             \item[] \textit{INCR (Incrementing):} Địa chỉ tăng dần (dùng cho RAM). Đây là kiểu phổ biến nhất.
@@ -165,26 +165,26 @@
     \textbf{1. Giao thức AXI4-Lite (AXI-Lite)} \\
     AXI4-Lite là một phiên bản rút gọn của AXI4, được thiết kế cho các giao tiếp điều khiển đơn giản, không yêu cầu truyền dữ liệu tốc độ cao (Burst transfer). Đặc điểm chính của AXI4-Lite bao gồm:
     \begin{itemize}
-        \item Mỗi giao dịch chỉ truyền một gói dữ liệu đơn lẻ (Burst length = 1).
-        \item Dữ liệu thường có độ rộng 32-bit hoặc 64-bit cố định.
-        \item Đơn giản hóa logic điều khiển, giảm diện tích phần cứng.
+        \item[] Mỗi giao dịch chỉ truyền một gói dữ liệu đơn lẻ (Burst length = 1).
+        \item[] Dữ liệu thường có độ rộng 32-bit hoặc 64-bit cố định.
+        \item[] Đơn giản hóa logic điều khiển, giảm diện tích phần cứng.
     \end{itemize}
     Nhờ sự đơn giản này, AXI4-Lite thường được sử dụng làm giao diện cấu hình cho các thanh ghi điều khiển (Control Registers) bên trong các khối IP (Intellectual Property).
 
     \textbf{2. Giao thức AXI4-Stream (AXI-Stream)} \\
     AXI4-Stream được thiết kế chuyên biệt cho việc truyền tải các luồng dữ liệu liên tục tốc độ cao (Streaming data) mà không cần sử dụng địa chỉ. Khác với AXI4-Lite hay AXI4-Full (Memory Mapped), AXI4-Stream chỉ tập trung vào việc đẩy dữ liệu từ nguồn (Master) đến đích (Slave) nhanh nhất có thể.
     \begin{itemize}
-        \item Không có kênh địa chỉ (Address Channel), giảm đáng kể số lượng dây tín hiệu.
-        \item Hỗ trợ truyền dữ liệu liên tục không giới hạn độ dài Burst.
-        \item Thích hợp cho dữ liệu video, âm thanh hoặc dữ liệu mạng nơ-ron (Feature maps).
+        \item[] Không có kênh địa chỉ (Address Channel), giảm đáng kể số lượng dây tín hiệu.
+        \item[] Hỗ trợ truyền dữ liệu liên tục không giới hạn độ dài Burst.
+        \item[] Thích hợp cho dữ liệu video, âm thanh hoặc dữ liệu mạng nơ-ron (Feature maps).
     \end{itemize}
 
     \subsubsection{Áp dụng trong hệ thống đề tài}
     Trong khuôn khổ đồ án thiết kế SoC RISC-V tích hợp EdgeAI này, nhóm thực hiện áp dụng kết hợp cả hai chuẩn giao tiếp trên để tối ưu hóa hiệu năng và tài nguyên:
 
     \begin{itemize}
-        \item \textbf{Sử dụng AXI4-Lite:} Đóng vai trò là kênh điều khiển (Control Plane). Vi xử lý PicoRV32 (Master) sẽ sử dụng AXI4-Lite để ghi vào các thanh ghi cấu hình của khối ngoại vi, khối Accelerator và DMA, thiết lập các thông số như kích thước ảnh, địa chỉ bộ nhớ và tín hiệu bắt đầu (Start).
-        \item \textbf{Sử dụng AXI4-Stream:} Đóng vai trò là kênh dữ liệu (Data Plane). Dữ liệu hình ảnh từ Camera và các ma trận trọng số (Weights) sẽ được truyền trực tiếp từ DMA vào khối Accelerator thông qua AXI4-Stream. Việc loại bỏ overhead của kênh địa chỉ giúp tối đa hóa băng thông xử lý cho mạng CNN.
+        \item[] \textbf{Sử dụng AXI4-Lite:} Đóng vai trò là kênh điều khiển (Control Plane). Vi xử lý PicoRV32 (Master) sẽ sử dụng AXI4-Lite để ghi vào các thanh ghi cấu hình của khối ngoại vi, khối Accelerator và DMA, thiết lập các thông số như kích thước ảnh, địa chỉ bộ nhớ và tín hiệu bắt đầu (Start).
+        \item[] \textbf{Sử dụng AXI4-Stream:} Đóng vai trò là kênh dữ liệu (Data Plane). Dữ liệu hình ảnh từ Camera và các ma trận trọng số (Weights) sẽ được truyền trực tiếp từ DMA vào khối Accelerator thông qua AXI4-Stream. Việc loại bỏ overhead của kênh địa chỉ giúp tối đa hóa băng thông xử lý cho mạng CNN.
     \end{itemize}
 
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -197,8 +197,8 @@
     \subsubsection{Nguyên lý hoạt động}
     Giao thức UART truyền dữ liệu trên hai dây tín hiệu riêng biệt:
     \begin{itemize}
-        \item \textbf{TX (Transmit):} Chân truyền dữ liệu đi.
-        \item \textbf{RX (Receive):} Chân nhận dữ liệu về.
+        \item[] \textbf{TX (Transmit):} Chân truyền dữ liệu đi.
+        \item[] \textbf{RX (Receive):} Chân nhận dữ liệu về.
     \end{itemize}
     Để giao tiếp thành công, chân TX của thiết bị này phải được nối với chân RX của thiết bị kia và ngược lại. Quá trình truyền tin diễn ra bằng cách chuyển đổi dữ liệu song song (Parallel data) từ bus hệ thống thành luồng dữ liệu nối tiếp (Serial bit stream) tại phía phát, và khôi phục lại thành song song tại phía thu.
     
@@ -248,8 +248,8 @@
     \subsubsection{Tốc độ Baud (Baud Rate)}
     Vì thiếu xung nhịp đồng bộ, hai thiết bị UART phải thống nhất trước một tốc độ truyền nhận, gọi là Baud Rate (đơn vị: bit/giây - bps).
     \begin{itemize}
-        \item Bên phát sẽ đẩy từng bit dữ liệu ra đường truyền với chu kỳ $T = 1/BaudRate$.
-        \item Bên thu sẽ lấy mẫu tín hiệu (sample) tại điểm giữa của mỗi chu kỳ bit dự kiến để đọc dữ liệu.
+        \item[] Bên phát sẽ đẩy từng bit dữ liệu ra đường truyền với chu kỳ $T = 1/BaudRate$.
+        \item[] Bên thu sẽ lấy mẫu tín hiệu (sample) tại điểm giữa của mỗi chu kỳ bit dự kiến để đọc dữ liệu.
     \end{itemize}
     Theo khuyến cáo kỹ thuật, độ sai lệch tốc độ Baud giữa hai thiết bị không được vượt quá 10\% để đảm bảo dữ liệu được đọc chính xác. Các tốc độ phổ biến thường dùng là 9600, 19200, 115200 bps.
 
@@ -274,10 +274,10 @@ Một bus SPI tiêu chuẩn (4-wire mode) bao gồm 4 đường tín hiệu logi
 
 Chức năng các chân tín hiệu bao gồm:
 \begin{itemize}
-    \item \textbf{SCLK (Serial Clock):} Tín hiệu xung nhịp do Master tạo ra. Toàn bộ quá trình truyền nhận dữ liệu được đồng bộ theo cạnh lên hoặc cạnh xuống của xung này. Slave không được phép tạo xung Clock.
-    \item \textbf{MOSI (Master Out Slave In):} Đường truyền dữ liệu từ Master đến Slave.
-    \item \textbf{MISO (Master In Slave Out):} Đường truyền dữ liệu từ Slave về Master. Nếu chỉ có Master gửi dữ liệu (ví dụ điều khiển LCD), chân này có thể bỏ qua.
-    \item \textbf{CS/SS (Chip Select / Slave Select):} Tín hiệu chọn thiết bị, thường hoạt động ở mức thấp (Active Low). Master kéo chân này xuống 0V để bắt đầu giao dịch với một Slave cụ thể.
+    \item[] \textbf{SCLK (Serial Clock):} Tín hiệu xung nhịp do Master tạo ra. Toàn bộ quá trình truyền nhận dữ liệu được đồng bộ theo cạnh lên hoặc cạnh xuống của xung này. Slave không được phép tạo xung Clock.
+    \item[] \textbf{MOSI (Master Out Slave In):} Đường truyền dữ liệu từ Master đến Slave.
+    \item[] \textbf{MISO (Master In Slave Out):} Đường truyền dữ liệu từ Slave về Master. Nếu chỉ có Master gửi dữ liệu (ví dụ điều khiển LCD), chân này có thể bỏ qua.
+    \item[] \textbf{CS/SS (Chip Select / Slave Select):} Tín hiệu chọn thiết bị, thường hoạt động ở mức thấp (Active Low). Master kéo chân này xuống 0V để bắt đầu giao dịch với một Slave cụ thể.
 \end{itemize}
 
 \subsubsection{Cơ chế hoạt động: Thanh ghi dịch (Shift Register)}
@@ -297,8 +297,8 @@ Quá trình truyền nhận diễn ra như sau:
     \item Master và Slave mỗi bên đều có một thanh ghi dịch (thường là 8-bit hoặc 16-bit).
     \item Tại mỗi chu kỳ xung nhịp SCLK:
     \begin{itemize}
-        \item 1 bit dữ liệu từ Master được đẩy ra đường MOSI và dịch vào thanh ghi của Slave.
-        \item Đồng thời, 1 bit dữ liệu từ Slave được đẩy ra đường MISO và dịch vào thanh ghi của Master.
+        \item[] 1 bit dữ liệu từ Master được đẩy ra đường MOSI và dịch vào thanh ghi của Slave.
+        \item[] Đồng thời, 1 bit dữ liệu từ Slave được đẩy ra đường MISO và dịch vào thanh ghi của Master.
     \end{itemize}
     \item Sau $N$ chu kỳ xung nhịp (với $N$ là độ rộng dữ liệu), giá trị trong thanh ghi của Master và Slave được trao đổi hoàn toàn cho nhau.
     
@@ -307,8 +307,8 @@ Quá trình truyền nhận diễn ra như sau:
 \subsubsection{Các chế độ hoạt động (Clock Polarity \& Phase)}
 SPI định nghĩa 4 chế độ hoạt động (Modes) dựa trên trạng thái của xung Clock, được quy định bởi hai tham số:
 \begin{itemize}
-    \item \textbf{CPOL (Clock Polarity):} Trạng thái nghỉ của đường SCLK (0 hoặc 1).
-    \item \textbf{CPHA (Clock Phase):} Cạnh lên hoặc xuống của xung dùng để lấy mẫu (Sample) và dùng để thay đổi dữ liệu (Shift).
+    \item[] \textbf{CPOL (Clock Polarity):} Trạng thái nghỉ của đường SCLK (0 hoặc 1).
+    \item[] \textbf{CPHA (Clock Phase):} Cạnh lên hoặc xuống của xung dùng để lấy mẫu (Sample) và dùng để thay đổi dữ liệu (Shift).
 \end{itemize}
 
 % --- VỊ TRÍ CHÈN ẢNH 3: Giản đồ xung 4 Mode (Lấy từ file Analog Device) ---
@@ -396,15 +396,15 @@ Các Slave được nối tiếp nhau (MISO của Slave này nối vào MOSI c�
     \end{figure}
 
     \begin{itemize}
-        \item \textbf{CLK (Serial Clock):} Tín hiệu xung nhịp đồng bộ do Master cấp.
-        \item \textbf{CS/SS (Chip Select):} Tín hiệu chọn chip (Active Low).
-        \item \textbf{IO0 - IO7 (Data Lines):} 8 đường dữ liệu hai chiều (Bi-directional). Trong một chu kỳ xung nhịp, 8 bit có thể được truyền đi đồng thời (1 Byte).
-        \item \textbf{DQS / DS (Data Strobe):} Đây là tín hiệu đặc biệt chỉ xuất hiện trên các chuẩn tốc độ cao (như OSPI và bộ nhớ DDR DRAM).
+        \item[] \textbf{CLK (Serial Clock):} Tín hiệu xung nhịp đồng bộ do Master cấp.
+        \item[] \textbf{CS/SS (Chip Select):} Tín hiệu chọn chip (Active Low).
+        \item[] \textbf{IO0 - IO7 (Data Lines):} 8 đường dữ liệu hai chiều (Bi-directional). Trong một chu kỳ xung nhịp, 8 bit có thể được truyền đi đồng thời (1 Byte).
+        \item[] \textbf{DQS / DS (Data Strobe):} Đây là tín hiệu đặc biệt chỉ xuất hiện trên các chuẩn tốc độ cao (như OSPI và bộ nhớ DDR DRAM).
         \begin{itemize}
             \item[] DQS là tín hiệu hai chiều, được tạo ra bởi thiết bị đang \textit{phát} dữ liệu (Source Synchronous).
             \item[] Nó đóng vai trò như một xung nhịp tham chiếu đi kèm với dữ liệu, giúp bên thu xác định chính xác thời điểm lấy mẫu dữ liệu hợp lệ mà không bị ảnh hưởng bởi độ trễ đường truyền ở tần số cao.
         \end{itemize}
-        \item \textbf{RWDS (Read Write Data Strobe):} Trong giao diện HyperRAM (một biến thể tương tự OSPI), chân này vừa đóng vai trò là DQS, vừa dùng để chỉ thị mặt nạ dữ liệu (Data Mask) khi ghi.
+        \item[] \textbf{RWDS (Read Write Data Strobe):} Trong giao diện HyperRAM (một biến thể tương tự OSPI), chân này vừa đóng vai trò là DQS, vừa dùng để chỉ thị mặt nạ dữ liệu (Data Mask) khi ghi.
     \end{itemize}
 
     \subsubsection{Cơ chế truyền tải DDR (Double Data Rate)}
@@ -412,8 +412,8 @@ Các Slave được nối tiếp nhau (MISO của Slave này nối vào MOSI c�
 
     \textbf{1. So sánh SDR và DDR:}
     \begin{itemize}
-        \item \textbf{SDR (Single Data Rate):} Dữ liệu chỉ được truyền ở một \textbf{cạnh} của xung nhịp (thường là \textbf{cạnh lên}). Đây là cách hoạt động của SPI và QSPI truyền thống.
-        \item \textbf{DDR (Double Data Rate):} Dữ liệu được truyền ở \textbf{cả cạnh lên và cạnh xuống} của xung nhịp.
+        \item[] \textbf{SDR (Single Data Rate):} Dữ liệu chỉ được truyền ở một \textbf{cạnh} của xung nhịp (thường là \textbf{cạnh lên}). Đây là cách hoạt động của SPI và QSPI truyền thống.
+        \item[] \textbf{DDR (Double Data Rate):} Dữ liệu được truyền ở \textbf{cả cạnh lên và cạnh xuống} của xung nhịp.
     \end{itemize}
     
     \begin{figure}[H]
@@ -427,9 +427,9 @@ Các Slave được nối tiếp nhau (MISO của Slave này nối vào MOSI c�
     \textbf{2. Hiệu năng tính toán:}
     Với giao diện 8 đường dữ liệu (IO0-IO7) hoạt động ở chế độ DDR:
     \begin{itemize}
-        \item Tại \textbf{cạnh lên (Rising Edge)}: Truyền 8 bit.
-        \item Tại \textbf{cạnh xuống (Falling Edge)}: Truyền 8 bit.
-        \item \textbf{Tổng cộng:} 16 bit (2 Bytes) được truyền trong một chu kỳ xung nhịp (Clock Cycle).
+        \item[] Tại \textbf{cạnh lên (Rising Edge)}: Truyền 8 bit.
+        \item[] Tại \textbf{cạnh xuống (Falling Edge)}: Truyền 8 bit.
+        \item[] \textbf{Tổng cộng:} 16 bit (2 Bytes) được truyền trong một chu kỳ xung nhịp (Clock Cycle).
     \end{itemize}
 
     Ví dụ: Với xung nhịp 200MHz, băng thông lý thuyết của OSPI DDR đạt: $200 \text{ MHz} \times 2 \text{ Bytes} = 400 \text{ MB/s}$. Tốc độ này nhanh gấp 8 lần so với QSPI thông thường (chạy SDR) và tiệm cận với các giao tiếp DRAM, đủ đáp ứng nhu cầu xử lý thời gian thực.
@@ -457,8 +457,8 @@ Các Slave được nối tiếp nhau (MISO của Slave này nối vào MOSI c�
 
     \subsubsection{Ưu điểm trong ứng dụng SoC IoT}
     \begin{itemize}
-        \item \textbf{Tốc độ cao:} Băng thông lớn giúp giảm thời gian nạp Bootloader và nạp trọng số mạng nơ-ron (Weights) vào Accelerator.
-        \item \textbf{Số lượng chân ít:} So với các giao tiếp bộ nhớ song song truyền thống (Parallel Flash/SRAM) cần 30-40 chân, OSPI chỉ cần khoảng 12 chân, giúp tiết kiệm diện tích SoC.
+        \item[] \textbf{Tốc độ cao:} Băng thông lớn giúp giảm thời gian nạp Bootloader và nạp trọng số mạng nơ-ron (Weights) vào Accelerator.
+        \item[] \textbf{Số lượng chân ít:} So với các giao tiếp bộ nhớ song song truyền thống (Parallel Flash/SRAM) cần 30-40 chân, OSPI chỉ cần khoảng 12 chân, giúp tiết kiệm diện tích SoC.
     \end{itemize}
 
 
@@ -473,8 +473,8 @@ Các Slave được nối tiếp nhau (MISO của Slave này nối vào MOSI c�
     \subsubsection{Cấu hình vật lý và Nguyên lý  Open-Drain}
     Mạng lưới I2C bao gồm hai đường tín hiệu hai chiều (Bidirectional):
     \begin{itemize}
-        \item \textbf{SDA (Serial Data):} Đường truyền dữ liệu.
-        \item \textbf{SCL (Serial Clock):} Đường xung nhịp đồng bộ (thường do Master tạo ra).
+        \item[] \textbf{SDA (Serial Data):} Đường truyền dữ liệu.
+        \item[] \textbf{SCL (Serial Clock):} Đường xung nhịp đồng bộ (thường do Master tạo ra).
     \end{itemize}
 
     \begin{figure}[H]
@@ -487,9 +487,9 @@ Các Slave được nối tiếp nhau (MISO của Slave này nối vào MOSI c�
 
     Đặc điểm phần cứng quan trọng nhất của I2C là cấu trúc ngõ ra \textbf{(Open-Drain)} 
     \begin{itemize}
-        \item Các thiết bị Master và Slave chỉ có thể kéo đường dây xuống mức thấp (Logic 0). Chúng không thể chủ động đẩy đường dây lên mức cao (Logic 1).
-        \item Để tạo ra mức Logic 1, cần phải có các \textbf{điện trở kéo lên (Pull-up resistors)} nối từ đường SDA/SCL lên nguồn VCC.
-        \item Cơ chế này cho phép thực hiện kỹ thuật "Wired-AND", giúp tránh hiện tượng ngắn mạch khi hai thiết bị cùng lái bus và hỗ trợ tính năng \textit{Clock Stretching} (kéo dãn xung nhịp).
+        \item[] Các thiết bị Master và Slave chỉ có thể kéo đường dây xuống mức thấp (Logic 0). Chúng không thể chủ động đẩy đường dây lên mức cao (Logic 1).
+        \item[] Để tạo ra mức Logic 1, cần phải có các \textbf{điện trở kéo lên (Pull-up resistors)} nối từ đường SDA/SCL lên nguồn VCC.
+        \item[] Cơ chế này cho phép thực hiện kỹ thuật "Wired-AND", giúp tránh hiện tượng ngắn mạch khi hai thiết bị cùng lái bus và hỗ trợ tính năng \textit{Clock Stretching} (kéo dãn xung nhịp).
     \end{itemize}
 
     \begin{figure}[H]
@@ -522,8 +522,8 @@ Các Slave được nối tiếp nhau (MISO của Slave này nối vào MOSI c�
     \textbf{1. Điều kiện Bắt đầu (Start) và Kết thúc (Stop):}
     Thông thường, dữ liệu chỉ được phép thay đổi khi SCL ở mức Thấp. Tuy nhiên, có hai ngoại lệ đặc biệt dùng để báo hiệu trạng thái bus:
     \begin{itemize}
-        \item \textbf{Start Condition (S):} SDA chuyển từ Cao xuống Thấp trong khi SCL đang ở mức Cao. Báo hiệu bắt đầu một giao dịch.
-        \item \textbf{Stop Condition (P):} SDA chuyển từ Thấp lên Cao trong khi SCL đang ở mức Cao. Báo hiệu kết thúc giao dịch.
+        \item[] \textbf{Start Condition (S):} SDA chuyển từ Cao xuống Thấp trong khi SCL đang ở mức Cao. Báo hiệu bắt đầu một giao dịch.
+        \item[] \textbf{Stop Condition (P):} SDA chuyển từ Thấp lên Cao trong khi SCL đang ở mức Cao. Báo hiệu kết thúc giao dịch.
     \end{itemize}
 
     \begin{figure}[H]
@@ -537,16 +537,16 @@ Các Slave được nối tiếp nhau (MISO của Slave này nối vào MOSI c�
     \textbf{2. Định dạng địa chỉ và Bit R/W:}
     Mỗi thiết bị Slave trên bus I2C được định danh bởi một địa chỉ duy nhất (thường là 7-bit, hỗ trợ tối đa 128 địa chỉ).
     \begin{itemize}
-        \item Sau tín hiệu Start, Master gửi 1 byte đầu tiên bao gồm: \textbf{7 bit địa chỉ} của Slave + \textbf{1 bit R/W} (Read/Write).
-        \item Nếu Bit R/W = 0: Master muốn Ghi dữ liệu vào Slave.
-        \item Nếu Bit R/W = 1: Master muốn Đọc dữ liệu từ Slave.
+        \item[] Sau tín hiệu Start, Master gửi 1 byte đầu tiên bao gồm: \textbf{7 bit địa chỉ} của Slave + \textbf{1 bit R/W} (Read/Write).
+        \item[] Nếu Bit R/W = 0: Master muốn Ghi dữ liệu vào Slave.
+        \item[] Nếu Bit R/W = 1: Master muốn Đọc dữ liệu từ Slave.
     \end{itemize}
 
     \textbf{3. Cơ chế xác nhận (ACK/NACK):}
     Sau mỗi byte dữ liệu (8 bit) được truyền đi, bên nhận (Receiver) bắt buộc phải phản hồi bằng một bit xác nhận (Acknowledge bit) trong chu kỳ xung nhịp thứ 9.
     \begin{itemize}
-        \item \textbf{ACK (Logic 0):} Bên nhận kéo đường SDA xuống thấp, báo hiệu đã nhận byte thành công và sẵn sàng nhận tiếp.
-        \item \textbf{NACK (Logic 1):} Bên nhận để đường SDA ở mức cao (do điện trở pull-up). Báo hiệu lỗi, hoặc Slave đang bận, hoặc kết thúc quá trình đọc.
+        \item[] \textbf{ACK (Logic 0):} Bên nhận kéo đường SDA xuống thấp, báo hiệu đã nhận byte thành công và sẵn sàng nhận tiếp.
+        \item[] \textbf{NACK (Logic 1):} Bên nhận để đường SDA ở mức cao (do điện trở pull-up). Báo hiệu lỗi, hoặc Slave đang bận, hoặc kết thúc quá trình đọc.
     \end{itemize}
 
     \begin{figure}[H]
@@ -560,10 +560,10 @@ Các Slave được nối tiếp nhau (MISO của Slave này nối vào MOSI c�
     \subsubsection{Các tốc độ hoạt động}
     Giao thức I2C hỗ trợ nhiều cấp độ tốc độ khác nhau tùy thuộc vào ứng dụng:
     \begin{itemize}
-        \item \textbf{Standard Mode (Sm):} Tốc độ lên đến 100 kbps (phổ biến nhất).
-        \item \textbf{Fast Mode (Fm):} Tốc độ lên đến 400 kbps.
-        \item \textbf{Fast Mode Plus (Fm+):} Tốc độ lên đến 1 Mbps.
-        \item \textbf{High Speed Mode (Hs):} Tốc độ lên đến 3.4 Mbps.
+        \item[] \textbf{Standard Mode (Sm):} Tốc độ lên đến 100 kbps (phổ biến nhất).
+        \item[] \textbf{Fast Mode (Fm):} Tốc độ lên đến 400 kbps.
+        \item[] \textbf{Fast Mode Plus (Fm+):} Tốc độ lên đến 1 Mbps.
+        \item[] \textbf{High Speed Mode (Hs):} Tốc độ lên đến 3.4 Mbps.
     \end{itemize}
     Trong phạm vi đồ án này, các ngoại vi cảm biến và cấu hình Camera thường sử dụng Standard Mode. 
 
@@ -644,10 +644,10 @@ Hệ thống xuất hình ảnh bao gồm hai tầng xử lý chính: tầng log
 \textbf{1. Giao diện đầu vào (FPGA $\rightarrow$ ADV7513):} \\
 FPGA đóng vai trò là nguồn video (Video Source), tạo ra các tín hiệu video số dạng song song. Các tín hiệu này bao gồm:
 \begin{itemize}
-    \item \textbf{Video Data Bus (D[23:0]):} Bus dữ liệu màu song song. ADV7513 hỗ trợ nhiều định dạng đầu vào như RGB 4:4:4, YCbCr 4:2:2. Trong đồ án này, ta sử dụng định dạng \textbf{RGB 24-bit} (8 bit cho mỗi kênh màu).
-    \item \textbf{Sync Signals:} Tín hiệu đồng bộ ngang (\textbf{HSYNC}) và đồng bộ dọc (\textbf{VSYNC}), tương tự như chuẩn VGA truyền thống.
-    \item \textbf{DE (Data Enable):} Tín hiệu cho phép dữ liệu. Mức cao (High) báo hiệu rằng dữ liệu trên bus D[23:0] là điểm ảnh tích cực (Active Pixel) và được hiển thị. Mức thấp tương ứng với khoảng thời gian xóa (Blanking period).
-    \item \textbf{CLK (Pixel Clock):} Xung nhịp điểm ảnh do FPGA cấp để đồng bộ hóa dữ liệu gửi sang ADV7513.
+    \item[] \textbf{Video Data Bus (D[23:0]):} Bus dữ liệu màu song song. ADV7513 hỗ trợ nhiều định dạng đầu vào như RGB 4:4:4, YCbCr 4:2:2. Trong đồ án này, ta sử dụng định dạng \textbf{RGB 24-bit} (8 bit cho mỗi kênh màu).
+    \item[] \textbf{Sync Signals:} Tín hiệu đồng bộ ngang (\textbf{HSYNC}) và đồng bộ dọc (\textbf{VSYNC}), tương tự như chuẩn VGA truyền thống.
+    \item[] \textbf{DE (Data Enable):} Tín hiệu cho phép dữ liệu. Mức cao (High) báo hiệu rằng dữ liệu trên bus D[23:0] là điểm ảnh tích cực (Active Pixel) và được hiển thị. Mức thấp tương ứng với khoảng thời gian xóa (Blanking period).
+    \item[] \textbf{CLK (Pixel Clock):} Xung nhịp điểm ảnh do FPGA cấp để đồng bộ hóa dữ liệu gửi sang ADV7513.
 \end{itemize}
 
 \textbf{2. Giao diện đầu ra (ADV7513 $\rightarrow$ HDMI Connector):} \\
@@ -657,8 +657,8 @@ Chip ADV7513 thực hiện mã hóa dữ liệu song song từ FPGA thành tín 
 Ở phía đầu ra vật lý, HDMI sử dụng công nghệ \textbf{TMDS (Transition Minimized Differential Signaling)} - Truyền tín hiệu vi sai cực tiểu hóa chuyển mạch. Công nghệ này giúp truyền tải dữ liệu băng thông lớn với khả năng kháng nhiễu cao. Cáp HDMI tiêu chuẩn bao gồm 4 cặp dây vi sai:
 
 \begin{itemize}
-    \item \textbf{TMDS Clock Channel:} Một cặp dây truyền xung nhịp tham chiếu. Tần số của kênh này thường bằng 1/10 tốc độ bit dữ liệu (đối với HDMI 1.4).
-    \item \textbf{TMDS Data Channels (0, 1, 2):} Ba cặp dây truyền dữ liệu màu (Red, Green, Blue) và thông tin đồng bộ.
+    \item[] \textbf{TMDS Clock Channel:} Một cặp dây truyền xung nhịp tham chiếu. Tần số của kênh này thường bằng 1/10 tốc độ bit dữ liệu (đối với HDMI 1.4).
+    \item[] \textbf{TMDS Data Channels (0, 1, 2):} Ba cặp dây truyền dữ liệu màu (Red, Green, Blue) và thông tin đồng bộ.
 \end{itemize}
 
 Chip ADV7513 sử dụng thuật toán mã hóa \textbf{8b/10b}, chuyển đổi mỗi 8-bit dữ liệu màu thành 10-bit ký tự TMDS nhằm cân bằng dòng DC và giảm thiểu nhiễu điện từ (EMI) trên đường truyền.
@@ -667,9 +667,9 @@ Chip ADV7513 sử dụng thuật toán mã hóa \textbf{8b/10b}, chuyển đổi
 Chip ADV7513 không thể tự động hoạt động ngay khi cấp nguồn mà cần được cấu hình thông qua giao thức \textbf{I2C}. FPGA đóng vai trò là I2C Master sẽ ghi vào các thanh ghi của ADV7513 để thiết lập các thông số quan trọng:
 
 \begin{itemize}
-    \item \textbf{Power Management:} Kích hoạt các khối chức năng bên trong chip (mặc định chip ở trạng thái ngủ để tiết kiệm điện).
-    \item \textbf{Input Video Format:} Khai báo cho chip biết FPGA đang gửi dữ liệu dạng RGB hay YCbCr, căn lề trái hay phải.
-    \item \textbf{Color Space Conversion (CSC):} ADV7513 có bộ xử lý phần cứng để chuyển đổi không gian màu (ví dụ từ RGB sang YCbCr cho TV) nếu cần thiết.
+    \item[] \textbf{Power Management:} Kích hoạt các khối chức năng bên trong chip (mặc định chip ở trạng thái ngủ để tiết kiệm điện).
+    \item[] \textbf{Input Video Format:} Khai báo cho chip biết FPGA đang gửi dữ liệu dạng RGB hay YCbCr, căn lề trái hay phải.
+    \item[] \textbf{Color Space Conversion (CSC):} ADV7513 có bộ xử lý phần cứng để chuyển đổi không gian màu (ví dụ từ RGB sang YCbCr cho TV) nếu cần thiết.
 \end{itemize}
 
 Việc thiết kế bộ điều khiển I2C (như đã trình bày ở phần 2.x) là điều kiện tiên quyết để khởi động hệ thống hiển thị HDMI.

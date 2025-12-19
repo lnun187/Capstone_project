@@ -5,8 +5,8 @@ RISC-V là một kiến trúc tập lệnh (ISA - Instruction Set Architecture) 
 
 Đặc điểm cốt lõi của RISC-V là tính mô-đun hóa và khả năng mở rộng. Kiến trúc này không định nghĩa một tập lệnh khổng lồ duy nhất, mà chia thành:
 \begin{itemize}
-    \item \textbf{Tập lệnh cơ sở (Base ISA):} Là phần cứng tối thiểu bắt buộc phải có để một vi xử lý được gọi là RISC-V. Đối với các ứng dụng nhúng 32-bit, chuẩn này là \textbf{RV32I} (Base Integer). Nó cung cấp đầy đủ các lệnh để thực thi tính toán nguyên, truy cập bộ nhớ và điều khiển luồng chương trình.
-    \item \textbf{Các phần mở rộng (Extensions):} Là các mô-đun tùy chọn để tăng cường sức mạnh xử lý. Ví dụ: M (Integer Multiplication/Division), A (Atomic instructions), F (Single-precision Floating-point), C (Compressed instructions - nén lệnh 16-bit để tiết kiệm bộ nhớ).
+    \item[] \textbf{Tập lệnh cơ sở (Base ISA):} Là phần cứng tối thiểu bắt buộc phải có để một vi xử lý được gọi là RISC-V. Đối với các ứng dụng nhúng 32-bit, chuẩn này là \textbf{RV32I} (Base Integer). Nó cung cấp đầy đủ các lệnh để thực thi tính toán nguyên, truy cập bộ nhớ và điều khiển luồng chương trình.
+    \item[] \textbf{Các phần mở rộng (Extensions):} Là các mô-đun tùy chọn để tăng cường sức mạnh xử lý. Ví dụ: M (Integer Multiplication/Division), A (Atomic instructions), F (Single-precision Floating-point), C (Compressed instructions - nén lệnh 16-bit để tiết kiệm bộ nhớ).
 \end{itemize}
 Sự kết hợp này tạo nên chuỗi định danh cho vi xử lý, ví dụ \textbf{RV32IMAC} biểu thị vi xử lý 32-bit có hỗ trợ nhân chia, thao tác nguyên tử và lệnh nén.
 
@@ -45,8 +45,8 @@ RV32I cung cấp 32 thanh ghi, được đánh số từ \texttt{x0} đến \tex
 
 Trong đó:
 \begin{itemize}
-    \item \textbf{Caller-saved:} Giá trị không được bảo toàn qua lời gọi hàm (hàm con có thể ghi đè).
-    \item \textbf{Callee-saved:} Giá trị phải được bảo toàn (nếu hàm con muốn dùng, phải lưu ra stack trước và khôi phục lại trước khi return).
+    \item[] \textbf{Caller-saved:} Giá trị không được bảo toàn qua lời gọi hàm (hàm con có thể ghi đè).
+    \item[] \textbf{Callee-saved:} Giá trị phải được bảo toàn (nếu hàm con muốn dùng, phải lưu ra stack trước và khôi phục lại trước khi return).
 \end{itemize}
 
 \subsection{Đặc tả tập lệnh cơ sở RV32I}
@@ -75,12 +75,12 @@ RISC-V sử dụng 6 định dạng lệnh cơ bản (R, I, S, B, U, J). Điểm
 
 Dưới đây là giải thích chi tiết ý nghĩa của từng loại định dạng lệnh:
 \begin{itemize}
-    \item \textbf{R-type (Register):} Dùng cho các lệnh thao tác trực tiếp giữa thanh ghi và thanh ghi (ví dụ: \texttt{add x1, x2, x3}).
-    \item \textbf{I-type (Immediate):} Dùng cho các lệnh thao tác với hằng số ngắn (Immediate) và các lệnh nạp dữ liệu (Load) từ bộ nhớ.
-    \item \textbf{S-type (Store):} Dùng chuyên biệt cho các lệnh lưu dữ liệu từ thanh ghi vào bộ nhớ.
-    \item \textbf{B-type (Branch):} Dùng cho các lệnh rẽ nhánh có điều kiện (ví dụ: so sánh bằng, so sánh lớn hơn).
-    \item \textbf{U-type (Upper Immediate):} Dùng để thao tác với các hằng số lớn (20-bit cao), thường dùng để nạp địa chỉ nền.
-    \item \textbf{J-type (Jump):} Dùng cho các lệnh nhảy vô điều kiện (dùng trong gọi hàm hoặc vòng lặp).
+    \item[] \textbf{R-type (Register):} Dùng cho các lệnh thao tác trực tiếp giữa thanh ghi và thanh ghi (ví dụ: \texttt{add x1, x2, x3}).
+    \item[] \textbf{I-type (Immediate):} Dùng cho các lệnh thao tác với hằng số ngắn (Immediate) và các lệnh nạp dữ liệu (Load) từ bộ nhớ.
+    \item[] \textbf{S-type (Store):} Dùng chuyên biệt cho các lệnh lưu dữ liệu từ thanh ghi vào bộ nhớ.
+    \item[] \textbf{B-type (Branch):} Dùng cho các lệnh rẽ nhánh có điều kiện (ví dụ: so sánh bằng, so sánh lớn hơn).
+    \item[] \textbf{U-type (Upper Immediate):} Dùng để thao tác với các hằng số lớn (20-bit cao), thường dùng để nạp địa chỉ nền.
+    \item[] \textbf{J-type (Jump):} Dùng cho các lệnh nhảy vô điều kiện (dùng trong gọi hàm hoặc vòng lặp).
 \end{itemize}
 
 Một kỹ thuật quan trọng khác là việc mã hóa giá trị tức thời (Immediate Encoding). Trong các lệnh dạng S và B, các bit giá trị tức thời bị phân mảnh và xáo trộn. Tuy nhiên, việc xáo trộn này được thiết kế có chủ đích để các bit này luôn tương ứng với cùng một vị trí bit đầu ra của bộ tạo giá trị tức thời (Immediate Generator), giúp giảm số lượng tầng logic (Fan-out) trong phần cứng.
@@ -90,23 +90,23 @@ Một kỹ thuật quan trọng khác là việc mã hóa giá trị tức thờ
 \textbf{1. Lệnh tính toán số nguyên (Integer Computational Instructions):} \\
 Nhóm lệnh này thực hiện các phép toán số học và logic. Chúng không gây ra ngoại lệ số học và không thay đổi bất kỳ cờ trạng thái nào (RISC-V không sử dụng thanh ghi cờ như ARM/x86).
 \begin{itemize}
-    \item \textbf{Tính toán với hằng số (I-Type):} \texttt{ADDI}, \texttt{ANDI}, \texttt{ORI}, \texttt{XORI}, \texttt{SLTI} (Set Less Than Immediate). Lệnh \texttt{LUI} (Load Upper Immediate) dùng để nạp 20-bit cao vào thanh ghi.
-    \item \textbf{Tính toán giữa các thanh ghi (R-Type):} \texttt{ADD}, \texttt{SUB}, \texttt{AND}, \texttt{OR}, \texttt{XOR}. Lệnh \texttt{SLT/SLTU} so sánh hai thanh ghi và ghi giá trị 1 vào đích nếu nhỏ hơn, ngược lại ghi 0.
-    \item \textbf{Dịch bit:} \texttt{SLL/SLLI} (Dịch trái logic), \texttt{SRL/SRLI} (Dịch phải logic - chèn 0), \texttt{SRA/SRAI} (Dịch phải số học - giữ nguyên dấu).
+    \item[] \textbf{Tính toán với hằng số (I-Type):} \texttt{ADDI}, \texttt{ANDI}, \texttt{ORI}, \texttt{XORI}, \texttt{SLTI} (Set Less Than Immediate). Lệnh \texttt{LUI} (Load Upper Immediate) dùng để nạp 20-bit cao vào thanh ghi.
+    \item[] \textbf{Tính toán giữa các thanh ghi (R-Type):} \texttt{ADD}, \texttt{SUB}, \texttt{AND}, \texttt{OR}, \texttt{XOR}. Lệnh \texttt{SLT/SLTU} so sánh hai thanh ghi và ghi giá trị 1 vào đích nếu nhỏ hơn, ngược lại ghi 0.
+    \item[] \textbf{Dịch bit:} \texttt{SLL/SLLI} (Dịch trái logic), \texttt{SRL/SRLI} (Dịch phải logic - chèn 0), \texttt{SRA/SRAI} (Dịch phải số học - giữ nguyên dấu).
 \end{itemize}
 
 \textbf{2. Lệnh truy cập bộ nhớ (Load and Store Instructions):} \\
 RISC-V sử dụng kiến trúc Load-Store thuần túy. Việc tính toán địa chỉ bộ nhớ luôn thông qua công thức: $Address = rs1 + sign\_extend(imm)$.
 \begin{itemize}
-    \item \textbf{Load:} \texttt{LW} (32-bit), \texttt{LH} (16-bit), \texttt{LB} (8-bit). Các biến thể \texttt{LHU} và \texttt{LBU} dùng để nạp dữ liệu không dấu, trong đó phần bit cao của thanh ghi đích sẽ được điền 0 (Zero-extension) thay vì mở rộng dấu (Sign-extension).
-    \item \textbf{Store:} \texttt{SW}, \texttt{SH}, \texttt{SB}. Lệnh store chỉ lấy các bit thấp tương ứng trong thanh ghi nguồn để ghi vào bộ nhớ.
+    \item[] \textbf{Load:} \texttt{LW} (32-bit), \texttt{LH} (16-bit), \texttt{LB} (8-bit). Các biến thể \texttt{LHU} và \texttt{LBU} dùng để nạp dữ liệu không dấu, trong đó phần bit cao của thanh ghi đích sẽ được điền 0 (Zero-extension) thay vì mở rộng dấu (Sign-extension).
+    \item[] \textbf{Store:} \texttt{SW}, \texttt{SH}, \texttt{SB}. Lệnh store chỉ lấy các bit thấp tương ứng trong thanh ghi nguồn để ghi vào bộ nhớ.
 \end{itemize}
 
 \textbf{3. Lệnh điều khiển luồng (Control Transfer Instructions):} \\
 RISC-V khác biệt so với các kiến trúc cũ ở chỗ lệnh rẽ nhánh thực hiện so sánh trực tiếp hai thanh ghi.
 \begin{itemize}
-    \item \textbf{Rẽ nhánh có điều kiện (Branch):} \texttt{BEQ} (Bằng), \texttt{BNE} (Không bằng), \texttt{BLT/BGE} (So sánh có dấu), \texttt{BLTU/BGEU} (So sánh không dấu). Việc tách biệt so sánh có dấu và không dấu giúp lập trình viên kiểm soát chính xác các cấu trúc điều khiển.
-    \item \textbf{Nhảy vô điều kiện (Jump):} 
+    \item[] \textbf{Rẽ nhánh có điều kiện (Branch):} \texttt{BEQ} (Bằng), \texttt{BNE} (Không bằng), \texttt{BLT/BGE} (So sánh có dấu), \texttt{BLTU/BGEU} (So sánh không dấu). Việc tách biệt so sánh có dấu và không dấu giúp lập trình viên kiểm soát chính xác các cấu trúc điều khiển.
+    \item[] \textbf{Nhảy vô điều kiện (Jump):} 
     \begin{itemize}
         \item[] \texttt{JAL} (Jump and Link): Nhảy đến địa chỉ tương đối so với PC, đồng thời lưu địa chỉ lệnh kế tiếp (PC+4) vào thanh ghi \texttt{rd} (thường là \texttt{ra}).
         \item[] \texttt{JALR} (Jump and Link Register): Nhảy đến địa chỉ tuyệt đối được tính từ thanh ghi cơ sở + offset. Lệnh này hỗ trợ việc gọi hàm qua con trỏ hoặc quay về từ hàm (Return).

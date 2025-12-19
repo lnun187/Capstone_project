@@ -1,0 +1,45 @@
+% File: 4_phan_tich_va_kien_truc/4.2_kien_truc_tong_the.tex
+
+\subsection{Tổng quan kiến trúc SoC}
+Để hiện thực hóa các yêu cầu phân tích nêu trên, đề tài đề xuất kiến trúc hệ thống \textbf{SoC không đồng nhất (Heterogeneous SoC)}, kết hợp giữa tính linh hoạt trong điều khiển của vi xử lý mềm (Soft-core Processor) và sức mạnh tính toán song song của phần cứng chuyên dụng.
+
+\begin{figure}[H]
+    \centering
+    % Thay hình sơ đồ khối SoC của bạn vào đây
+    \includegraphics[width=1\linewidth]{3_phan_tich_va_kien_truc/image/AISoC-SoC.drawio.png} 
+    \caption{Sơ đồ mô-đun kiến trúc tổng thể của hệ thống SoC RISC-V EdgeAI}
+    \label{fig:soc_block_diagram}
+\end{figure}
+
+Hệ thống được tổ chức thành ba phân hệ chính hoạt động phối hợp chặt chẽ. Đầu tiên là \textbf{Center Processing Unit} với trung tâm là lõi vi xử lý PicoRV32. Phân hệ này đóng vai trò bộ não của hệ thống, chịu trách nhiệm khởi tạo, cấu hình các ngoại vi và quản lý giao tiếp người dùng.
+
+Tiếp theo là \textbf{Image Detector}, bao gồm khối Accelerator được thiết kế tùy biến để thực thi các phép toán nhân chập (Convolution) nặng nề nhất trong mạng nơ-ron và khối Video Streaming để quản lý luồng video vào từ Camera và hiện thị ra HDMI. 
+
+Cuối cùng là \textbf{Peripherals}, tập hợp các mô-đun giao tiếp và lưu trữ thiết yếu để đảm bảo tính hoàn chỉnh của một hệ thống máy tính nhúng. Phân hệ này tích hợp các bộ điều khiển giao diện chuẩn công nghiệp như \textbf{UART} cho mục đích gỡ lỗi và \textbf{I2C} để cấu hình tham số phần cứng. Đối với giao tiếp lưu trữ, hệ thống áp dụng kiến trúc phân tầng. Trước hết, bộ điều khiển \textbf{SPI} được sử dụng để kết nối với các thiết bị lưu trữ thứ cấp phổ biến như thẻ nhớ SD Card, phục vụ việc lưu trữ dữ liệu ảnh mẫu, chương trình điều khiển(Firmware) hoặc logs hệ thống. Tuy nhiên, để đáp ứng nhu cầu truy xuất băng thông lớn cho trọng số mạng nơ-ron, thiết kế tích hợp thêm mô-đun giao tiếp bộ nhớ tốc độ cao \textbf{OSPI}. Mô-đun này hỗ trợ các chế độ truyền dẫn tiên tiến (Octal-SPI hỗ trợ \textbf{DDR}), giúp tăng tốc độ truy suất bộ nhớ bên ngoài hiệu quả, giải quyết bài toán giới hạn phải xài tài nguyên bộ nhớ nội bộ (BRAM) trên FPGA.
+
+Để đáp ứng yêu cầu khắt khe về định thời trong các ứng dụng thời gian thực, mô-đun \textbf{Timer} được thiết kế với độ chính xác cao dựa trên xung nhịp hệ thống. Chức năng của mô-đun là tạo ra các khoảng trễ (Delay) chính xác cho các giao thức giao tiếp hoặc dùng đề làm Software Timer.
+
+Cuối cùng, mô-đun \textbf{GPIO} cung cấp giao diện điều khiển linh hoạt ở cấp độ bit. Mặc dù có cấu trúc đơn giản, GPIO đóng vai trò không thể thiếu trong việc tương tác trực tiếp với người dùng thông qua hệ thống đèn LED báo trạng thái và nút nhấn điều khiển. Ngoài ra, các chân GPIO còn được quy hoạch để điều khiển các tín hiệu phần cứng quan trọng như tín hiệu Reset cứng cho Camera hay tín hiệu kích hoạt cho màn hình, đảm bảo quy trình khởi động và vận hành của các phân hệ diễn ra theo đúng trình tự thiết kế.
+
+
+
+\subsection{Tổ chức hệ thống Bus phân tầng}
+Thách thức lớn nhất trong thiết kế này là giải quyết sự tranh chấp băng thông bộ nhớ giữa vi xử lý, bộ gia tốc AI và luồng video thời gian thực. Để khắc phục vấn đề này, kiến trúc Bus được thiết kế theo mô hình \textbf{Bus phân tầng (Hierarchical Bus Architecture)}.
+
+Tầng thứ nhất là \textbf{Bus Ngoại vi (Peripheral Bus)}, sử dụng giao thức \textbf{AXI4-Lite} (biểu diễn bằng các đường kết nối màu xanh dương trong sơ đồ) để kết nối CPU với các ngoại vi bao gồm UART, I2C Master, SPI/OSPI Controller, Timer và GPIO. Các giao dịch trên tuyến bus này chủ yếu là các lệnh đọc/ghi thanh ghi cấu hình, do đó không yêu cầu băng thông lớn và vi xử lý đóng vai trò là Master (AXI4-Lite có hỗ trợ Multi Master và Multi Slave).
+
+Tầng thứ hai là \textbf{Bus Dữ liệu Tốc độ cao (High-Performance Bus)}, được hiện thực chủ yếu dựa trên giao thức \textbf{AXI4-Stream} (biểu diễn bằng các đường kết nối màu xám trong sơ đồ). Đây là giao thức truyền dẫn dòng dữ liệu một chiều không cần địa chỉ, cho phép loại bỏ các chu kỳ trễ (Latency) phát sinh do quá trình bắt tay địa chỉ, từ đó tối đa hóa băng thông cho hệ thống. Tuyến bus này kết nối trực tiếp các thành phần tiêu thụ dữ liệu lớn thông qua cơ chế truy cập bộ nhớ trực tiếp (DMA): Bộ điều khiển Camera (Video DMA Write), Bộ điều khiển truy suất bộ nhớ (DRAM DMA) và Bộ gia tốc AI.
+
+% \subsection{Cơ chế quản lý luồng dữ liệu chia sẻ}
+% Để giải quyết bài toán truy cập dữ liệu đồng thời cho hai tác vụ có đặc thù khác nhau là hiển thị (yêu cầu thời gian thực) và tính toán AI (yêu cầu thông lượng cao), hệ thống áp dụng cơ chế \textbf{Bộ đệm khung hình trung tâm (Shared Frame Buffer)}.
+
+% Trung tâm của cơ chế này là một vùng nhớ đệm (Frame Buffer) nằm trong bộ nhớ Bram, đóng vai trò là điểm tập kết dữ liệu duy nhất. Quá trình luân chuyển dữ liệu được thực hiện qua hai tuyến độc lập:
+
+% \textbf{Tuyến Video (Video Path):} Được quản lý bởi \textbf{Bộ điều khiển Video (Video Controller)}. Khối này đảm nhiệm vai trò kép:
+% \begin{itemize}
+%     \item \textit{Luồng Ghi (Write Channel):} Tiếp nhận dữ liệu thô từ Camera, thực hiện đóng gói và ghi trực tiếp vào Frame Buffer.
+%     \item \textit{Luồng Đọc hiển thị (Read Channel):} Tự động đọc dữ liệu từ Frame Buffer theo quy tắc quét dòng (Raster Scan) và gửi đến cổng HDMI. Quá trình này được thực hiện liên tục và đồng bộ với xung nhịp Pixel Clock để đảm bảo tín hiệu hình ảnh không bị gián đoạn.
+% \end{itemize}
+
+% \textbf{Tuyến Tăng tốc (Acceleration Path):} Được quản lý bởi một \textbf{DMA riêng biệt (Dedicated DMA)}.
+% Khác với luồng hiển thị phải tuân theo định thời VESA, bộ gia tốc (Accelerator) cần dữ liệu đầu vào dưới dạng các khối (Blocks) hoặc dòng (Lines) với tốc độ nhanh nhất có thể. Do đó, một kênh DMA riêng được thiết lập để đọc dữ liệu từ chính Frame Buffer nói trên và chuyển trực tiếp vào bộ nhớ cục bộ của Accelerator. Việc sử dụng DMA riêng giúp tách biệt hoàn toàn miền thời gian của việc hiển thị và việc tính toán, cho phép bộ gia tốc hoạt động ở hiệu suất tối đa mà không ảnh hưởng đến chất lượng hình ảnh đầu ra.
