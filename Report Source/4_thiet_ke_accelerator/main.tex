@@ -98,7 +98,7 @@ Thực chất là phép chập chuẩn với kernel $1 \times 1$. Nó chịu tr�
 \section{Chiến lược Phân mảnh và Quản lý Dòng dữ liệu}
 
 Do tài nguyên bộ nhớ on-chip (BRAM) trên FPGA là hữu hạn, không thể nạp toàn bộ Feature Map của các mạng lớn vào cùng lúc. Chúng tôi áp dụng chiến lược \textbf{Phân mảnh dữ liệu (Tiling)} kết hợp với cơ chế quản lý bộ nhớ \textbf{Ping-Pong} để xử lý vấn đề này.
-
+Bên cạnh đó, vì kích thước ifmap ở các layer rất đa dạng nên việc cố định kích thước input tile sẽ gây lãng phí tài nguyên tính toán. Vì vậy chúng tôi đề xuất một phương pháp phân mảnh linh hoạt theo chiều dọc của ảnh đầu vào, giúp tận dụng tối đa tài nguyên phần cứng.
 \subsection{Chiến lược Phân mảnh không gian (Space Partitioning)}
 
 Chúng tôi định nghĩa một "Tile" (Mảnh dữ liệu) là đơn vị dữ liệu cơ sở được nạp và xử lý trong một lần. Không gian tính toán được chia nhỏ theo 3 chiều:
@@ -244,13 +244,13 @@ Initialize pointers: $Buf_{curr} \leftarrow A$, $Buf_{next} \leftarrow B$\;
 
 \begin{figure}[h!]
     \centering
-    \begin{subfigure}[b]{0.8\textwidth}
+    \begin{subfigure}[b]{1\textwidth}
         \centering
         \includegraphics[width=\linewidth]{image/4/std_conv_pass.png}
         \caption{Standard Convolution ($H=21, M=2$)}
     \end{subfigure}
     \par\bigskip
-    \begin{subfigure}[b]{0.8\textwidth} 
+    \begin{subfigure}[b]{1\textwidth} 
         \centering
         \includegraphics[width=\linewidth]{image/4/dw_conv_pass.png}
         \caption{Depthwise Convolution ($H=21, M=21$)}
@@ -295,7 +295,7 @@ Khối PA tận dụng tính song song mức bộ lọc (Filter Parallelism). D�
 \subsubsection{Đơn vị xử lý (Process Unit - PU)}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.6\linewidth]{image/4/pu_arch.png} 
+    \includegraphics[width=1\linewidth]{image/4/pu_arch.png} 
     \caption{Khối PU chứa 11 PE trong trường hợp chạy model AlexNet.}
     \label{fig:pu_arch}
 \end{figure}
@@ -369,7 +369,7 @@ Mô hình thời gian hoàn thành 1 layer được phân tích dựa trên sự
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=1.0\linewidth]{image/4/image_f8eee0.png} 
+    \includegraphics[width=1.2\linewidth]{image/4/image_f8eee0.png} 
     \caption{Biểu đồ thời gian thực thi trong 3 trường hợp: (Trên cùng) Memory Bound 1, (Giữa) Memory Bound 2, (Dưới cùng) Compute Bound.}
     \label{fig:timing_diagrams}
 \end{figure}
@@ -390,42 +390,21 @@ Xảy ra khi thời gian nạp dữ liệu lớn hơn thời gian tính toán ($
         T_{total} \approx \left[ \left( H \times W \times C \right) + \left( H_{out} \times W_{out} \times C \right) \right] \times b
     \end{equation}
 \end{itemize}
-
+Lưu ý: Công thức này chỉ áp dụng khi số lượng pass cần để download 1 pass = 1 (tức là trong trường hợp Depthwise Convolution với hoặc $C \leq T_k$). Với trường hợp còn lại, công thức sẽ phức tạp hơn, tạm thời chưa được phân tích.\\
 \textbf{Trường hợp 2: Memory Bound 2 (Nghẽn băng thông trung bình)} \\
 Xảy ra khi thời gian tính toán nhanh hơn tổng thời gian nạp và ghi, nhưng chậm hơn thời gian nạp ($T_{load} < T_{comp} < T_{load} + T_{store}$). Lúc này, thời gian thực thi bao gồm thời gian nạp, ghi và một phần chênh lệch thời gian tính toán.
 \begin{equation}
-    T_{total} \approx T_{total\_IO} + (T_{comp} - T_{load\_first\_pass})
+    T_{total} \approx T_{total\_IO} + (T_{comp} - T_{store} + (T_{comp} - T_{load})
 \end{equation}
 Trong đó $T_{total\_IO}$ được tính theo công thức tại Trường hợp 1 tùy thuộc loại Convolution.
-
+Lưu ý: Công thức này chỉ áp dụng khi số lượng pass cần để download 1 pass = 1 (tức là trong trường hợp Depthwise Convolution với hoặc $C \leq T_k$). Với trường hợp còn lại, công thức sẽ phức tạp hơn, tạm thời chưa được phân tích.\\
 \textbf{Trường hợp 3: Compute Bound (Nghẽn tính toán)} \\
 Xảy ra khi thời gian tính toán lớn hơn tổng thời gian nạp và ghi ($T_{comp} > T_{load} + T_{store}$). Lúc này, toàn bộ thời gian truyền tải dữ liệu (trừ pass đầu và cuối) được che giấu hoàn toàn bên dưới thời gian tính toán.
 
 Công thức tổng quát:
 \begin{equation}
-    T_{total} = T_{load\_first\_pass} + \sum_{all\_passes} T_{comp} + T_{store\_residual}
+    T_{total} = T_{load} + \sum_{all\_passes} T_{comp} + T_{store}
 \end{equation}
-
-\begin{itemize}
-    \item \textbf{Đối với Standard Convolution:}
-    \begin{equation}
-        T_{total} \approx (T_h W T_c b) + \left( \left\lceil \frac{H}{T_h} \right\rceil \left\lceil \frac{C}{T_c} \right\rceil \left\lceil \frac{N_f}{T_m} \right\rceil \times T_{comp} \right) + T_{res\_std}
-    \end{equation}
-    Với $T_{res\_std}$ là thời gian ghi phần dư cuối cùng phụ thuộc số filter dư ($N_f \% T_m$):
-    \begin{equation}
-        T_{res\_std} = \left( \left\lfloor \frac{H \% T_h}{Str} \right\rfloor + 1 \right) \times W_{out} \times (N_f \% T_m) \times b
-    \end{equation}
-
-    \item \textbf{Đối với Depthwise Convolution:}
-    Do không có vòng lặp tích lũy kênh đầu vào ($C/T_c$), tổng số pass giảm đi đáng kể:
-    \begin{equation}
-        T_{total} \approx (T_h W T_c b) + \left( \left\lceil \frac{H}{T_h} \right\rceil \left\lceil \frac{C}{T_m} \right\rceil \times T_{comp} \right) + T_{res\_dw}
-    \end{equation}
-    Với $T_{res\_dw}$ là thời gian ghi phần dư cuối cùng phụ thuộc số kênh dư ($C \% T_m$):
-    \begin{equation}
-        T_{res\_dw} = \left( \left\lfloor \frac{H \% T_h}{Str} \right\rfloor + 1 \right) \times W_{out} \times (C \% T_m) \times b
-    \end{equation}
-\end{itemize}
 
 \subsubsection{Tổng thời gian toàn mạng (Model Latency)}
 Thời gian thực thi của toàn bộ mô hình (Model) bao gồm $N$ lớp tích chập là tổng thời gian của từng lớp, do sự phụ thuộc dữ liệu tuần tự giữa các lớp (Layer $i+1$ cần OFM của Layer $i$ làm IFM):
@@ -438,7 +417,7 @@ Mục tiêu của bài toán tối ưu hóa thiết kế là tìm bộ tham số
 
 Để vận hành hệ thống, chúng tôi xây dựng công cụ phần mềm nhằm tìm kiếm bộ tham số phân mảnh tối ưu $\mathbf{S}_i = \{T_{h}, T_{c}, T_{m}\}$ cho từng lớp.
 
-Kết quả tối ưu được đóng gói thành chuỗi lệnh (Descriptor) để nạp xuống Controller sẽ có dạng như sau:
+Kết quả tối ưu được đóng gói thành chuỗi lệnh (Descriptor) để nạp xuống Controller sẽ có dạng như sau (chỉ có tác dụng tượng trưng ý tưởng, chưa chắc là mã thực thi sẽ được triển khai thật sự):
 
 \begin{table}[H]
 \centering
