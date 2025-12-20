@@ -390,14 +390,14 @@ Xảy ra khi thời gian nạp dữ liệu lớn hơn thời gian tính toán ($
         T_{total} \approx \left[ \left( H \times W \times C \right) + \left( H_{out} \times W_{out} \times C \right) \right] \times b
     \end{equation}
 \end{itemize}
-Lưu ý: Công thức này chỉ áp dụng khi số lượng pass cần để download 1 pass = 1 (tức là trong trường hợp Depthwise Convolution với hoặc $C \leq T_k$). Với trường hợp còn lại, công thức sẽ phức tạp hơn, tạm thời chưa được phân tích.\\
+Lưu ý: Công thức này chỉ áp dụng khi số lượng pass cần để download 1 pass = 1 (tức là trong trường hợp Depthwise Convolution với hoặc $C \leq T_k$). Với trường hợp còn lại, công thức sẽ phức tạp hơn, tạm thời không thảo luận tới.\\
 \textbf{Trường hợp 2: Memory Bound 2 (Nghẽn băng thông trung bình)} \\
 Xảy ra khi thời gian tính toán nhanh hơn tổng thời gian nạp và ghi, nhưng chậm hơn thời gian nạp ($T_{load} < T_{comp} < T_{load} + T_{store}$). Lúc này, thời gian thực thi bao gồm thời gian nạp, ghi và một phần chênh lệch thời gian tính toán.
 \begin{equation}
     T_{total} \approx T_{total\_IO} + (T_{comp} - T_{store} + (T_{comp} - T_{load})
 \end{equation}
 Trong đó $T_{total\_IO}$ được tính theo công thức tại Trường hợp 1 tùy thuộc loại Convolution.
-Lưu ý: Công thức này chỉ áp dụng khi số lượng pass cần để download 1 pass = 1 (tức là trong trường hợp Depthwise Convolution với hoặc $C \leq T_k$). Với trường hợp còn lại, công thức sẽ phức tạp hơn, tạm thời chưa được phân tích.\\
+Lưu ý: Công thức này chỉ áp dụng khi số lượng pass cần để download 1 pass = 1 (tức là trong trường hợp Depthwise Convolution với hoặc $C \leq T_k$). Với trường hợp còn lại, công thức sẽ phức tạp hơn,  tạm thời không thảo luận tới.\\
 \textbf{Trường hợp 3: Compute Bound (Nghẽn tính toán)} \\
 Xảy ra khi thời gian tính toán lớn hơn tổng thời gian nạp và ghi ($T_{comp} > T_{load} + T_{store}$). Lúc này, toàn bộ thời gian truyền tải dữ liệu (trừ pass đầu và cuối) được che giấu hoàn toàn bên dưới thời gian tính toán.
 
