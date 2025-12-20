@@ -1,0 +1,110 @@
+% File: 5_hien_thuc_soc/5.3_thiet_ke_bus.tex
+
+% \section{Thiết kế hệ thống Bus kết nối AXI4-Lite}
+
+% File: 5_hien_thuc_soc/5.3_thiet_ke_bus.tex
+
+% \section{Thiết kế hệ thống Bus kết nối AXI4-Lite}
+
+Hệ thống Bus đóng vai trò là hạ tầng giao tiếp xương sống của SoC, thực hiện việc kết nối và điều phối luồng dữ liệu giữa lõi vi xử lý PicoRV32 cùng các Master khác với các phân hệ ngoại vi và bộ nhớ nội. Để đảm bảo tính chuẩn hóa, hiệu năng truyền tải và khả năng tùy biến cao, đề tài đã hiện thực hóa một bộ \textbf{AXI4-Lite Interconnect} hoàn chỉnh. Hệ thống này không chỉ tuân thủ chặt chẽ giao thức bắt tay (handshake) của chuẩn AXI4-Lite mà còn tích hợp các cơ chế quản lý giao dịch phức tạp để tối ưu hóa băng thông và đảm bảo an toàn vận hành thông qua ba mô hình kết nối đặc thù.
+
+\subsection{Mô hình điều phối đơn Master - đa Slave ($1 \times N$)}
+Mô hình kết nối $1 \times N$ đóng vai trò là bộ định tuyến dữ liệu từ một Master duy nhất đến hệ thống nhiều Slaves ngoại vi. Trong cấu trúc này, chức năng cốt lõi là giải mã địa chỉ (Address Decoding) dựa trên tham số cấu hình \texttt{ADDR\_MAP\_SLAVES}. Khi Master khởi tạo một giao dịch, các khối điều phối \textbf{AW\_dispatcher} và \textbf{AR\_dispatcher} sẽ phân tích địa chỉ đích để xác định chính xác Slave cần tương tác. Cơ chế này cho phép vi xử lý trung tâm quản lý toàn bộ tài nguyên hệ thống một cách thống nhất trên không gian địa chỉ phẳng, đồng thời tối ưu hóa tài nguyên logic bằng cách loại bỏ các bộ trọng tài phức tạp không cần thiết khi chỉ có một thực thể điều khiển.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{5_hien_thuc_soc/image/1xn.png}
+    \caption{a. Sơ đồ khối mô hình kết nối AXI4-Lite $1 \times N$}
+    \label{fig:axi_1_n}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{5_hien_thuc_soc/image/axi_lite_interconnect_circuit-1-N version2.drawio.png}
+    \caption{b. Sơ đồ khối mô hình kết nối AXI4-Lite $1 \times N$}
+    \label{fig:axi_1_n}
+\end{figure}
+
+\subsection{Mô hình trọng tài đa Master - đơn Slave ($N \times 1$)}
+Ngược lại với mô hình trên, mô hình này giải quyết bài toán xung đột truy cập khi nhiều Master (như CPU và các bộ gia tốc DMA) cùng muốn tương tác với một tài nguyên dùng chung duy nhất, điển hình là bộ nhớ nội. Tại đây, trọng tâm của thiết kế nằm ở bộ trọng tài (\textbf{Arbiter}) hoạt động theo thuật toán xoay vòng Round-Robin. Logic này đảm bảo tính công bằng trong việc cấp quyền chiếm giữ bus (\texttt{grant\_permission}), triệt tiêu hiện tượng nghẽn mạch và đảm bảo rằng không có Master nào chiếm dụng tài nguyên quá lâu gây ảnh hưởng đến tính thời gian thực của hệ thống. Sự kết hợp giữa bộ đếm \texttt{counter\_arbiter} và các mạng lưới Multiplexer giúp luân chuyển dữ liệu từ Master được chọn đến Slave một cách mượt mà và chính xác.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{5_hien_thuc_soc/image/nx1.png}
+    \caption{a. Sơ đồ khối cơ chế trọng tài trong mô hình $N \times 1$}
+    \label{fig:axi_n_1}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{5_hien_thuc_soc/image/axi_lite_interconnect_circuit-Page-9.drawio.png}
+    \caption{b. Sơ đồ khối cơ chế trọng tài trong mô hình $N \times 1$}
+    \label{fig:axi_n_1}
+\end{figure}
+
+
+\subsection{Mô hình phức hợp đa Master - đa Slave ($N \times M$)}
+Mô hình đa Master - đa Slave ($N \times M$) đại diện cho cấu trúc kết nối tổng quát và linh hoạt nhất trong hệ thống SoC, được hiện thực hóa bằng phương pháp kết hợp phân tầng (cascading) hai mô hình cơ sở $1 \times N$ và $N \times 1$. Khi hệ thống được cấu hình với số lượng Master lớn hơn một, một quy trình xử lý luồng dữ liệu hai giai đoạn sẽ được thiết lập. 
+
+Ở giai đoạn đầu tiên, tầng $N \times 1$ đảm nhiệm vai trò trọng tài để điều phối và lựa chọn một yêu cầu giao dịch duy nhất từ các Master đang cùng truy cập bus. Sau khi Master được cấp quyền truy cập được xác định, luồng tín hiệu sẽ được chuyển tiếp qua tầng $1 \times N$. Tại đây, hệ thống tiếp tục thực hiện các thao tác giải mã địa chỉ và dẫn hướng dữ liệu đến đúng thiết bị Slave mục tiêu trong mạng lưới $M$ ngoại vi.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{5_hien_thuc_soc/image/nxn.png}
+    \caption{a. Kiến trúc kết hợp Cascaded Interconnect cho mô hình đa Master - đa Slave}
+    \label{fig:axi_n_m}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{5_hien_thuc_soc/image/axi_lite_interconnect_circuit-Page-10.drawio.png}
+    \caption{b. Kiến trúc kết hợp Cascaded Interconnect cho mô hình đa Master - đa Slave}
+    \label{fig:axi_n_m}
+\end{figure}
+
+
+
+% \begin{figure}[H]
+%     \centering
+%     % \includegraphics[width=0.9\textwidth]{figures/axi_n_m.png}
+%     \caption{Kiến trúc kết hợp Cascaded Interconnect cho mô hình đa Master - đa Slave}
+%     \label{fig:axi_n_m}
+% \end{figure}
+
+Việc áp dụng kiến trúc phân tầng này mang lại khả năng mở rộng quy mô cực kỳ linh hoạt cho SoC. Người thiết kế có thể dễ dàng thay đổi số lượng cổng Master và Slave thông qua các tham số \texttt{NUM\_MASTERS} và \texttt{NUM\_SLAVES} mà không cần can thiệp vào cấu trúc logic cốt lõi. Bên cạnh đó, việc tách biệt rõ rệt giữa logic quản lý xung đột truy cập và logic định tuyến dữ liệu giúp tối ưu hóa các đường trễ tín hiệu (Critical Path). Đây là yếu tố then chốt giúp thiết kế bus đáp ứng được các ràng buộc khắt khe về định thời, đảm bảo hệ thống vận hành ổn định tại tần số xung nhịp 200MHz.
+\subsection{Kiến trúc tổng thể và cơ chế cấu hình linh hoạt}
+Thành phần trung tâm của hạ tầng bus là module top \textbf{AXI4-Lite Interconnect}, được thiết kế với khả năng thích ứng cao theo cấu hình Master-Slave của hệ thống. Điểm đặc biệt trong hiện thực này là dựa trên tham số \texttt{NUM\_MASTERS} và \texttt{NUM\_SLAVES}. 
+
+Khi hệ thống chỉ vận hành với một Master duy nhất, Interconnect sẽ tự động cấu hình theo mô hình \textbf{1 $\times$ N}, giúp tối ưu hóa tài nguyên bằng cách chỉ sử dụng logic giải mã địa chỉ đơn giản. Trong trường hợp hệ thống có nhiều Master cùng truy cập (như khi tích hợp thêm các kênh DMA cho bộ gia tốc AI), Interconnect sẽ thiết lập một cấu trúc phân cấp phức hợp theo mô hình \textbf{N $\times$ M}. Cụ thể, hệ thống sẽ sử dụng tầng \textbf{N $\times$ 1} để thực hiện trọng tài giữa các Master, sau đó dẫn hướng luồng dữ liệu qua tầng \textbf{1 $\times$ N} để phân phối đến các thiết bị Slave mục tiêu. 
+
+Kiến trúc phân tầng (cascaded) này giúp tách biệt rõ ràng giữa logic điều phối quyền truy cập Master và logic giải mã địa chỉ Slave, từ đó giảm thiểu độ phức tạp của các đường trễ logic tổ hợp, đảm bảo tính toàn vẹn của dữ liệu trên toàn hệ thống Bus.
+
+\subsection{Cơ chế điều phối giao dịch và giải mã địa chỉ}
+Trong tầng phân phối tín hiệu, hệ thống sử dụng các module \textit{Dispatcher} chuyên trách cho từng kênh của giao thức AXI. Các module \textbf{AW\_dispatcher} và \textbf{AR\_dispatcher} đảm nhiệm việc thực thi bản đồ địa chỉ thông qua tham số \texttt{ADDR\_MAP\_SLAVES}. Bằng cách so sánh địa chỉ ghi (\texttt{awaddr}) hoặc địa chỉ đọc (\texttt{araddr}) phát ra từ CPU với các dải địa chỉ đã quy hoạch, khối logic sẽ kích hoạt tín hiệu chọn Slave (\texttt{slave\_selected}) tương ứng. 
+
+Điểm nổi bật trong thiết kế này là khả năng hiện thực hóa cơ chế \textbf{Pipeline giao dịch} (Transaction Pipelining) nhằm tối ưu hóa hiệu suất truyền tải. Giao thức AXI vốn có đặc tính tách biệt giữa pha địa chỉ, pha dữ liệu và pha phản hồi; hệ thống đã tận dụng đặc điểm này bằng cách tích hợp các hàng đợi \textbf{FIFO} làm bộ đệm trung gian giữa các kênh. Cụ thể, đối với giao dịch ghi, ngay khi pha địa chỉ tại kênh \textbf{AW} hoàn tất, định danh của Slave mục tiêu (\texttt{slave\_id}) sẽ được đẩy vào khối \textbf{fifo\_AW\_W}(nằm ở giữa AW và W). Tại thời điểm này, kênh \textbf{AW} được giải phóng hoàn toàn để sẵn sàng tiếp nhận và giải mã yêu cầu địa chỉ tiếp theo từ CPU, trong khi luồng dữ liệu hiện hành vẫn đang được xử lý song song tại kênh \textbf{W}. 
+
+Quá trình pipeline này tiếp tục được duy trì thông qua khối \textbf{fifo\_W\_B}(nằm ở giữa W và B) để chuyển tiếp thông tin định danh sang pha phản hồi (\textbf{B}), và tương tự với khối \textbf{fifo\_AR\_R}(nằm ở giữa AR và R) cho luồng giao dịch đọc. Sự kết hợp giữa Dispatcher và các tầng FIFO cho phép nhiều giao dịch có thể diễn ra dưới hình thức gối đầu (overlapping) trên các kênh khác nhau mà không gây xung đột. Cơ chế này không chỉ đảm bảo tính toàn vẹn của dữ liệu bằng cách truy vấn FIFO để dẫn hướng chính xác tín hiệu bắt tay về đúng Master, mà còn triệt tiêu các trạng thái chờ không cần thiết, giúp hệ thống đạt được băng thông tối đa và giảm thiểu độ trễ cho vi xử lý trung tâm.
+
+\subsection{Logic trọng tài Round-Robin và quản lý truy cập}
+Để quản lý việc truy cập tài nguyên dùng chung từ nhiều Master, hệ thống hiện thực thuật toán trọng tài xoay vòng (\textbf{Round-Robin}) trong module \textbf{arbiter}. Khác với cơ chế ưu tiên cố định có thể gây ra hiện tượng "đói tài nguyên" cho các Master mức thấp, Round-Robin đảm bảo mọi Master đều có cơ hội chiếm giữ bus một cách công bằng. Logic trọng tài được xây dựng dựa trên sự phối hợp giữa module \textbf{counter\_arbiter} để luân chuyển quyền ưu tiên và module \textbf{ID\_Masters} để thực hiện ánh xạ tín hiệu. Khi một Master được cấp quyền thông qua tín hiệu \texttt{grant\_permission}, toàn bộ kênh địa chỉ và dữ liệu sẽ được kết nối trực tiếp đến Slave thông qua một mạng lưới Multiplexer đóng gói trong module \textbf{axi\_interconnect\_n\_1}. Cơ chế này triệt tiêu các xung đột truy cập và đảm bảo rằng hiệu năng của bộ gia tốc AI không bị ảnh hưởng bởi các tác vụ quản trị của vi xử lý trung tâm.
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{5_hien_thuc_soc/image/abiter2.png}
+    \caption{a. Sơ đồ khối cơ chế trọng tài Round-Robin}
+    \label{fig:axi_n_m}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{5_hien_thuc_soc/image/abiter1.png}
+    \caption{b. Sơ đồ khối cơ chế trọng tài Round-Robin}
+    \label{fig:axi_n_m}
+\end{figure}
+
+
+
+\subsection{Hệ thống an toàn và tầng giao diện Slave}
+Nhằm đối phó với các kịch bản ngoại vi bị treo hoặc không phản hồi tín hiệu bắt tay, thiết kế bus tích hợp khối \textbf{DLock\_timer (Deadlock Timer)}. Cơ chế này giám sát thời gian thực hiện của mỗi giao dịch dựa trên tham số \texttt{QUANTUM\_TIME} (mặc định là 16 chu kỳ). Nếu một Slave giữ tín hiệu \texttt{valid} mà không trả về \texttt{ready} vượt quá khoảng thời gian này, bộ định thời sẽ kích hoạt \texttt{tick\_timer} để tự động giải phóng bus, ngăn chặn tình trạng toàn bộ SoC bị treo vô thời hạn. Cuối cùng, tại điểm cuối của mỗi nhánh bus, module \textbf{axi\_lite\_slave\_interface} thực hiện vai trò cầu nối, chuyển đổi các kênh tín hiệu phức tạp của AXI thành các chân điều khiển cơ bản như \texttt{addr\_w}, \texttt{wen} và \texttt{data\_w}. Việc sử dụng các thanh ghi đệm \textbf{register\_DFF} tại tầng giao diện này giúp cô lập miền thời gian và tối ưu hóa đường truyền.

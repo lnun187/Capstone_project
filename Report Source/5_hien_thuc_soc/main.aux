@@ -1,18 +1,85 @@
 \relax 
 \providecommand\hyper@newdestlabel[2]{}
-\@writefile{toc}{\contentsline {chapter}{\numberline {6}Hiện thực SoC và Tích hợp hệ thống}{79}{chapter.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {6}Hiện thực SoC và Tích hợp hệ thống}{90}{chapter.6}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \@writefile{loa}{\addvspace {10\p@ }}
-\newlabel{ch:soc_impl}{{6}{79}{Hiện thực SoC và Tích hợp hệ thống}{chapter.6}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {6.1}Môi trường và Công cụ hiện thực}{80}{section.6.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {6.2}Tích hợp Lõi RISC-V và Hệ thống Bus}{80}{section.6.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {6.3}Thiết kế và Tích hợp các khối Ngoại vi}{80}{section.6.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {6.4}Phát triển Firmware và Trình điều khiển (Driver)}{80}{section.6.4}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {6.5}Quy trình Tổng hợp và Triển khai trên FPGA}{80}{section.6.5}\protected@file@percent }
+\newlabel{ch:soc_impl}{{6}{90}{Hiện thực SoC và Tích hợp hệ thống}{chapter.6}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {6.1}Môi trường và Công cụ hiện thực}{90}{section.6.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.1.1}Môi trường thiết kế và kiểm thử phần cứng}{90}{subsection.6.1.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.1.2}Môi trường phát triển phần mềm và quy trình nhúng mã}{91}{subsection.6.1.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {6.2}Tích hợp Lõi RISC-V}{92}{section.6.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.2.1}Khái quát về lõi vi xử lý PicoRV32}{92}{subsection.6.2.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.2.2}Phân tích cấu hình và tùy chọn tập lệnh}{93}{subsection.6.2.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.2.3}Thiết lập ngữ cảnh thực thi và kết nối hệ thống}{94}{subsection.6.2.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {6.2.3.1}Chi tiết thiết lập tham số phần cứng (Parameters)}{94}{subsubsection.6.2.3.1}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {6.1}{\ignorespaces Cấu hình tham số phần cứng cho lõi PicoRV32}}{95}{table.caption.53}\protected@file@percent }
+\newlabel{tab:picorv32_full_params}{{6.1}{95}{Cấu hình tham số phần cứng cho lõi PicoRV32}{table.caption.53}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {6.3}Thiết kế hệ thống Bus}{96}{section.6.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.3.1}Mô hình điều phối đơn Master - đa Slave ($1 \times N$)}{96}{subsection.6.3.1}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {6.1}{\ignorespaces a. Sơ đồ khối mô hình kết nối AXI4-Lite $1 \times N$}}{97}{figure.caption.54}\protected@file@percent }
+\newlabel{fig:axi_1_n}{{6.1}{97}{a. Sơ đồ khối mô hình kết nối AXI4-Lite $1 \times N$}{figure.caption.54}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6.2}{\ignorespaces b. Sơ đồ khối mô hình kết nối AXI4-Lite $1 \times N$}}{97}{figure.caption.55}\protected@file@percent }
+\newlabel{fig:axi_1_n}{{6.2}{97}{b. Sơ đồ khối mô hình kết nối AXI4-Lite $1 \times N$}{figure.caption.55}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.3.2}Mô hình trọng tài đa Master - đơn Slave ($N \times 1$)}{98}{subsection.6.3.2}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {6.3}{\ignorespaces a. Sơ đồ khối cơ chế trọng tài trong mô hình $N \times 1$}}{98}{figure.caption.56}\protected@file@percent }
+\newlabel{fig:axi_n_1}{{6.3}{98}{a. Sơ đồ khối cơ chế trọng tài trong mô hình $N \times 1$}{figure.caption.56}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6.4}{\ignorespaces b. Sơ đồ khối cơ chế trọng tài trong mô hình $N \times 1$}}{99}{figure.caption.57}\protected@file@percent }
+\newlabel{fig:axi_n_1}{{6.4}{99}{b. Sơ đồ khối cơ chế trọng tài trong mô hình $N \times 1$}{figure.caption.57}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.3.3}Mô hình phức hợp đa Master - đa Slave ($N \times M$)}{99}{subsection.6.3.3}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {6.5}{\ignorespaces a. Kiến trúc kết hợp Cascaded Interconnect cho mô hình đa Master - đa Slave}}{100}{figure.caption.58}\protected@file@percent }
+\newlabel{fig:axi_n_m}{{6.5}{100}{a. Kiến trúc kết hợp Cascaded Interconnect cho mô hình đa Master - đa Slave}{figure.caption.58}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6.6}{\ignorespaces b. Kiến trúc kết hợp Cascaded Interconnect cho mô hình đa Master - đa Slave}}{100}{figure.caption.59}\protected@file@percent }
+\newlabel{fig:axi_n_m}{{6.6}{100}{b. Kiến trúc kết hợp Cascaded Interconnect cho mô hình đa Master - đa Slave}{figure.caption.59}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.3.4}Kiến trúc tổng thể và cơ chế cấu hình linh hoạt}{101}{subsection.6.3.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.3.5}Cơ chế điều phối giao dịch và giải mã địa chỉ}{101}{subsection.6.3.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.3.6}Logic trọng tài Round-Robin và quản lý truy cập}{102}{subsection.6.3.6}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {6.7}{\ignorespaces a. Sơ đồ khối cơ chế trọng tài Round-Robin}}{103}{figure.caption.60}\protected@file@percent }
+\newlabel{fig:axi_n_m}{{6.7}{103}{a. Sơ đồ khối cơ chế trọng tài Round-Robin}{figure.caption.60}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6.8}{\ignorespaces b. Sơ đồ khối cơ chế trọng tài Round-Robin}}{104}{figure.caption.61}\protected@file@percent }
+\newlabel{fig:axi_n_m}{{6.8}{104}{b. Sơ đồ khối cơ chế trọng tài Round-Robin}{figure.caption.61}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.3.7}Hệ thống an toàn và tầng giao diện Slave}{104}{subsection.6.3.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {6.4}Thiết kế và Tích hợp các khối Ngoại vi}{105}{section.6.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.4.1}UART}{105}{subsection.6.4.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {6.4.1.1}Kiến trúc hệ thống và bộ tạo tốc độ Baud}{105}{subsubsection.6.4.1.1}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {6.9}{\ignorespaces Sơ đồ khối kiến trúc module UART Unit}}{106}{figure.caption.62}\protected@file@percent }
+\newlabel{fig:uart_architecture}{{6.9}{106}{Sơ đồ khối kiến trúc module UART Unit}{figure.caption.62}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {6.4.1.2}Hiện thực máy trạng thái cho bộ nhận (RX) và bộ truyền (TX)}{107}{subsubsection.6.4.1.2}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {6.10}{\ignorespaces Sơ đồ máy trạng thái (FSM) của bộ nhận UART RX}}{108}{figure.caption.63}\protected@file@percent }
+\newlabel{fig:uart_fsm_rx}{{6.10}{108}{Sơ đồ máy trạng thái (FSM) của bộ nhận UART RX}{figure.caption.63}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {6.4.1.3}Cơ chế đệm dữ liệu và quản lý dòng thông tin}{109}{subsubsection.6.4.1.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {6.4.1.4}Tích hợp giao diện AXI4-Lite}{109}{subsubsection.6.4.1.4}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {6.11}{\ignorespaces Các thanh ghi kết nối giữa Bus AXI4-Lite và ngoại vi UART}}{109}{figure.caption.64}\protected@file@percent }
+\newlabel{fig:uart_axi_interface}{{6.11}{109}{Các thanh ghi kết nối giữa Bus AXI4-Lite và ngoại vi UART}{figure.caption.64}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.4.2}SPI}{110}{subsection.6.4.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {6.4.2.1}Cấu trúc logic và bộ tạo xung nhịp SPI}{110}{subsubsection.6.4.2.1}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {6.12}{\ignorespaces SPI Mode}}{111}{figure.caption.65}\protected@file@percent }
+\newlabel{fig:spi_architecture}{{6.12}{111}{SPI Mode}{figure.caption.65}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {6.4.2.2}Cơ chế điều khiển và Máy trạng thái FSMD}{111}{subsubsection.6.4.2.2}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {6.13}{\ignorespaces Thời gian thực hiện thao tác dịch dữ liệu trong SPI}}{112}{figure.caption.66}\protected@file@percent }
+\newlabel{fig:spi_architecture}{{6.13}{112}{Thời gian thực hiện thao tác dịch dữ liệu trong SPI}{figure.caption.66}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6.14}{\ignorespaces SPI controller ASMD chart}}{113}{figure.caption.67}\protected@file@percent }
+\newlabel{fig:spi_architecture}{{6.14}{113}{SPI controller ASMD chart}{figure.caption.67}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {6.4.2.3}Tích hợp hệ thống qua giao diện AXI4-Lite}{114}{subsubsection.6.4.2.3}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {6.15}{\ignorespaces Các thanh ghi kết nối giữa Bus AXI4-Lite và ngoại vi SPI}}{115}{figure.caption.68}\protected@file@percent }
+\newlabel{fig:spi_architecture}{{6.15}{115}{Các thanh ghi kết nối giữa Bus AXI4-Lite và ngoại vi SPI}{figure.caption.68}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.4.3}I2C}{115}{subsection.6.4.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {6.4.3.1}Kiến trúc bộ điều khiển I2C Master}{115}{subsubsection.6.4.3.1}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {6.16}{\ignorespaces Chia các giai đoạn điều kiện trong chu kỳ xung nhịp I2C}}{116}{figure.caption.69}\protected@file@percent }
+\newlabel{fig:spi_architecture}{{6.16}{116}{Chia các giai đoạn điều kiện trong chu kỳ xung nhịp I2C}{figure.caption.69}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6.17}{\ignorespaces Chia các giai đoạn dữ liệu trong chu kỳ xung nhịp I2C}}{116}{figure.caption.70}\protected@file@percent }
+\newlabel{fig:spi_architecture}{{6.17}{116}{Chia các giai đoạn dữ liệu trong chu kỳ xung nhịp I2C}{figure.caption.70}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {6.4.3.2}Hiện thực Máy trạng thái điều khiển (Control FSM)}{116}{subsubsection.6.4.3.2}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {6.18}{\ignorespaces Sơ đồ các trạng thái của bộ điều khiển I2C Master}}{117}{figure.caption.71}\protected@file@percent }
+\newlabel{fig:i2c_fsm_logic}{{6.18}{117}{Sơ đồ các trạng thái của bộ điều khiển I2C Master}{figure.caption.71}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {6.4.3.3}Ánh xạ thanh ghi và tích hợp AXI4-Lite}{119}{subsubsection.6.4.3.3}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {6.19}{\ignorespaces Các thanh ghi kết nối giữa Bus AXI4-Lite và ngoại vi I2C}}{119}{figure.caption.72}\protected@file@percent }
+\newlabel{fig:i2c_fsm_logic}{{6.19}{119}{Các thanh ghi kết nối giữa Bus AXI4-Lite và ngoại vi I2C}{figure.caption.72}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {6.5}Phát triển Firmware và Trình điều khiển (Driver)}{120}{section.6.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {6.6}Quy trình Tổng hợp và Triển khai trên FPGA}{120}{section.6.6}\protected@file@percent }
 \@setckpt{5_hien_thuc_soc/main}{
-\setcounter{page}{81}
-\setcounter{equation}{0}
+\setcounter{page}{121}
+\setcounter{equation}{1}
 \setcounter{enumi}{2}
 \setcounter{enumii}{0}
 \setcounter{enumiii}{0}
@@ -21,13 +88,13 @@
 \setcounter{mpfootnote}{0}
 \setcounter{part}{0}
 \setcounter{chapter}{6}
-\setcounter{section}{5}
+\setcounter{section}{6}
 \setcounter{subsection}{0}
 \setcounter{subsubsection}{0}
 \setcounter{paragraph}{0}
 \setcounter{subparagraph}{0}
-\setcounter{figure}{0}
-\setcounter{table}{0}
+\setcounter{figure}{19}
+\setcounter{table}{1}
 \setcounter{caption@flags}{2}
 \setcounter{continuedfloat}{0}
 \setcounter{subfigure}{0}
@@ -169,7 +236,7 @@
 \setcounter{section@level}{0}
 \setcounter{Item}{22}
 \setcounter{Hfootnote}{0}
-\setcounter{bookmark@seq@number}{119}
+\setcounter{bookmark@seq@number}{158}
 \setcounter{lastpagecount}{0}
 \setcounter{subsubsubsection}{0}
 \setcounter{lstlisting}{0}

@@ -1,0 +1,57 @@
+% File: 5_hien_thuc_soc/5.2_tich_hop_loi_riscv.tex
+
+% \section{Tích hợp Lõi RISC-V}
+
+\subsection{Khái quát về lõi vi xử lý PicoRV32}
+Trái tim của hệ thống SoC được xây dựng dựa trên lõi \textbf{PicoRV32}, một hiện thực vi xử lý mã nguồn mở tuân thủ kiến trúc tập lệnh (ISA) RISC-V. Được thiết kế với mục tiêu tối ưu hóa tài nguyên logic, PicoRV32 đặc biệt phù hợp cho các hệ thống nhúng đòi hỏi kích thước nhỏ gọn nhưng vẫn duy trì được tần số xung nhịp cao. Trong đề tài này, nhóm thiết kế lựa chọn phiên bản \textbf{picorv32\_axi} để hiện thực hóa việc kết nối. Khác với phiên bản giao tiếp bộ nhớ trực tiếp thông thường, biến thể này tích hợp sẵn giao diện bus chuẩn \textbf{AXI4} (Advanced eXtensible Interface), cho phép vi xử lý tương tác đồng bộ với hạ tầng Interconnect và các ngoại vi phức tạp trong hệ thống thông qua các giao thức bắt tay (handshake) tiêu chuẩn.
+
+\subsection{Phân tích cấu hình và tùy chọn tập lệnh}
+Để đạt được sự cân bằng giữa hiệu năng tính toán và mức tiêu thụ tài nguyên trên FPGA, lõi PicoRV32 được cấu hình thông qua một hệ thống các tham số (\textit{parameters}) chuyên biệt. Về năng lực xử lý số học, mặc dù hệ thống dựa trên nền tảng cơ bản là tập lệnh số nguyên 32-bit (\textbf{RV32I}), đề tài quyết định kích hoạt các khối tính toán phần cứng cho phép nhân và phép chia thông qua tham số \texttt{ENABLE\_MUL} và \texttt{ENABLE\_DIV}. Việc chuyển đổi sang tập lệnh \textbf{RV32IM} này đóng vai trò then chốt trong việc tăng tốc các thuật toán xử lý dữ liệu mà không cần phụ thuộc vào các thư viện phần mềm mô phỏng phép tính, vốn thường gây trễ lớn trong các ứng dụng thời gian thực. Ngược lại, tập lệnh nén (\texttt{COMPRESSED\_ISA}) được thiết lập ở mức 0 để giữ cho logic giải mã lệnh đơn giản, ưu tiên độ ổn định về định thời tại tần số 200 MHz.
+
+Về quản lý tài nguyên nội tại, hệ thống tận dụng tối đa khả năng của lõi thông qua việc kích hoạt đầy đủ 32 thanh ghi đa năng và cơ chế truy xuất hai cổng (\texttt{ENABLE\_REGS\_DUALPORT}), giúp tối ưu hóa luồng thực thi lệnh trong ALU. Bên cạnh đó, các bộ đếm hiệu năng (\texttt{ENABLE\_COUNTERS}) cũng được tích hợp để phục vụ quá trình đo đạc thời gian thực thi của các đoạn mã điều khiển. Nhằm đảm bảo an toàn hệ thống, các cơ chế bẫy lỗi như bắt lỗi lệnh không hợp lệ (\texttt{CATCH\_ILLINSN}) và lỗi căn chỉnh bộ nhớ (\texttt{CATCH\_MISALIGN}) luôn ở trạng thái hoạt động, cho phép hệ thống tự động nhảy vào trạng thái bảo vệ (Trap) khi xảy ra sự cố phần mềm.
+
+\subsection{Thiết lập ngữ cảnh thực thi và kết nối hệ thống}
+Một khía cạnh quan trọng trong việc tích hợp lõi là quy hoạch địa chỉ khởi vận và không gian ngăn xếp để phù hợp với Memory Map toàn cục. Tham số \texttt{PROGADDR\_RESET} được thiết lập tại địa chỉ \texttt{32'h0100\_0000}, trỏ trực tiếp vào vùng nhớ \textbf{BMEM} nơi chứa chương trình Bootloader. Điều này đảm bảo ngay sau khi tín hiệu Reset được giải phóng, CPU sẽ bắt đầu quy trình nạp chương trình ứng dụng từ Flash vào IMEM như đã thiết kế. Đồng thời, địa chỉ đỉnh ngăn xếp (\texttt{STACKADDR}) được ấn định tại \texttt{32'h0001\_0000} trong vùng nhớ dữ liệu DMEM, cung cấp không gian lưu trữ an toàn cho các biến cục bộ và ngữ cảnh hàm của ngôn ngữ C.
+
+Trong quá trình hiện thực kết nối vật lý, lõi \texttt{cpu0} được ánh xạ các tín hiệu giao diện AXI4 bao gồm các kênh địa chỉ ghi (\texttt{awaddr}), dữ liệu ghi (\texttt{wdata}), địa chỉ đọc (\texttt{araddr}) và dữ liệu đọc (\texttt{rdata}). Sự phối hợp giữa các tín hiệu \texttt{valid} và \texttt{ready} trên bus đảm bảo rằng mọi giao dịch truy xuất giữa vi xử lý và các ngoại vi như UART, I2C hay bộ gia tốc AI đều diễn ra chính xác theo đúng chu kỳ xung nhịp hệ thống. Mặc dù cơ chế ngắt (\texttt{IRQ}) được hỗ trợ về mặt logic, trong thiết kế hiện tại, các chân ngắt được giữ ở mức 0 để tập trung vào cơ chế thăm dò (\textit{Polling}) chủ động, giúp đơn giản hóa lớp trình điều khiển thiết bị trong giai đoạn phát triển ban đầu.
+
+
+% File: 5_hien_thuc_soc/5.2.2_cau_hinh_chi_tiet.tex
+
+\subsubsection{Chi tiết thiết lập tham số phần cứng (Parameters)}
+
+Để lõi vi xử lý PicoRV32 vận hành tối ưu trong hệ thống SoC, các tham số cấu hình được thiết lập cụ thể nhằm cân bằng giữa tài nguyên logic và hiệu năng. Bảng \ref{tab:picorv32_full_params} liệt kê các tham số chính được sử dụng trong quá trình hiện thực thực thể \texttt{picorv32\_axi}.
+
+\begin{table}[H]
+    \centering % Căn giữa toàn bộ bảng trên trang giấy
+    \caption{Cấu hình tham số phần cứng cho lõi PicoRV32}
+    \label{tab:picorv32_full_params}
+    \renewcommand{\arraystretch}{1.3}
+    
+    % Thiết lập độ rộng cột để không tràn lề (Tổng 14.5cm)
+    \begin{tabular}{|p{4.5cm}|p{3.0cm}|p{7.0cm}|}
+        \hline
+        % Căn giữa tiêu đề của từng cột
+        \multicolumn{1}{|c|}{\textbf{Tham số (Parameter)}} & 
+        \multicolumn{1}{|c|}{\textbf{Giá trị}} & 
+        \multicolumn{1}{|c|}{\textbf{Mô tả chức năng}} \\ \hline
+        
+        \texttt{ENABLE\_MUL} & \multicolumn{1}{|c|}{1} & Kích hoạt bộ nhân phần cứng (RV32M). \\ \hline
+        \texttt{ENABLE\_DIV} & \multicolumn{1}{|c|}{1} & Kích hoạt bộ chia phần cứng (RV32M). \\ \hline
+        \texttt{COMPRESSED\_ISA} & \multicolumn{1}{|c|}{0} & Không sử dụng tập lệnh nén (C). \\ \hline
+        \texttt{BARREL\_SHIFTER} & \multicolumn{1}{|c|}{0} & Tối ưu diện tích, dịch bit theo chu kỳ. \\ \hline
+        
+        \texttt{ENABLE\_REGS\_16\_31} & \multicolumn{1}{|c|}{1} & Sử dụng đầy đủ 32 thanh ghi RV32I. \\ \hline
+        \texttt{ENABLE\_REGS\_DUALPORT} & \multicolumn{1}{|c|}{1} & Hỗ trợ truy xuất đồng thời hai thanh ghi. \\ \hline
+        \texttt{ENABLE\_COUNTERS} & \multicolumn{1}{|c|}{1} & Kích hoạt bộ đếm hiệu năng hệ thống. \\ \hline
+        
+        \texttt{CATCH\_MISALIGN} & \multicolumn{1}{|c|}{1} & Bắt lỗi truy cập bộ nhớ không căn chỉnh. \\ \hline
+        \texttt{CATCH\_ILLINSN} & \multicolumn{1}{|c|}{1} & Bẫy lỗi khi gặp tập lệnh không hợp lệ. \\ \hline
+        \texttt{REGS\_INIT\_ZERO} & \multicolumn{1}{|c|}{1} & Khởi tạo giá trị thanh ghi bằng 0 khi Reset. \\ \hline
+        
+        \texttt{PROGADDR\_RESET} & \multicolumn{1}{|c|}{\texttt{0x0100\_0000}} & Địa chỉ nạp chương trình Bootloader. \\ \hline
+        \texttt{STACKADDR} & \multicolumn{1}{|c|}{\texttt{0x0001\_0000}} & Địa chỉ đỉnh ngăn xếp trong vùng DMEM. \\ \hline
+    \end{tabular}
+\end{table}
+
+Việc thiết lập các tham số trên biến lõi xử lý thành kiến trúc \textbf{RV32IM}. Điều này cho phép SoC thực hiện các phép toán số học phức tạp một cách nhanh chóng, đóng vai trò quan trọng trong việc điều phối các thuật toán xử lý dữ liệu. Để đảm bảo hệ thống đạt được tần số 200 MHz, tham số \texttt{BARREL\_SHIFTER} được đặt bằng 0 nhằm giảm mức độ phức tạp của logic tổ hợp, giúp thiết kế đạt được các ràng buộc về mặt định thời trên FPGA.
