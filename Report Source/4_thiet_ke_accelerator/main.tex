@@ -353,15 +353,13 @@ Với tích chập chiều sâu, các kênh hoạt động độc lập ($N_f = 
 
 Để xác định cấu hình phần cứng tối ưu cho từng lớp mạng, chúng tôi xây dựng mô hình ước lượng thời gian thực thi. Mô hình này thực hiện quét qua không gian các tham số chia khối (Tiling parameters) gồm $(T_c, T_m, T_h)$ để tìm ra bộ tham số giúp cực tiểu hóa tổng số chu kỳ hoạt động (Total Cycles).
 
-\subsubsection{Cơ chế hoạt động}
-Trước khi bắt đầu tính toán Pass đầu tiên, hệ thống cần nạp đầy đủ dữ liệu (IFM, Weights) vào buffer. Sau giai đoạn khởi tạo này, quy trình hoạt động theo nguyên lý "gối đầu":
-\begin{itemize}
-    \item Trong khi lõi tính toán đang xử lý Pass $i$, bộ điều khiển DMA đồng thời nạp dữ liệu cho Pass $i+1$ vào nửa còn lại của Buffer.
-    \item Đồng thời, kết quả của Pass $i-1$ (nếu đã hoàn tất) được ghi trả về bộ nhớ ngoài.
-\end{itemize}
+\subsubsection{Cơ chế hoạt động và tối ưu hóa tham số}
 
-Do hệ thống sử dụng bus dữ liệu dùng chung (Shared Data Bus) cho cả luồng nạp (Load) và ghi (Store), băng thông bộ nhớ phải được chia sẻ thời gian. Bộ điều khiển sẽ ưu tiên nạp Pass tiếp theo, sau đó mới đến ghi Pass trước đó (hoặc xen kẽ tùy theo chính sách trọng tài).
+Nhằm xác định cấu hình phần cứng tối ưu cho từng lớp mạng, một mô hình ước lượng thời gian thực thi đã được xây dựng để thực hiện việc khảo sát và đánh giá hiệu năng. Mô hình này tiến hành quét qua toàn bộ không gian của các tham số chia khối (Tiling parameters), bao gồm bộ ba $(T_c, T_m, T_h)$, với mục tiêu then chốt là tìm ra tổ hợp tham số giúp tối thiểu hóa tổng số chu kỳ hoạt động (Total Cycles) của hệ thống.
 
+Về cơ chế vận hành, quy trình xử lý bắt đầu bằng giai đoạn khởi tạo để nạp đầy đủ dữ liệu đầu vào (IFM) và trọng số (Weights) vào các bộ đệm (buffer). Sau bước chuẩn bị này, hệ thống sẽ vận hành theo nguyên lý "gối đầu" (pipelining) để tối ưu hóa hiệu suất sử dụng tài nguyên. Cụ thể, trong khi lõi tính toán đang thực hiện xử lý dữ liệu của lượt chạy (Pass) thứ $i$, bộ điều khiển DMA sẽ đồng thời nạp dữ liệu cho Pass $i+1$ vào nửa còn lại của bộ đệm kép. Song song với đó, nếu kết quả của Pass $i-1$ đã hoàn tất, chúng sẽ được ghi trả về bộ nhớ ngoài một cách độc lập.
+
+Tuy nhiên, do hệ thống sử dụng cấu trúc bus dữ liệu dùng chung (Shared Data Bus) cho cả hai luồng nạp (Load) và ghi (Store), nên băng thông bộ nhớ cần được phân bổ theo phương thức chia sẻ thời gian. Để đảm bảo lõi tính toán luôn có sẵn dữ liệu cho chu kỳ kế tiếp, bộ điều khiển sẽ ưu tiên thực hiện tác vụ nạp dữ liệu của Pass tiếp theo trước, sau đó mới tiến hành ghi kết quả của Pass trước đó, hoặc thực hiện xen kẽ dựa trên các chính sách điều phối của bộ trọng tài bus.
 \subsubsection{Các kịch bản hiệu năng (Performance Scenarios)}
 Gọi $T_{load}$ là thời gian nạp 1 Input Pass, $T_{store}$ là thời gian ghi 1 Output Pass, và $T_{comp}$ là thời gian tính toán 1 Pass (cũng chính là $T_{pass}$ đã tính ở mục 4.3.3). Ta định nghĩa tham số $b$ là \textbf{số chu kỳ đồng hồ cần thiết để truyền 1 giá trị dữ liệu} (Cycles per Data Transfer).
 
@@ -390,13 +388,12 @@ Xảy ra khi thời gian nạp dữ liệu lớn hơn thời gian tính toán ($
         T_{total} \approx \left[ \left( H \times W \times C \right) + \left( H_{out} \times W_{out} \times C \right) \right] \times b
     \end{equation}
 \end{itemize}
-Lưu ý: Công thức này chỉ áp dụng khi số lượng pass cần để download 1 pass = 1 (tức là trong trường hợp Depthwise Convolution với hoặc $C \leq T_k$). Với trường hợp còn lại, công thức sẽ phức tạp hơn, tạm thời không thảo luận tới.\\
 \textbf{Trường hợp 2: Memory Bound 2 (Nghẽn băng thông trung bình)} \\
 Xảy ra khi thời gian tính toán nhanh hơn tổng thời gian nạp và ghi, nhưng chậm hơn thời gian nạp ($T_{load} < T_{comp} < T_{load} + T_{store}$). Lúc này, thời gian thực thi bao gồm thời gian nạp, ghi và một phần chênh lệch thời gian tính toán.
 \begin{equation}
-    T_{total} \approx T_{total\_IO} + (T_{comp} - T_{store} + (T_{comp} - T_{load})
+    T_{total} \approx T_{total\_IO} + (T_{comp} - T_{store}) + (T_{comp} - T_{load})
 \end{equation}
-Trong đó $T_{total\_IO}$ được tính theo công thức tại Trường hợp 1 tùy thuộc loại Convolution.
+Trong đó $T_{total\_IO}$ được tính theo công thức tại Trường hợp 1 tùy thuộc loại Convolution.\\
 Lưu ý: Công thức này chỉ áp dụng khi số lượng pass cần để download 1 pass = 1 (tức là trong trường hợp Depthwise Convolution với hoặc $C \leq T_k$). Với trường hợp còn lại, công thức sẽ phức tạp hơn,  tạm thời không thảo luận tới.\\
 \textbf{Trường hợp 3: Compute Bound (Nghẽn tính toán)} \\
 Xảy ra khi thời gian tính toán lớn hơn tổng thời gian nạp và ghi ($T_{comp} > T_{load} + T_{store}$). Lúc này, toàn bộ thời gian truyền tải dữ liệu (trừ pass đầu và cuối) được che giấu hoàn toàn bên dưới thời gian tính toán.
