@@ -1,0 +1,390 @@
+% File: 5_hien_thuc_soc/5.4_ngoai_vi_uart.tex
+
+% \section{Thiết kế và Tích hợp các khối Ngoại vi}
+
+
+\subsection{UART}
+
+Khối UART được thiết kế để đảm nhiệm vai trò kênh giao tiếp gỡ lỗi (Console/Debug) và truyền nhận dữ liệu tốc độ thấp. Toàn bộ khối IP được xây dựng theo kiến trúc phân lớp, từ các tầng vật lý xử lý tín hiệu nối tiếp đến tầng giao diện thanh ghi tương thích chuẩn AXI.
+
+\subsubsection{Kiến trúc hệ thống và bộ tạo tốc độ Baud}
+Cấu trúc tổng quát của ngoại vi UART dựa trên module \textbf{uart\_unit}, tích hợp các thành phần cốt lõi bao gồm bộ tạo tốc độ Baud, khối transmitter/receiver và các bộ đệm FIFO hàng đợi.
+
+
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{5_hien_thuc_soc/image/uart.png}
+    \caption{Sơ đồ khối kiến trúc module UART Unit}
+    \label{fig:uart_architecture}
+\end{figure}
+
+% File: 5_hien_thuc_soc/5.4_ngoai_vi_uart.tex
+
+Nền tảng vận hành của khối UART là module \textbf{buad\_gen}, đóng vai trò như một bộ chia tần số linh hoạt. Với xung nhịp hệ thống cao (200 MHz), bộ tạo tốc độ Baud sử dụng một thanh ghi đếm và một thanh ghi giá trị chia (\texttt{dvsr}) để tạo ra các xung \texttt{tick} định thời. Các xung này được thiết lập tại tần số gấp 16 lần tốc độ Baud mục tiêu (Oversampling), cho phép khối nhận (\textit{Receiver}) thực hiện lấy mẫu dữ liệu chính xác tại trung tâm của mỗi bit truyền. Cơ chế này giúp tăng cường khả năng chống nhiễu và bù đắp sai số xung nhịp giữa SoC và các thiết bị ngoại vi giao tiếp.
+
+Giá trị nạp vào thanh ghi cấu hình \texttt{dvsr} được xác định dựa trên mối tương quan giữa tần số hệ thống và tốc độ truyền thông mong muốn thông qua công thức sau:
+
+\begin{equation}
+    v = \frac{f_{clk}}{16 \times B} - 1
+\end{equation}
+
+Trong đó các tham số được định nghĩa cụ thể:
+\begin{itemize}
+    \item \textbf{$v$}: Giá trị số nguyên được nạp vào thanh ghi \texttt{dvsr} của bộ tạo Baud.
+    \item \textbf{$f_{clk}$}: Tần số xung nhịp hệ thống đầu vào (trong thiết kế này là 200 MHz).
+    \item \textbf{$B$}: Tốc độ Baud mong muốn (ví dụ: 9600, 115200 bits/second).
+    \item \textbf{16}: Hệ số lấy mẫu dư (Oversampling factor) cố định, đảm bảo bộ nhận UART lấy mẫu mỗi bit 16 lần để tối ưu hóa độ chính xác.
+\end{itemize}
+
+Ví dụ, với tần số hệ thống $f_{clk} = 100$ MHz và tốc độ Baud yêu cầu $B = 9600$, giá trị $v$ tính toán được xấp xỉ 650. Đối với cấu hình thực tế của đề tài tại tần số 200 MHz và tốc độ 115200 bps, giá trị này sẽ được phần mềm tính toán và nạp vào thanh ghi điều khiển tương ứng tại thời điểm khởi tạo hệ thống.
+
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics[width=0.8\textwidth]{5_hien_thuc_soc/image/uart1.png}
+%     \caption{Sơ đồ khối và logic tính toán của bộ tạo tốc độ Baud}
+%     \label{fig:uart_baud_gen}
+% \end{figure}
+
+\subsubsection{Hiện thực máy trạng thái cho bộ nhận (RX) và bộ truyền (TX)}
+Logic truyền nhận vật lý được điều khiển bởi các máy trạng thái hữu hạn (FSM) trong module \textbf{uart\_rx} và \textbf{uart\_tx}. 
+
+Đối với bộ nhận, FSM hoạt động qua 4 trạng thái chính: \textit{IDLE, START, DATA} và \textit{STOP}. Khi phát hiện Start-bit, hệ thống sẽ đếm 7 xung \texttt{tick} để nhảy vào giữa bit và sau đó cứ mỗi 16 xung \texttt{tick} sẽ thực hiện lấy mẫu một bit dữ liệu. Quy trình này đảm bảo dữ liệu được thu thập tại thời điểm tín hiệu ổn định nhất.
+
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.2\textwidth]{5_hien_thuc_soc/image/uart2.png}
+    \caption{Sơ đồ máy trạng thái (FSM) của bộ nhận UART RX}
+    \label{fig:uart_fsm_rx}
+\end{figure}
+
+Tương tự, bộ truyền \textbf{uart\_tx} thực hiện quá trình chuyển đổi từ dữ liệu song song 8-bit sang khung truyền nối tiếp. Dữ liệu được đẩy ra chân \texttt{tx} kèm theo các bit khung (Start/Stop) theo đúng định thời được cấu hình, đảm bảo tính đồng bộ hoàn toàn với thiết bị đầu cuối.
+
+\subsubsection{Cơ chế đệm dữ liệu và quản lý dòng thông tin}
+Nhằm tối ưu hóa hiệu suất cho CPU, hệ thống tích hợp các khối \textbf{fifo\_unit} cho cả hai chiều truyền và nhận. Với độ sâu được thiết lập qua tham số \texttt{FIFO\_W}, các bộ đệm này cho phép CPU có thể nạp một chuỗi dữ liệu dài vào hàng đợi và tiếp tục thực thi các thuật toán AI mà không cần chờ đợi từng byte được truyền xong. 
+
+% \begin{figure}[H]
+%     \centering
+%     % \includegraphics[width=0.7\textwidth]{figures/uart_fifo_flow.png}
+%     \caption{Luồng dữ liệu giữa vi xử lý và UART thông qua hàng đợi FIFO}
+%     \label{fig:uart_fifo_flow}
+% \end{figure}
+
+Sự hiện diện của FIFO giúp triệt tiêu hiện tượng mất dữ liệu (Data Overflow) khi vi xử lý đang bận xử lý các tác vụ ưu tiên cao, đồng thời tăng băng thông tổng thể cho hệ thống giao tiếp.
+
+\subsubsection{Tích hợp giao diện AXI4-Lite}
+Việc nhúng khối UART vào hệ thống SoC được thực hiện thông qua module \textbf{uart\_axi\_lite}. Module áp dụng \textbf{axi\_lite\_slave\_interface} để ánh xạ các tài nguyên của UART thành các thanh ghi trong không gian địa chỉ của CPU.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{5_hien_thuc_soc/image/uart3.png}
+    \caption{Các thanh ghi kết nối giữa Bus AXI4-Lite và ngoại vi UART}
+    \label{fig:uart_axi_interface}
+\end{figure}
+
+Thông qua việc truy cập vào các địa chỉ Base Address đã quy hoạch trong Memory Map, phần mềm điều khiển có thể:
+\begin{itemize}
+    \item[] Đọc dữ liệu từ hàng đợi nhận hoặc ghi dữ liệu cần gửi vào hàng đợi truyền.
+    \item[] Kiểm tra các trạng thái hệ thống như \texttt{tx\_full} (đầy bộ đệm truyền) hoặc \texttt{rx\_empty} (hết dữ liệu nhận) để điều phối luồng chương trình.
+    \item[] Cấu hình lại tốc độ Baud linh hoạt ngay trong quá trình vận hành bằng cách ghi giá trị mới vào thanh ghi \texttt{dvsr}.
+\end{itemize}
+
+Kiến trúc này đảm bảo tính tách biệt hoàn toàn giữa logic bus và logic truyền nhận, giúp khối ngoại vi hoạt động ổn định và dễ dàng tái sử dụng trong các thiết kế SoC khác nhau.
+
+
+
+% File: 5_hien_thuc_soc/5.4.2_ngoai_vi_spi.tex
+
+\subsection{SPI}
+
+Bên cạnh UART, giao thức giao tiếp ngoại vi nối tiếp (SPI - Serial Peripheral Interface) đóng vai trò quan trọng trong việc kết nối SoC với các cảm biến tốc độ cao hoặc các bộ nhớ Flash phụ trợ. Khối IP SPI được thiết kế theo cấu trúc Master, cho phép lõi PicoRV32 chủ động điều phối luồng dữ liệu thông qua cơ chế truyền nhận đồng bộ.
+
+\subsubsection{Cấu trúc logic và bộ tạo xung nhịp SPI}
+
+
+
+
+
+Khác với UART sử dụng cơ chế lấy mẫu dư, SPI là một giao thức đồng bộ nên yếu tố then chốt nằm ở việc tạo ra xung nhịp \texttt{sclk} ổn định. Module tích hợp một bộ chia tần số linh hoạt, cho phép phần mềm cấu hình tốc độ truyền thông dựa trên tần số hệ thống 200 MHz. Điểm đặc biệt trong hiện thực này là khả năng tùy biến các chế độ hoạt động (\textit{SPI Modes}) thông qua việc điều chỉnh cực tính (\texttt{CPOL}) và pha của xung nhịp (\texttt{CPHA}), đảm bảo tính tương thích với đa dạng các chủng loại linh kiện ngoại vi trên thị trường.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{5_hien_thuc_soc/image/spi.png}
+    \caption{SPI Mode}
+    \label{fig:spi_architecture}
+\end{figure}
+
+
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics[width=0.8\textwidth]{5_hien_thuc_soc/image/spi1.png}
+%     \caption{Sơ đồ khối ý tưởng dich bit trong SPI}
+%     \label{fig:spi_architecture}
+% \end{figure}
+\subsubsection{Cơ chế điều khiển và Máy trạng thái FSMD}
+
+Hệ thống SPI Master được hiện thực hóa dựa trên kiến trúc \textbf{FSMD} (Finite State Machine with Datapath), nơi bộ điều khiển máy trạng thái (FSM) đóng vai trò chỉ đạo và khối dữ liệu (Datapath) thực hiện các phép toán logic như dịch bit và đếm số bit đã truyền. Quy trình này được mô phỏng chi tiết dựa trên sơ đồ máy trạng thái và giản đồ định thời của giao thức SPI.
+
+
+
+Hoạt động của FSM bao gồm các trạng thái chính sau:
+\begin{itemize}
+    \item[] \textbf{Trạng thái IDLE:} Đây là trạng thái mặc định của hệ thống. Tín hiệu chọn chip \texttt{ss} được giữ ở mức cao ($Logic\ 1$) để ngắt kết nối với các Slave ngoại vi. FSM liên tục giám sát tín hiệu khởi tạo từ Bus AXI; ngay khi có lệnh truyền, hệ thống sẽ nạp dữ liệu vào thanh ghi dịch và chuyển sang trạng thái kế tiếp.
+    \item[] \textbf{Trạng thái TRANSFER:} Tại đây, tín hiệu \texttt{ss} được kéo xuống thấp ($Logic\ 0$) để bắt đầu phiên làm việc. Khối Datapath bắt đầu vận hành đồng bộ với xung nhịp \texttt{sclk}.
+    \begin{itemize}
+        \item[] \textbf{Dịch bit dữ liệu (Shift-out):} Tại mỗi cạnh tích cực (hoặc cạnh dẫn tùy theo cấu hình CPOL/CPHA), bit có trọng số cao nhất (MSB) của thanh ghi dịch được đẩy ra chân \texttt{mosi}.
+        \item[] \textbf{Lấy mẫu dữ liệu (Sample-in):} Đồng thời, tín hiệu từ chân \texttt{miso} được lấy mẫu và đưa vào vị trí bit thấp nhất (LSB) của thanh ghi dịch.
+        \item[] \textbf{Bộ đếm bit:} Một bộ đếm nội bộ (\textit{Bit Counter}) theo dõi số lượng xung nhịp. Sau khi hoàn tất đủ 8 chu kỳ (tương đương 1 byte dữ liệu), FSM sẽ quyết định kết thúc hoặc tiếp tục truyền byte tiếp theo.
+    \end{itemize}
+    \item[] \textbf{Trạng thái DONE/READY:} Sau khi trao đổi đủ dữ liệu, tín hiệu \texttt{ss} được đưa trở lại mức cao. Đồng thời, tín hiệu \texttt{ready} sẽ được kích hoạt ở mức logic 1 trong một chu kỳ xung nhịp hệ thống để báo hiệu cho vi xử lý PicoRV32 rằng dữ liệu trong thanh ghi đã sẵn sàng để đọc hoặc byte tiếp theo có thể được nạp vào.
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{5_hien_thuc_soc/image/spi2.png}
+    \caption{Thời gian thực hiện thao tác dịch dữ liệu trong SPI}
+    \label{fig:spi_architecture}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth]{5_hien_thuc_soc/image/spi3.png}
+    \caption{SPI controller ASMD chart}
+    \label{fig:spi_architecture}
+\end{figure}
+
+Sự phối hợp chặt chẽ giữa bộ đếm và thanh ghi dịch trong tầng Datapath giúp triệt tiêu các sai số về định thời. Việc sử dụng thanh ghi đệm tại chân \texttt{miso} trước khi nạp vào FSM đảm bảo rằng dữ liệu nhận được luôn ổn định, tránh các hiện tượng nhiễu tức thời tại cạnh xung nhịp, từ đó duy trì tính toàn vẹn của dữ liệu trong suốt quá trình giao tiếp tốc độ cao với các ngoại vi.
+
+
+
+
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics[width=1\textwidth]{5_hien_thuc_soc/image/spi2.png}
+%     \caption{Thời gian thực hiện thao tác dịch dữ liệu trong SPI}
+%     \label{fig:spi_architecture}
+% \end{figure}
+
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics[width=0.8\textwidth]{5_hien_thuc_soc/image/spi3.png}
+%     \caption{SPI controller ASMD chart}
+%     \label{fig:spi_architecture}
+% \end{figure}
+
+\subsubsection{Tích hợp hệ thống qua giao diện AXI4-Lite}
+Khối SPI được nhúng vào không gian địa chỉ SoC thông qua module \textbf{Spi\_axi\_lite\_core}. Tương tự như khối UART, việc giao tiếp được thực hiện theo cơ chế nạp/lưu dữ liệu trực tiếp vào các thanh ghi chức năng (Memory-mapped I/O).
+
+Giao diện \textbf{axi\_lite\_interface} đóng vai trò là tầng trung gian xử lý các giao thức bắt tay của bus. CPU quản lý ngoại vi SPI thông qua tập hợp các thanh ghi 32-bit sau:
+\begin{itemize}
+    \item[] \textbf{Thanh ghi dữ liệu (Data Register):} Chứa dữ liệu cần truyền đi hoặc dữ liệu vừa nhận về từ slave.
+    \item[] \textbf{Thanh ghi điều khiển (Control Register):} Cho phép cấu hình tốc độ xung nhịp \texttt{sclk}, chọn thiết bị tớ (Slave Select) và thiết lập các tham số truyền thông.
+    \item[] \textbf{Thanh ghi trạng thái (Status Register):} Cung cấp các cờ báo hiệu \texttt{ready} đang sẵn sàng.
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{5_hien_thuc_soc/image/spi4.png}
+    \caption{Các thanh ghi kết nối giữa Bus AXI4-Lite và ngoại vi SPI}
+    \label{fig:spi_architecture}
+\end{figure}
+
+Việc sử dụng các thanh ghi đệm \textit{D-Flip-Flop} tại tầng vật lý giúp cô lập hoàn toàn logic bus hệ thống với các tín hiệu I/O bên ngoài. Thiết kế này giúp triệt tiêu các vấn đề về nhiễu tín hiệu và đảm bảo rằng hệ thống Bus AXI vẫn duy trì được hiệu suất cao tại tần số 200 MHz trong khi khối SPI có thể hoạt động tại các dải tần số thấp hơn tùy theo yêu cầu của linh kiện ngoại vi.
+
+
+% File: 5_hien_thuc_soc/5.4.3_ngoai_vi_i2c.tex
+
+\subsection{I2C}
+
+Trong hệ thống SoC đề xuất, giao thức I2C (Inter-Integrated Circuit) đóng vai trò là kênh điều khiển thiết yếu để cấu hình các tham số vận hành cho cảm biến hình ảnh OV5640 và chip phát HDMI (ADV7513). Khối IP I2C Master được hiện thực hóa với khả năng điều khiển bus hai dây (\texttt{scl} và \texttt{sda}), hỗ trợ đa thiết bị tớ thông qua cơ chế địa chỉ hóa và bắt tay chặt chẽ.
+
+\subsubsection{Kiến trúc bộ điều khiển I2C Master}
+Thành phần hạt nhân của phân hệ là module \textbf{i2c\_master}, được thiết kế theo mô hình FSMD để quản lý các điều kiện phức tạp trên đường truyền. Khác với các giao thức nối tiếp khác, I2C sử dụng cấu trúc cực Open-drain, đòi hỏi bộ điều khiển phải quản lý linh hoạt trạng thái trở kháng cao (\textit{High-Impedance}) để cho phép các thiết bị tớ phản hồi tín hiệu Ack/Nack.
+
+
+
+
+% \begin{figure}[H]
+%     \centering
+%     % \includegraphics[width=0.8\textwidth]{figures/i2c_architecture.png}
+%     \caption{Sơ đồ khối kiến trúc bộ điều khiển I2C Master}
+%     \label{fig:i2c_architecture}
+% \end{figure}
+
+Để tạo ra xung nhịp \texttt{scl} từ nền tảng 200 MHz, module tích hợp một bộ chia tần số dựa trên thanh ghi \texttt{dvsr}. Tuy nhiên, do đặc thù của I2C yêu cầu duy trì các khoảng thời gian thiết lập (\textit{Setup time}) và giữ (\textit{Hold time}) khắt khe cho điều kiện Start và Stop, bộ tạo xung được chia thành 4 giai đoạn (\textit{Quarters}) trong mỗi chu kỳ. Việc lấy mẫu tín hiệu \texttt{sda} luôn được thực hiện tại trung tâm của mức cao xung \texttt{scl} để đảm bảo tính ổn định tối đa của dữ liệu.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{5_hien_thuc_soc/image/i2c.png}
+    \caption{Chia các giai đoạn điều kiện trong chu kỳ xung nhịp I2C}
+    \label{fig:spi_architecture}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{5_hien_thuc_soc/image/i2c1.png}
+    \caption{Chia các giai đoạn dữ liệu trong chu kỳ xung nhịp I2C}
+    \label{fig:spi_architecture}
+\end{figure}
+
+% File: 5_hien_thuc_soc/5.4.3.2_fsm_i2c.tex
+
+\subsubsection{Hiện thực Máy trạng thái điều khiển (Control FSM)}
+
+Máy trạng thái hữu hạn (FSM) là thành phần cốt lõi điều phối toàn bộ trình tự logic của khối I2C Master. FSM tiếp nhận tín hiệu đầu vào \texttt{cmd} để xác định loại tác vụ cần thực hiện, bao gồm: \texttt{RD\_CMD} (đọc dữ liệu), \texttt{WR\_CMD} (ghi dữ liệu), \texttt{START\_CMD} (tạo điều kiện bắt đầu), \texttt{RESTART\_CMD} (khởi động lại giao dịch) và \texttt{STOP\_CMD} (tạo điều kiện kết thúc). Các trạng thái trong FSM được thiết kế để khớp nối chính xác với các pha thời gian của giao thức I2C, đảm bảo tính ổn định cho hai đường tín hiệu \texttt{scl} và \texttt{sda}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.95\textwidth]{5_hien_thuc_soc/image/i2c2.png}
+    \caption{Sơ đồ các trạng thái của bộ điều khiển I2C Master}
+    \label{fig:i2c_fsm_logic}
+\end{figure}
+
+Quy trình vận hành của FSM được hiện thực hóa qua các giai đoạn cụ thể như sau:
+
+\begin{itemize}
+    \item[] \textbf{Khởi tạo giao dịch (Start Phase):} Khi nhận lệnh \texttt{START\_CMD}, FSM sẽ chuyển lần lượt qua các trạng thái \texttt{start1} và \texttt{start2}. Tại đây, bộ điều khiển sẽ tạo ra điều kiện Start bằng cách điều phối mức logic trên các chân I/O để thông báo phiên giao dịch mới cho các thiết bị trên bus.
+    
+    \item[] \textbf{Xử lý dữ liệu và bit xác nhận (Data Phase):} Sau khi thiết lập điều kiện Start, các lệnh \texttt{WR\_CMD} hoặc \texttt{RD\_CMD} sẽ được thực thi. Cả hai tác vụ này đều đi qua chu trình gồm 4 trạng thái: \texttt{data1}, \texttt{data2}, \texttt{data3} và \texttt{data4}.
+    \begin{itemize}
+        \item[] Chu trình này được lặp lại 9 lần cho mỗi byte dữ liệu (bao gồm 8 bit dữ liệu chính và 1 bit xác nhận ACK/NACK).
+        \item[] Một bộ đếm nội bộ (\texttt{bit\_reg}) được sử dụng để theo dõi số lần lặp và đảm bảo trình tự dịch bit diễn ra chính xác.
+        \item[] Sau khi xử lý đủ 9 bit, FSM chuyển sang trạng thái \texttt{data\_end} để kéo thấp các đường \texttt{scl} và \texttt{sda} trong một khoảng thời gian tương ứng với 1/4 chu kỳ xung nhịp trước khi chuyển về trạng thái giữ.
+    \end{itemize}
+
+    \item[] \textbf{Duy trì trạng thái (Hold State) và Phản hồi Ready:} Sau khi hoàn tất một lệnh đơn lẻ, FSM sẽ duy trì ở trạng thái \texttt{hold} để chờ đợi chỉ thị tiếp theo từ vi xử lý. Ở trạng thái này, cả \texttt{scl} và \texttt{sda} đều được giữ ở mức thấp. Tín hiệu trạng thái \texttt{ready} sẽ được kích hoạt tại các trạng thái \texttt{idle} hoặc \texttt{hold} để báo hiệu cho lõi PicoRV32 rằng bộ điều khiển đã sẵn sàng nhận lệnh mới.
+
+    \item[] \textbf{Kết thúc hoặc Khởi động lại (Stop/Restart Phase):} Giao dịch được kết thúc bằng lệnh \texttt{STOP\_CMD}, buộc FSM đi qua các trạng thái \texttt{stop1} và \texttt{stop2} để tạo điều kiện Stop. Nếu nhận lệnh \texttt{RESTART\_CMD}, FSM sẽ trực tiếp tái tạo lại điều kiện Start để bắt đầu một phiên truy cập mới mà không giải phóng bus, giúp tối ưu hóa thời gian truyền tải khi giao tiếp với đa thiết bị.
+\end{itemize}
+
+Cơ chế phân tách các pha xung nhịp thành các trạng thái FSM nhỏ lẻ giúp hệ thống kiểm soát chặt chẽ các thông số thời gian (\textit{setup/hold time}), đảm bảo sự tương thích hoàn toàn với các thiết bị ngoại vi như cảm biến camera OV5640 tại tần số vận hành của SoC.
+
+\subsubsection{Ánh xạ thanh ghi và tích hợp AXI4-Lite}
+Khối I2C được nhúng vào hạ tầng Bus hệ thống thông qua module \textbf{I2C\_axi\_lite\_core}. Module này đóng vai trò cầu nối, chuyển đổi các giao dịch bus AXI thành các xung lệnh nạp dữ liệu (\texttt{din}) và mã lệnh (\texttt{cmd}) cho lõi I2C Master.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.95\textwidth]{5_hien_thuc_soc/image/i2c3.png}
+    \caption{Các thanh ghi kết nối giữa Bus AXI4-Lite và ngoại vi I2C}
+    \label{fig:i2c_fsm_logic}
+\end{figure}
+
+Hệ thống thanh ghi điều khiển được quy hoạch theo cơ chế MMIO, cho phép vi xử lý PicoRV32 quản lý ngoại vi thông qua các tác vụ phần mềm đơn giản:
+\begin{itemize}
+    \item[] \textbf{Thanh ghi Data/Command:} Kết hợp giữa dữ liệu 8-bit và các bit lệnh (Start, Stop, Write, Read). Việc ghi vào thanh ghi này sẽ kích hoạt FSM bắt đầu vận hành.
+    \item[] \textbf{Thanh ghi Divisor (\texttt{dvsr}):} Lưu trữ giá trị bộ chia xung nhịp, cho phép thiết lập tốc độ bus ở chế độ Standard (100 kbps) hoặc Fast mode (400 kbps) linh hoạt tại thời điểm chạy.
+    \item[] \textbf{Thanh ghi Status:} Cung cấp thông tin thời gian thực về trạng thái \texttt{ready} (sẵn sàng tiếp nhận lệnh mới) và kết quả của bit \texttt{ack} gần nhất.
+\end{itemize}
+
+Sự phối hợp giữa kiến trúc phần cứng tối ưu và lớp giao diện AXI chuẩn hóa giúp khối ngoại vi I2C vận hành tin cậy tại tần số cao, đồng thời đơn giản hóa việc viết trình điều khiển (\textit{Driver}) cho cảm biến camera và hệ thống hiển thị trong các giai đoạn phát triển phần mềm ứng dụng.
+
+
+
+% File: 5_hien_thuc_soc/5.4.4_ngoai_vi_ospi_ddr.tex
+
+\subsection{OSPI-DDR}
+
+Trong các hệ thống SoC hiện đại, nhu cầu về băng thông bộ nhớ mở rộng là cực kỳ cấp thiết, đặc biệt khi hệ thống cần xử lý các thuật toán mạng nơ-ron hoặc lưu trữ lượng lớn frame hình ảnh từ camera. Để giải quyết bài toán này, đề tài hiện thực hóa khối ngoại vi \textbf{Octal-SPI (OSPI)} tích hợp công nghệ \textbf{DDR (Double Data Rate)}, cho phép tối ưu hóa tốc độ truyền tải dữ liệu giữa FPGA và các chip Flash/RAM ngoại vi.
+
+\subsubsection{Ý tưởng thiết kế}
+Thành phần chính của thiết kế là module \textbf{ospi\_ddr}, sự kết hợp giữa SPI và I2C thì module này mở rộng xây dựng dựa trên cấu trúc máy trạng thái hữu hạn kết hợp với các khối I/O chuyên dụng của FPGA. Để thực hiện được việc dịch bit tại cả hai cạnh xung nhịp, tầng vật lý sử dụng các nguyên lý chuyển đổi dữ liệu tốc độ cao, đảm bảo pha của xung nhịp và dữ liệu luôn được căn chỉnh chính xác.
+
+Hệ thống điều khiển bao gồm các khối chức năng chính: bộ chia tần số linh hoạt để tạo xung nhịp giao tiếp từ nền tảng 200 MHz, khối logic nạp/dịch dữ liệu 8-bit và bộ điều phối tín hiệu chọn chip (\texttt{csn}). Máy trạng thái điều khiển được thiết kế để quản lý các pha giao thức phức tạp của OSPI, bao gồm pha gửi mã lệnh (Instruction), pha địa chỉ (Address) và pha dữ liệu (Data), trong đó mỗi pha có thể được cấu hình chạy ở chế độ SDR hoặc DDR tùy theo đặc tính của linh kiện ngoại vi kết nối.
+
+\subsubsection{Tích hợp hệ thống và giao diện AXI4-Lite}
+Khối OSPI-DDR được nhúng vào không gian địa chỉ của vi xử lý thông qua module \textbf{OSPI\_axi\_lite\_core}. Module này đóng vai trò là một tầng cầu nối giữa giao thức bus AXI4-Lite tiêu chuẩn và logic điều khiển OSPI nội bộ. Việc tích hợp module \textbf{axi\_lite\_slave\_interface} giúp chuẩn hóa quy trình bắt tay dữ liệu, đảm bảo vi xử lý PicoRV32 có thể truy xuất bộ nhớ ngoài thông qua các lệnh nạp/lưu (\texttt{Load/Store}) đơn giản.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.95\textwidth]{5_hien_thuc_soc/image/ospi.png}
+    \caption{Các thanh ghi kết nối giữa Bus AXI4-Lite và ngoại vi OSPI}
+    \label{fig:i2c_fsm_logic}
+\end{figure}
+
+
+Cấu trúc thanh ghi điều khiển được quy hoạch theo cơ chế Memory-mapped I/O bao gồm:
+\begin{itemize}
+    \item[] \textbf{Thanh ghi Dữ liệu (\texttt{Data Register}):} Đây là thanh ghi trung tâm thực hiện nhiệm vụ truyền nhận dữ liệu.
+    
+    \item[] \textbf{Thanh ghi Cấu hình Chế độ (\texttt{Configuration  Register}):} Thanh ghi này cho phép người dùng tùy chỉnh các thông số của transaction.
+    
+    \item[] \textbf{Thanh ghi Trạng thái (\texttt{Status Register}):} Cung cấp các cờ báo hiệu thời gian thực về tiến trình của bộ điều khiển vật lý.
+\end{itemize}
+Việc hiện thực hóa khối OSPI-DDR không chỉ giúp SoC mở rộng được không gian lưu trữ mã lệnh chương trình (XIP - Execute In Place) mà còn tạo ra một hạ tầng dữ liệu vững chắc cho các tác vụ xử lý AI đòi hỏi bộ nhớ đệm lớn, đảm bảo tính ổn định và hiệu năng cao cho toàn bộ hệ thống SoC.
+
+
+
+
+
+
+% File: 5_hien_thuc_soc/5.5_video_streaming.tex
+
+\section{Video Streaming}
+
+Video Streaming đóng vai trò then chốt trong việc thu nhận, lưu trữ tạm thời và hiển thị hình ảnh từ cảm biến camera đến thiết bị đầu cuối. Hệ thống được thiết kế theo cấu trúc Pipeline (đường ống) nhằm tối ưu hóa băng thông và đảm bảo luồng dữ liệu hình ảnh được truyền tải với độ trễ thấp nhất, phục vụ các tác vụ xử lý ảnh thời gian thực.
+
+\subsection{Kiến trúc tổng thể của Video Pipeline}
+% File: 5_hien_thuc_soc/5.5_video_streaming_intro.tex
+
+Hệ thống xử lý video trong SoC được tổ chức thành bốn tầng chức năng chính, phối hợp chặt chẽ để đảm bảo luồng dữ liệu hình ảnh được xử lý ổn định và hiệu quả:
+
+\begin{itemize}
+    \item[] \textbf{Tầng thu nhận dữ liệu vật lý (\textit{Capture Layer}):} Thu nhận tín hiệu từ giao diện DVP, thực hiện ghép byte và đồng bộ khung hình từ cảm biến camera.
+    
+    \item[] \textbf{Tầng quản lý bộ đệm (\textit{Memory Buffer Layer}):} Đóng vai trò là trung tâm lưu trữ tạm thời, sử dụng bộ điều khiển để quản lý việc truy cập vào vùng nhớ BRAM thông qua các giao dịch Burst tốc độ cao, giúp triệt tiêu sự lệch pha giữa tốc độ camera và tốc độ hiển thị.
+    
+    \item[] \textbf{Tầng truyền tải dữ liệu nội bộ (\textit{DMA Data Transfer Layer}):} Đây là tầng chức năng quan trọng cho phép hệ thống tự động trích xuất dữ liệu từ \textit{Frame Buffer} để truyền tải đến các tài nguyên khác trong SoC. Cơ chế này tận dụng khả năng truy cập trực tiếp bộ nhớ (\textit{Direct Memory Access}) để đẩy dữ liệu hình ảnh vào bộ gia tốc AI hoặc các kênh xử lý tín hiệu số mà không làm tiêu tốn chu kỳ xử lý của lõi PicoRV32, từ đó tối ưu hóa hiệu năng tổng thể của hệ thống.
+    
+    \item[] \textbf{Tầng điều khiển hiển thị (\textit{Display Controller Layer}):} Đảm bảo dữ liệu pixel được xuất ra màn hình thông qua giao diện HDMI một cách mượt mà và không bị nhiễu.
+\end{itemize}
+
+Sự phối hợp giữa bốn tầng chức năng này không chỉ đảm bảo dữ liệu từ cảm biến được đồng bộ hóa chính xác mà còn tạo ra một hạ tầng dữ liệu linh hoạt, sẵn sàng cung cấp thông tin hình ảnh cho các thuật toán xử lý thông minh trong các bước tiếp theo.
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.1\textwidth]{5_hien_thuc_soc/image/videostreaming.png}
+    \caption{Sơ đồ khối Video Streaming tích hợp trong SoC}
+    \label{fig:video_pipeline}
+\end{figure}
+
+\subsection{Khối thu nhận hình ảnh từ cảm biến OV5640 (DVP Interface)}
+Đề tài sử dụng cảm biến hình ảnh \textbf{OV5640} giao tiếp thông qua giao diện video kỹ thuật số song song \textbf{DVP} (Digital Video Port). Khối logic thu nhận thực hiện nhiệm vụ giải mã các tín hiệu định thời từ camera để trích xuất dữ liệu pixel hợp lệ.
+
+Quy trình thu nhận dựa trên việc giám sát ba tín hiệu xung nhịp và đồng bộ:
+\begin{itemize}
+    \item[] \textbf{VSYNC (Vertical Sync):} Đánh dấu thời điểm bắt đầu một khung hình mới.
+    \item[] \textbf{HREF (Horizontal Reference):} Xác định vùng dữ liệu pixel hợp lệ trên mỗi dòng quét.
+    \item[] \textbf{PCLK (Pixel Clock):} Xung nhịp đồng bộ để lấy mẫu dữ liệu trên bus 8-bit ($D[9:2]$).
+\end{itemize}
+
+\subsection{Cơ chế quản lý bộ đệm khung hình (Frame Buffer)}
+Do sự mất cân bằng về tốc độ giữa tần số lấy mẫu của camera và tần số quét của màn hình hiển thị, hệ thống sử dụng một bộ đệm khung hình (\textbf{Frame Buffer}) đóng vai trò vùng nhớ đệm trung gian. Khối này được hiện thực hóa bằng bộ nhớ \textit{BRAM} với cấu trúc hai cổng (Dual-port) độc lập.
+
+Cơ chế vận hành của Frame Buffer bao gồm:
+\begin{itemize}
+    \item[] \textbf{Luồng Ghi (Write Path):} Đồng bộ với xung nhịp PCLK, thực hiện việc ghi dữ liệu pixel từ khối Capture vào bộ nhớ dựa trên địa chỉ được tạo ra từ bộ đếm tọa độ dòng/cột.
+    \item[] \textbf{Luồng Đọc (Read Path):} Đồng bộ với xung nhịp hiển thị (\textit{Pixel Clock}), truy xuất dữ liệu pixel dựa trên yêu cầu từ bộ tạo định thời hiển thị.
+\end{itemize}
+
+
+\subsection{Điều khiển hiển thị và Giao diện HDMI (ADV7513)}
+Tầng cuối cùng của Pipeline là bộ điều khiển hiển thị, chịu trách nhiệm tạo ra các tín hiệu đồng bộ chuẩn VGA/HD để giao tiếp với chip phát \textbf{ADV7513}.
+
+Bộ tạo định thời Video thực hiện tính toán các khoảng thời gian quét bao gồm: \textit{Active Video}, \textit{Front Porch}, \textit{Sync Pulse} và \textit{Back Porch} cho cả hai chiều ngang (Horizontal) và dọc (Vertical).
+\begin{itemize}
+    \item[] \textbf{HSYNC/VSYNC:} Điều khiển quá trình quét dòng và quét khung hình trên màn hình.
+    \item[] \textbf{Data Enable (DE):} Tín hiệu kích hoạt cho phép chip ADV7513 lấy mẫu dữ liệu pixel từ bus dữ liệu để chuyển đổi sang định dạng TMDS truyền qua cổng HDMI.
+\end{itemize}
+
+Việc cấu hình các tham số cho cảm biến OV5640 và chip ADV7513 được thực hiện thông qua khối ngoại vi \textbf{I2C} đã trình bày ở phần trước.
+
+
+
+
+
+
+

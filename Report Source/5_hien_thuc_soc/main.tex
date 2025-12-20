@@ -1,17 +1,20 @@
 \chapter{Hiện thực SoC và Tích hợp hệ thống}
 \label{ch:soc_impl}
 
-\textit{Chương này trình bày chi tiết quá trình hiện thực hệ thống SoC. Nội dung bao gồm việc tích hợp lõi vi xử lý PicoRV32, thiết kế các khối ngoại vi (Camera, UART, SPI, OSPI, I2C), xây dựng hệ thống Bus AXI kết nối và phát triển lớp phần mềm điều khiển (Firmware) để vận hành toàn bộ hệ thống.}
+\textit{Chương này trình bày chi tiết quá trình hiện thực hệ thống SoC. Nội dung bao gồm việc tích hợp lõi vi xử lý PicoRV32, thiết kế các khối ngoại vi (UART, SPI, OSPI, I2C, Camera/HDMI DVP), xây dựng hệ thống Bus AXI kết nối và phát triển lớp phần mềm điều khiển (Firmware) để vận hành toàn bộ hệ thống.}
 
 \section{Môi trường và Công cụ hiện thực}
 % Mô tả Vivado, board FPGA sử dụng, toolchain GCC cho RISC-V
 \input{5_hien_thuc_soc/5.1_moi_truong_hien_thuc.tex}
 
-\section{Tích hợp Lõi RISC-V và Hệ thống Bus}
+\section{Tích hợp Lõi RISC-V}
 % Phần này mô tả backbone của hệ thống:
 % - Cấu hình Core (Clock, Reset, Boot address).
 % - Cấu hình AXI Interconnect/Crossbar (Phân giải địa chỉ Master/Slave).
 \input{5_hien_thuc_soc/5.2_riscv_bus_integration.tex}
+
+\section{Thiết kế hệ thống Bus}
+\input{5_hien_thuc_soc/5.2.2_bus_integration.tex}
 
 \section{Thiết kế và Tích hợp các khối Ngoại vi}
 % Đây là phần trọng tâm công việc của bạn (System Design):
@@ -25,8 +28,3 @@
 % - File Linker script (.ld), Startup code (.S).
 % - Các hàm thư viện (HAL) để điều khiển DMA, Camera, Accelerator.
 \input{5_hien_thuc_soc/5.4_firmware_driver.tex}
-
-\section{Quy trình Tổng hợp và Triển khai trên FPGA}
-% Các bước thực hiện: Synthesis -> Implementation -> Bitstream Generation.
-% Thiết lập ràng buộc (Constraints file .xdc): Gán chân PIN, ràng buộc thời gian (Timing).
-\input{5_hien_thuc_soc/5.5_trien_khai_fpga.tex}
