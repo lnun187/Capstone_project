@@ -166,6 +166,19 @@
     \renewcommand*\listfigurename{Danh sách hình vẽ}
     \renewcommand*\listtablename{Danh sách bảng biểu}
     \renewcommand*\chaptername{Chương}
+    
+    % Định nghĩa tên hiển thị dưới mỗi hình/bảng
+    \renewcommand{\figurename}{Hình}
+    \renewcommand{\tablename}{Bảng}
+    
+    % Cấu hình tocloft để hiển thị "Hình 1.1" thay vì "1.1" trong danh sách
+    \renewcommand{\cftfigpresnum}{Hình~}
+    \renewcommand{\cftfignumwidth}{4.5em} % Tăng độ rộng để không bị đè chữ
+    \renewcommand{\cftfigaftersnum}{:}    % Thêm dấu hai chấm nếu muốn (Hình 1.1:)
+    
+    \renewcommand{\cfttabpresnum}{Bảng~}
+    \renewcommand{\cfttabnumwidth}{4.5em}
+    \renewcommand{\cfttabaftersnum}{:}
 }
 
 
