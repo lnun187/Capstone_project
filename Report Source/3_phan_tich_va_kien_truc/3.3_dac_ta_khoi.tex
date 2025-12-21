@@ -18,12 +18,12 @@
 Khối này quản lý dòng chảy dữ liệu hình ảnh liên tục để phục vụ nhu cầu quan sát. Tại ngõ vào, giao diện thu thập dữ liệu tiếp nhận tín hiệu từ Camera qua chuẩn song song DVP, thực hiện đồng bộ và đóng gói dữ liệu vào bộ đệm khung hình (Frame Buffer). Tại ngõ ra, bộ điều khiển hiển thị đọc dữ liệu từ bộ đệm này và chuyển đổi thành tín hiệu chuẩn HDMI, đảm bảo xuất hình ảnh mượt mà lên màn hình với độ trễ tối thiểu.
 
 \subsubsection{Khối Gia tốc (Accelerator)}
-Đóng vai trò là trung tâm xử lý AI, khối gia tốc được thiết kế dựa trên kiến trúc Mảng tâm thu (Systolic Array) kích thước $N \times N$, chuyên trách xử lý các phép toán nhân chập (Convolution) nặng nề của mạng nơ-ron.
+Đóng vai trò là trung tâm xử lý AI chuyên trách xử lý các phép toán nhân chập (Convolution) nặng nề của mạng nơ-ron.
 
 Để đảm bảo khả năng cung cấp dữ liệu liên tục cho mảng tính toán mà không làm nghẽn bus hệ thống, khối gia tốc được tích hợp cơ chế truy xuất bộ nhớ băng thông rộng thông qua hai kênh DMA chuyên biệt:
 \begin{itemize}
-    \item[] \textbf{DMA 0 (Data/Weight Reader):} Kênh này chịu trách nhiệm đọc dữ liệu đặc trưng đầu vào (Input Feature Maps) và các bộ trọng số (Weights) từ bộ nhớ hệ thống (Frame Buffer hoặc Weight Memory) để nạp vào bộ đệm nội của Accelerator.
-    \item[] \textbf{DMA 1 (Result Writer):} Kênh này chịu trách nhiệm thu thập kết quả tính toán (Output Feature Maps) từ mảng Systolic và ghi ngược trở lại bộ nhớ chính, sẵn sàng cho các lớp xử lý tiếp theo hoặc để vi xử lý trung tâm đọc kết quả phân lớp.
+    \item[] \textbf{DMA 0 (Data/Weight Reader):} Kênh này chịu trách nhiệm đọc các bộ trọng số (Weights) từ bộ nhớ hệ thống (Frame Buffer hoặc Weight Memory) để nạp vào bộ đệm nội của Accelerator.
+    \item[] \textbf{DMA 1 (Result Writer):} Kênh này chịu trách nhiệm đọc dữ liệu đặc trưng đầu vào (Input Feature Maps) và thu thập kết quả tính toán (Output Feature Maps) từ khối Image Detector và ghi ngược trở lại bộ nhớ chính, sẵn sàng cho các lớp xử lý tiếp theo hoặc để vi xử lý trung tâm đọc kết quả phân lớp.
 \end{itemize}
 
 

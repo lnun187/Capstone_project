@@ -1,13 +1,13 @@
 \chapter{Ước lượng hiệu năng}
 \label{ch:evaluation}
 
-Chương này trình bày các kết quả thực nghiệm thu được từ mô hình ước lượng hiệu năng của kiến trúc phần cứng AI Accelerator được đề xuất trong đồ án. Nội dung đánh giá tập trung vào việc phân tích hiệu quả của thuật toán tối ưu tham số (Codegen) và khả năng xử lý của phần cứng đối với ba lớp mô hình đại diện gồm AlexNet, VGG-16 và MobileNetV1. Bên cạnh đó, nhóm thực hiện cũng tiến hành so sánh kết quả với kiến trúc Eyeriss để làm rõ các ưu điểm và hạn chế của giải pháp thiết kế.
+Chương này trình bày các kết quả thu được từ mô hình ước lượng hiệu năng của kiến trúc phần cứng AI Accelerator được đề xuất trong đồ án. Nội dung đánh giá tập trung vào việc phân tích hiệu quả của thuật toán tối ưu tham số (Codegen) và khả năng xử lý của phần cứng đối với ba lớp mô hình đại diện gồm AlexNet, VGG-16 và MobileNetV1. Bên cạnh đó, nhóm thực hiện cũng tiến hành so sánh kết quả với kiến trúc Eyeriss để làm rõ các ưu điểm và hạn chế của giải pháp thiết kế.
 
 \section{Môi trường và Phương pháp thực nghiệm}
 
 Nhằm đánh giá để tiên liệu trước về hiệu năng của đồ án này, kiến trúc được đánh giá thông qua một mô hình ước lượng (Analytical Estimator) xây dựng bằng ngôn ngữ C++. Mô hình này hiện thực hóa các công thức toán học đã được thiết lập tại Chương 4 nhằm dự báo độ trễ và tài nguyên tiêu thụ.
 
-Các tham số cấu hình cho quá trình mô phỏng được thiết lập dựa trên các ràng buộc phần cứng dự kiến. Cụ thể, hệ thống hoạt động ở tần số $200 \text{ MHz}$. Tốc độ của off-chip memory là 1 byte 1 cycle tương ứng tần số 200 MHz. Các giá trị đã được quantized ở dạng int8.Phạm vi đánh giá chỉ tập trung đo đạc thời gian thực thi của các lớp tích chập (Convolutional Layers), vốn là thành phần chiếm tỷ trọng tính toán lớn nhất trong mạng CNN. Chiến lược xử lý được lựa chọn là Batch Size = 1 nhằm tối ưu hóa độ trễ cho tác vụ xử lý từng ảnh đơn lẻ. Về cấu hình bộ nhớ, đồ án giả lập kiến trúc bộ nhớ tách biệt (Separate Off-chip Memory), trong đó Trọng số (Weights) và Dữ liệu (Activations) được truy xuất trên các kênh độc lập để tối ưu băng thông.
+Các tham số cấu hình cho quá trình mô phỏng được thiết lập dựa trên các ràng buộc phần cứng dự kiến. Cụ thể, hệ thống hoạt động ở tần số $200 \text{ MHz}$. Tốc độ của off-chip memory là 1 byte 1 cycle tương ứng tần số 200 MHz. Các giá trị đã được quantized ở dạng int8. Phạm vi đánh giá chỉ tập trung đo đạc thời gian thực thi của các lớp tích chập (Convolutional Layers), vốn là thành phần chiếm tỷ trọng tính toán lớn nhất trong mạng CNN. Chiến lược xử lý được lựa chọn là Batch Size = 1 nhằm tối ưu hóa độ trễ cho tác vụ xử lý từng ảnh đơn lẻ. Về cấu hình bộ nhớ, đồ án giả lập kiến trúc bộ nhớ tách biệt (Separate Off-chip Memory), trong đó Trọng số (Weights) và Dữ liệu (Activations) được truy xuất trên các kênh độc lập để tối ưu băng thông.
 
 \section{Đánh giá khả năng xử lý trên AlexNet}
 \label{sec:alexnet_eval}
@@ -34,8 +34,8 @@ Quan sát biểu đồ tại Hình \ref{fig:alexnet_chart}, có thể thấy đi
 \toprule
 \multirow{2}{*}{\textbf{Layer}} & \multirow{2}{*}{\textbf{Filter / Channels}} & \multirow{2}{*}{\textbf{Map Size}} & \multirow{2}{*}{\textbf{PE Used}} & \multicolumn{3}{c}{\textbf{Optimized Config}} & \multirow{2}{*}{\textbf{Latency (ms)}} & \multirow{2}{*}{\textbf{Bottleneck}} \\ \cmidrule(lr){5-7}
  &  &  &  & $\mathbf{T_k}$ & $\mathbf{T_m}$ & $\mathbf{T_h}$ &  &  \\ \midrule
-Conv1 & $11\times11 / 96$ & $224 \times 224$ & 396 & 3 & 12 & 1 & 8.12 & Memory \\
-Conv2 & $5\times5 / 256$ & $27 \times 27$ & 180 & 3 & 12 & 1 & 13.60 & Memory \\
+Conv1 & $11\times11 / 96$ & $224 \times 224$ & 396 & 3 & 12 & 1 & 8.12 & Mixed \\
+Conv2 & $5\times5 / 256$ & $27 \times 27$ & 180 & 3 & 12 & 1 & 13.60 & Mixed \\
 Conv3 & $3\times3 / 384$ & $13 \times 13$ & 108 & 3 & 12 & 1 & 7.25 & Memory \\
 Conv4 & $3\times3 / 384$ & $13 \times 13$ & 108 & 3 & 12 & 1 & 10.71 & Memory \\
 Conv5 & $3\times3 / 256$ & $13 \times 13$ & 108 & 3 & 12 & 1 & 7.36 & Memory \\ \midrule
@@ -44,9 +44,9 @@ Conv5 & $3\times3 / 256$ & $13 \times 13$ & 108 & 3 & 12 & 1 & 7.36 & Memory \\ 
 }
 \end{table}
 
-Dựa trên kết quả thực hiện mô phỏng tại Bảng \ref{tab:alexnet_breakdown}, hệ thống đạt tổng thời gian thực thi cho mô hình AlexNet là $47,04$ ms với cấu hình phần cứng sử dụng tối đa $396$ PE. Việc áp dụng các tham số tối ưu hóa cố định $T_k = 3$ và $T_m = 12$ giúp duy trì sự ổn định trong kiến trúc, đồng thời số lượng PE huy động thực tế được điều chỉnh linh hoạt theo từng lớp để phù hợp với kích thước kernel và bản đồ đặc trưng.
+Dựa trên kết quả thực nghiệm tại Bảng \ref{tab:alexnet_breakdown}, mô hình AlexNet đạt tổng thời gian thực thi là $47,04$ ms. Tại hai lớp đầu tiên (\textit{Conv1} và \textit{Conv2}), hệ thống ghi nhận trạng thái \textit{Mixed Bound}, cho thấy hiệu năng đang bị kìm hãm đồng thời bởi năng lực tính toán của mảng PE và tốc độ đáp ứng của băng thông bộ nhớ. Trong đó, \textit{Conv2} có độ trễ cao nhất ($13,60$ ms) do phải xử lý khối lượng tính toán lớn cùng áp lực truyền tải dữ liệu cao. 
 
-Đặc điểm quan trọng nhất được ghi nhận là trạng thái \textit{Memory Bound} (nghẽn bộ nhớ) xảy ra đồng nhất trên tất cả các lớp từ Conv1 đến Conv5. Mặc dù mảng PE đã được tối ưu, tốc độ truy xuất dữ liệu từ bộ nhớ vẫn là yếu tố chi phối chính, khiến năng lực tính toán chưa được khai thác triệt để. Trong đó, lớp Conv2 chiếm tỷ trọng thời gian lớn nhất ($13,60$ ms), phản ánh áp lực truyền tải dữ liệu cực hạn khi xử lý số lượng kênh lớn. Tổng kết lại, kết quả thực nghiệm chỉ ra rằng để nâng cao hiệu năng hệ thống trong tương lai, các giải pháp cần tập trung vào việc cải thiện băng thông bộ nhớ hoặc tăng cường khả năng tái sử dụng dữ liệu (\textit{data reuse}) tại các tầng đệm trung gian.
+Từ lớp \textit{Conv3} đến \textit{Conv5}, nút thắt cổ chai chuyển dịch hoàn toàn sang \textit{Memory Bound}. Mặc dù số lượng PE huy động thực tế giảm xuống, tốc độ truy xuất từ bộ nhớ ngoài vẫn không kịp cung cấp dữ liệu cho các đơn vị tính toán, dẫn đến việc lãng phí tài nguyên phần cứng. Tổng kết lại, thực nghiệm cho thấy hệ thống đang gặp thách thức về băng thông (\textit{Memory Wall}), do đó các giải pháp tối ưu trong tương lai cần tập trung vào việc tăng cường khả năng tái sử dụng dữ liệu (\textit{data reuse}) thay vì mở rộng quy mô mảng PE.
 \section{Đánh giá khả năng xử lý trên VGG-16}
 \label{sec:vgg_eval}    
 
@@ -72,27 +72,27 @@ Dựa vào biểu đồ Hình \ref{fig:vgg16_chart}, điểm tối ưu nhất đ
 \toprule
 \multirow{2}{*}{\textbf{Layer}} & \multirow{2}{*}{\textbf{Filter / Channels}} & \multirow{2}{*}{\textbf{Map Size}} & \multirow{2}{*}{\textbf{PE Used}} & \multicolumn{3}{c}{\textbf{Optimized Config}} & \multirow{2}{*}{\textbf{Latency (ms)}} & \multirow{2}{*}{\textbf{Bottleneck}} \\ \cmidrule(lr){5-7}
  &  &  &  & $\mathbf{T_k}$ & $\mathbf{T_m}$ & $\mathbf{T_h}$ &  &  \\ \midrule
-Conv1\_1 & $3\times3 / 64$ & $224 \times 224$ & 384 & 2 & 64 & 1 & 17.07 & Memory \\
-Conv1\_2 & $3\times3 / 64$ & $224 \times 224$ & 384 & 2 & 64 & 1 & 39.90 & Memory \\ \midrule
-Conv2\_1 & $3\times3 / 128$ & $112 \times 112$ & 384 & 2 & 64 & 1 & 19.95 & Memory \\
-Conv2\_2 & $3\times3 / 128$ & $112 \times 112$ & 384 & 2 & 64 & 1 & 31.99 & Memory \\ \midrule
-Conv3\_1 & $3\times3 / 256$ & $56 \times 56$ & 384 & 2 & 64 & 1 & 16.00 & Memory \\
-Conv3\_2 & $3\times3 / 256$ & $56 \times 56$ & 384 & 2 & 64 & 1 & 28.04 & Memory \\
-Conv3\_3 & $3\times3 / 256$ & $56 \times 56$ & 384 & 2 & 64 & 1 & 28.04 & Memory \\ \midrule
-Conv4\_1 & $3\times3 / 512$ & $28 \times 28$ & 384 & 2 & 64 & 1 & 14.02 & Memory \\
-Conv4\_2 & $3\times3 / 512$ & $28 \times 28$ & 384 & 2 & 64 & 1 & 26.06 & Memory \\
-Conv4\_3 & $3\times3 / 512$ & $28 \times 28$ & 384 & 2 & 64 & 1 & 26.06 & Memory \\ \midrule
-Conv5\_1 & $3\times3 / 512$ & $14 \times 14$ & 384 & 2 & 64 & 1 & 6.52 & Memory \\
-Conv5\_2 & $3\times3 / 512$ & $14 \times 14$ & 384 & 2 & 64 & 1 & 6.52 & Memory \\
-Conv5\_3 & $3\times3 / 512$ & $14 \times 14$ & 384 & 2 & 64 & 1 & 6.52 & Memory \\ \midrule
-\textbf{Total} & \textbf{--} & \textbf{--} & \textbf{Max 384} & \textbf{--} & \textbf{--} & \textbf{--} & \textbf{266.66} & \textbf{Memory} \\ \bottomrule
+Conv1\_1 & $3\times3 / 64$ & $224 \times 224$ & 384 & 2 & 64 & 1 & 17.07 & Mixed \\
+Conv1\_2 & $3\times3 / 64$ & $224 \times 224$ & 384 & 2 & 64 & 1 & 39.90 & Mixed \\ \midrule
+Conv2\_1 & $3\times3 / 128$ & $112 \times 112$ & 384 & 2 & 64 & 1 & 19.95 & Mixed \\
+Conv2\_2 & $3\times3 / 128$ & $112 \times 112$ & 384 & 2 & 64 & 1 & 31.99 & Mixed \\ \midrule
+Conv3\_1 & $3\times3 / 256$ & $56 \times 56$ & 384 & 2 & 64 & 1 & 16.00 & Mixed \\
+Conv3\_2 & $3\times3 / 256$ & $56 \times 56$ & 384 & 2 & 64 & 1 & 28.04 & Mixed \\
+Conv3\_3 & $3\times3 / 256$ & $56 \times 56$ & 384 & 2 & 64 & 1 & 28.04 & Mixed \\ \midrule
+Conv4\_1 & $3\times3 / 512$ & $28 \times 28$ & 384 & 2 & 64 & 1 & 14.02 & Mixed \\
+Conv4\_2 & $3\times3 / 512$ & $28 \times 28$ & 384 & 2 & 64 & 1 & 26.06 & Mixed \\
+Conv4\_3 & $3\times3 / 512$ & $28 \times 28$ & 384 & 2 & 64 & 1 & 26.06 & Mixed \\ \midrule
+Conv5\_1 & $3\times3 / 512$ & $14 \times 14$ & 384 & 2 & 64 & 1 & 6.52 & Mixed \\
+Conv5\_2 & $3\times3 / 512$ & $14 \times 14$ & 384 & 2 & 64 & 1 & 6.52 & Mixed \\
+Conv5\_3 & $3\times3 / 512$ & $14 \times 14$ & 384 & 2 & 64 & 1 & 6.52 & Mixed \\ \midrule
+\textbf{Total} & \textbf{--} & \textbf{--} & \textbf{Max 384} & \textbf{--} & \textbf{--} & \textbf{--} & \textbf{266.66} & \textbf{Mixed} \\ \bottomrule
 \end{tabular}%
 }
 \end{table}
 
-Kết quả thực nghiệm trên mô hình VGG-16 ghi nhận tổng thời gian thực thi là $266,66$ ms với cấu hình phần cứng tối ưu hóa $(T_k=2, T_m=64, T_h=1)$. Hệ thống duy trì mức huy động tài nguyên ổn định tại \textbf{384 PE} cho toàn bộ 13 lớp tích chập, cho thấy sự tương thích cao giữa cấu hình phần cứng đề xuất và cấu trúc phân tầng của VGG-16.
+Kết quả thực nghiệm tại Bảng \ref{tab:vgg16_breakdown} cho thấy mô hình VGG-16 đạt tổng thời gian thực thi là $266,66$ ms với cấu hình phần cứng huy động ổn định $384$ PE. Điểm đặc biệt toàn bộ các lớp từ \textit{Conv1\_1} đến \textit{Conv5\_3} đều duy trì trạng thái \textit{Mixed Bound}. Điều này chứng tỏ cấu hình tối ưu hóa $T_m = 64$ đã tạo ra sự cân bằng nhất định giữa năng lực tính toán và lưu lượng dữ liệu, khiến hệ thống bị giới hạn đồng thời bởi cả băng thông bộ nhớ và tốc độ xử lý của mảng PE trên mọi tầng kiến trúc.
 
-Tuy nhiên, số liệu thống kê khẳng định toàn bộ hệ thống vận hành trong tình trạng \textit{Memory Bound} (nghẽn bộ nhớ). Độ trễ lớn nhất tập trung tại các lớp đầu như Conv1\_2 ($39,90$ ms) và các lớp có số lượng kênh lớn như khối Conv2 và Conv3, nơi sự chênh lệch chu kỳ giữa truy xuất bộ nhớ và tính toán là rõ rệt nhất. Điều này minh chứng rằng năng lực xử lý của mảng PE đang bị giới hạn bởi tốc độ cung cấp dữ liệu bản đồ đặc trưng ($ifmap$) và trọng số từ bộ nhớ ngoài. Tổng kết lại, để tối ưu hóa hiệu năng cho các kiến trúc sâu như VGG-16, hướng phát triển cần ưu tiên việc mở rộng băng thông bộ nhớ hoặc áp dụng các kỹ thuật nén mô hình để giảm thiểu khối lượng dữ liệu truyền tải, thay vì chỉ tập trung gia tăng số lượng đơn vị tính toán.
+Độ trễ có xu hướng giảm dần tại các tầng sâu hơn (từ $39,90$ ms ở \textit{Conv1\_2} xuống còn $6,52$ ms ở các lớp \textit{Conv5}), hệ quả trực tiếp của việc thu nhỏ kích thước bản đồ đặc trưng (\textit{Map Size}) dù số lượng kênh tăng mạnh. Việc duy trì số lượng PE hoạt động tối đa xuyên suốt các lớp cho thấy hiệu suất khai thác phần cứng của thiết kế đối với VGG-16 là rất cao. Tuy nhiên, để tối ưu hóa thêm tổng thời gian thực thi, cần có những điều chỉnh linh hoạt hơn về tham số $T_k$ và $T_m$ nhằm thoát khỏi trạng thái nghẽn hỗn hợp tại các lớp có khối lượng tính toán lớn ở giai đoạn đầu.
 
 \section{Đánh giá khả năng xử lý trên MobileNet v1}
 \label{sec:mobilenet_eval}
@@ -118,31 +118,29 @@ Dựa trên biểu đồ Hình \ref{fig:mobilenet_chart}, điểm tối ưu nh�
 \toprule
 \multirow{2}{*}{\textbf{Layer}} & \multirow{2}{*}{\textbf{Filter / Channels}} & \multirow{2}{*}{\textbf{Map Size}} & \multirow{2}{*}{\textbf{PE Used}} & \multicolumn{3}{c}{\textbf{Optimized Config}} & \multirow{2}{*}{\textbf{Latency (ms)}} & \multirow{2}{*}{\textbf{Bottleneck}} \\ \cmidrule(lr){5-7}
  &  &  &  & $\mathbf{T_k}$ & $\mathbf{T_m}$ & $\mathbf{T_h}$ &  &  \\ \midrule
-Standard Conv (L0) & $3\times3 / 32$ & $224 \times 224$ & 96 & 1 & 32 & 1 & 3.39 & Memory \\ \midrule
-Depthwise (L1) & $3\times3 / 32$ & $112 \times 112$ & 3 & 1 & 1 & 1 & 4.02 & Memory \\
+Standard Conv (L0) & $3\times3 / 32$ & $224 \times 224$ & 96 & 1 & 32 & 1 & 3.39 & Mixed \\ \midrule
+Depthwise (L1) & $3\times3 / 32$ & $112 \times 112$ & 3 & 1 & 1 & 1 & 4.02 & Mixed \\
 Pointwise (L2) & $1\times1 / 64$ & $112 \times 112$ & 64 & 1 & 64 & 1 & 6.02 & Memory \\ \midrule
-Depthwise (L3) & $3\times3 / 64$ & $56 \times 56$ & 3 & 1 & 1 & 23 & 6.70 & Memory \\
+Depthwise (L3) & $3\times3 / 64$ & $56 \times 56$ & 3 & 1 & 1 & 23 & 6.70 & Mixed \\
 Pointwise (L4) & $1\times1 / 128$ & $56 \times 56$ & 128 & 1 & 128 & 1 & 3.01 & Memory \\ \midrule
-Depthwise (L5) & $3\times3 / 128$ & $56 \times 56$ & 3 & 1 & 1 & 1 & 4.02 & Memory \\
+Depthwise (L5) & $3\times3 / 128$ & $56 \times 56$ & 3 & 1 & 1 & 1 & 4.02 & Mixed \\
 Pointwise (L6) & $1\times1 / 128$ & $56 \times 56$ & 128 & 1 & 128 & 1 & 4.01 & Memory \\ \midrule
-Depthwise (L7) & $3\times3 / 128$ & $28 \times 28$ & 3 & 1 & 1 & 56 & 2.57 & Memory \\
+Depthwise (L7) & $3\times3 / 128$ & $28 \times 28$ & 3 & 1 & 1 & 56 & 2.57 & Mixed \\
 Pointwise (L8) & $1\times1 / 256$ & $28 \times 28$ & 128 & 1 & 128 & 1 & 2.01 & Memory \\ \midrule
-Depthwise (L9) & $3\times3 / 256$ & $28 \times 28$ & 3 & 1 & 1 & 1 & 2.01 & Memory \\
+Depthwise (L9) & $3\times3 / 256$ & $28 \times 28$ & 3 & 1 & 1 & 1 & 2.01 & Mixed \\
 Pointwise (L10) & $1\times1 / 256$ & $28 \times 28$ & 128 & 1 & 128 & 1 & 3.01 & Memory \\ \midrule
-Depthwise (L11) & $3\times3 / 256$ & $14 \times 14$ & 3 & 1 & 1 & 28 & 1.27 & Memory \\
+Depthwise (L11) & $3\times3 / 256$ & $14 \times 14$ & 3 & 1 & 1 & 28 & 1.27 & Mixed \\
 Pointwise (L12) & $1\times1 / 512$ & $14 \times 14$ & 128 & 1 & 128 & 1 & 1.51 & Memory \\ \midrule
-Avg. DW (L13-25 odd) & $3\times3 / 512$ & $14 \times 14$ & 3 & 1 & 1 & 1$^*$ & 0.88$^\dagger$ & Memory \\
-Avg. PW (L14-26 even) & $1\times1 / 512$ & $14 \times 14$ & 128 & 1 & 128 & 1 & 2.21$^\dagger$ & Memory \\ \midrule
-\textbf{Total} & \textbf{--} & \textbf{--} & \textbf{Max 128} & \textbf{--} & \textbf{--} & \textbf{--} & \textbf{65.75} & \textbf{Memory} \\ \bottomrule
-\multicolumn{9}{l}{\small $^*$ Giá trị $T_h$ thay đổi tùy lớp (1-14). $^\dagger$ Giá trị trung bình của các lớp lặp lại trong khối Conv5.}
+Avg. DW (L13-25 odd) & $3\times3 / 512$ & $14 \times 14$ & 3 & 1 & 1 & $1^*$ & 0.86$^\dagger$ & Mixed \\
+Avg. PW (L14-26 even) & $1\times1 / 512$ & $14 \times 14$ & 128 & 1 & 128 & 1 & 2.30$^\dagger$ & Memory \\ \midrule
+\textbf{Total} & \textbf{--} & \textbf{--} & \textbf{Max 128} & \textbf{--} & \textbf{--} & \textbf{--} & \textbf{65.75} & \textbf{Mixed} \\ \bottomrule
+\multicolumn{9}{l}{\small $^*$ Giá trị $T_h$ thay đổi tùy lớp. $^\dagger$ Giá trị trung bình dựa trên tổng chu kỳ thực tế của các lớp lặp lại (L13-L26).}
 \end{tabular}%
 }
 \end{table}
-Dựa trên kết quả tại Bảng \ref{tab:mobilenet_breakdown}, mô hình MobileNet v1 đạt tổng thời gian thực thi là $65,75$ ms với mảng PE huy động tối đa $128$ đơn vị. Đặc điểm quan trọng nhất là trạng thái \textit{Memory Bound} (nghẽn bộ nhớ) xảy ra đồng nhất trên $100\%$ các lớp, minh chứng rằng băng thông truy xuất dữ liệu đang là điểm nghẽn chính cản trở năng lực tính toán của hệ thống bất kể loại hình tích chập nào.
+Dựa trên kết quả thực nghiệm tại Bảng \ref{tab:mobilenet_breakdown}, mô hình MobileNet v1 đạt tổng thời gian thực thi là $65,75$ ms với mảng PE huy động tối đa $128$ đơn vị. Hệ thống ghi nhận sự phân hóa rõ rệt về nút thắt cổ chai giữa hai loại hình tích chập đặc trưng: các lớp \textit{Pointwise} luôn ở trạng thái \textit{Memory Bound}, trong khi các lớp \textit{Depthwise} và \textit{Standard Conv} duy trì trạng thái \textit{Mixed Bound}. 
 
-Trong các lớp Pointwise ($1 \times 1$), hệ thống tận dụng tối đa cấu hình song song $T_m = 128$ để xử lý số lượng kênh lớn, dẫn đến việc huy động tài nguyên phần cứng ở mức cao nhất. Tuy nhiên, các lớp này vẫn chiếm tỷ trọng thời gian thực thi lớn (từ $1,25$ ms đến $6,02$ ms) do khối lượng dữ liệu bản đồ đặc trưng cần luân chuyển quá lớn. Ngược lại, các lớp Depthwise ($3 \times 3$) bộc lộ sự hạn chế về hiệu suất sử dụng tài nguyên khi chỉ huy động được $3$ PE mỗi chu kỳ do đặc thù tính toán đơn kênh ($T_m = 1$). Mặc dù độ trễ của các lớp Depthwise được duy trì ở mức thấp (tối thiểu $0,50$ ms), nhưng hiệu suất sử dụng phần cứng cực thấp (chỉ khoảng $2,3\%$ so với mức tối đa) đặt ra yêu cầu cấp thiết về việc cải tiến kiến trúc mảng PE để thích ứng tốt hơn với các khối tích chập tách rời.
-
-Tổng kết lại, kết quả thực nghiệm cho thấy MobileNet v1 chịu tác động kép từ giới hạn băng thông bộ nhớ và sự không tương thích giữa cấu trúc lớp Depthwise với mảng PE song song hóa cao. Các giải pháp tiếp theo cần tập trung vào việc tối ưu hóa bộ đệm cho lớp Pointwise và tái cấu trúc sơ đồ tính toán cho lớp Depthwise để giải tỏa điểm nghẽn hiện tại.
+Tại các lớp \textit{Pointwise}, dù đã tận dụng tối đa cấu hình song song $T_m = 128$, hiệu năng vẫn bị giới hạn bởi tốc độ truy xuất dữ liệu từ bộ nhớ ngoài do khối lượng tham số và đặc trưng lớn. Ngược lại, các lớp \textit{Depthwise} bộc lộ sự hạn chế trong việc khai thác tài nguyên khi chỉ huy động được $3$ PE ($T_m = 1$) do đặc thù tính toán đơn kênh, dẫn đến việc năng lực tính toán và băng thông rơi vào trạng thái nghẽn hỗn hợp với hiệu suất sử dụng phần cứng thấp. Tổng kết lại, kết quả thực nghiệm chỉ ra rằng hiệu năng của MobileNet v1 trên kiến trúc hiện tại bị kìm hãm đồng thời bởi giới hạn băng thông bộ nhớ tại các lớp tích chập điểm và sự thiếu tương thích về cấu trúc song song tại các lớp tích chập sâu.
 \section{So sánh với các Nghiên cứu liên quan}
 \label{sec:comparison}
 

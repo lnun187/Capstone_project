@@ -156,7 +156,7 @@ Số lượng hàng đầu ra hợp lệ ($T_{ho}$) trong mỗi Pass tuân theo 
 \end{equation}
 
 \subsubsection{Logic Hoạt động Ping-Pong}
-Hệ thống sử dụng hai bộ đệm đầu ra ($Buffer_A, Buffer_B$) luân phiên vai trò để xử lý vấn đề này:
+Hệ thống sử dụng hai bộ đệm đầu ra ($\text{Buffer}_A, \text{Buffer}_B$) luân phiên vai trò để xử lý vấn đề này:
 \begin{enumerate}
     \item \textbf{Pass $k$:} Ghi kết quả hợp lệ vào Buffer hiện tại. Các hàng dôi ra được ghi vào Buffer kế tiếp.
     \item \textbf{Pass $k+1$:} Buffer kế tiếp (chứa dữ liệu dôi ra cũ) trở thành Buffer hiện tại. Phép tính mới cộng dồn vào đó, hoàn thiện các hàng dôi ra thành hợp lệ.
