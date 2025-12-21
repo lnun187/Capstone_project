@@ -263,7 +263,7 @@ Quy trình vận hành của FSM được hiện thực hóa qua các giai đo�
 Cơ chế phân tách các pha xung nhịp thành các trạng thái FSM nhỏ lẻ giúp hệ thống kiểm soát chặt chẽ các thông số thời gian (\textit{setup/hold time}), đảm bảo sự tương thích hoàn toàn với các thiết bị ngoại vi như cảm biến camera OV5640 tại tần số vận hành của SoC.
 
 \subsubsection{Ánh xạ thanh ghi và tích hợp AXI4-Lite}
-Khối I2C được nhúng vào hạ tầng Bus hệ thống thông qua module \textbf{I2C\_axi\_lite\_core}. Module này đóng vai trò cầu nối, chuyển đổi các giao dịch bus AXI thành các xung lệnh nạp dữ liệu (\texttt{din}) và mã lệnh (\texttt{cmd}) cho lõi I2C Master.
+Khối I2C được nhúng vào hạ tầng Bus hệ thống thông qua \\ module \textbf{I2C\_axi\_lite\_core}. Module này đóng vai trò cầu nối, chuyển đổi các giao dịch bus AXI thành các xung lệnh nạp dữ liệu (\texttt{din}) và mã lệnh (\texttt{cmd}) cho lõi I2C Master.
 
 \begin{figure}[H]
     \centering
